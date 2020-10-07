@@ -52,10 +52,6 @@ class Spectrum:
         return deadtime
     
     def readable_datetime(self):
-        #date,time=str.split(str(self.datetime))
-        #year,month,day=str.split(date,'-')
-        #hour,minute,second=str.split(time,':')
-        #return (day+'/'+month+'/'+year+' '+hour+':'+minute+':'+second)
         return self.datetime.strftime("%d/%m/%Y %H:%M:%S")
     
     def number_of_channels(self):
