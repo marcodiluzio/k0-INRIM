@@ -1,0 +1,1 @@
+#flux parameters{this line is for comments and is not considered} #name_of_facility(without spaces) f uf alpha ualpha
