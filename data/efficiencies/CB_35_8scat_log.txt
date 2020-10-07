@@ -1,0 +1,78 @@
+Calibration performed on CB35 detector, at nominal distance 160.0 mm.
+
+1 spectra selected by acquisition of Multigamma 2018 source:
+CB35_MG_d8.ASC
+
+13 of the selected emissions were found in the spectra:
+59.54 keV       241Am
+88.03 keV       109Cd
+122.06 keV       57Co
+136.47 keV       57Co
+165.85 keV      139Ce
+391.7 keV       113Sn
+661.66 keV      137Cs
+834.85 keV       54Mn
+898.04 keV        88Y
+1115.54 keV      65Zn
+1173.23 keV      60Co
+1332.49 keV      60Co
+1836.07 keV       88Y
+
+Energy fit: linear model
+(evaluted averaging values for all spectra, max deviation 0.0 channels)
+      value      u (k=1)    rel. u
+p0:   0.249942   5e-06      (0.0 %)
+p1:   0.073973   0.019131   (25.86 %)
+
+corr. M  p0:      p1:      
+p0:      1.0      -0.7757  
+p1:      -0.7757  1.0      
+
+FWHM fit: quadratic model
+(evaluated averaging values for all spectra,
+max deviation on X-axis variable 0.0 channels
+max deviation on Y-axis variable 0.0 channels)
+      value      u (k=1)    rel. u
+p0:   0.007      6.6e-05    (0.94 %)
+p1:   11.070539  0.230325   (2.08 %)
+
+corr. M  p0:      p1:      
+p0:      1.0      -0.7757  
+p1:      -0.7757  1.0      
+
+Efficiency fit: 6term-polynomial model
+(evaluated averaging values for all spectra, max deviation 0.0 % efficiency)
+0 parameters were dropped due to higher uncertainty than the 80 % value set by the user
+      value      u (k=1)    rel. u
+p0:   -0.291997  0.023569   (8.07 %)
+p1:   -7.130284  0.052968   (0.74 %)
+p2:   0.511671   0.034543   (6.75 %)
+p3:   -0.066043  0.007451   (11.28 %)
+p4:   0.003582   0.000623   (17.38 %)
+p5:   -8.6e-05   1.7e-05    (20.16 %)
+
+corr. M  p0:      p1:      p2:      p3:      p4:      p5:      
+p0:      1.0      -0.9729  0.9044   -0.8555  0.8168   -0.786   
+p1:      -0.9729  1.0      -0.9733  0.9396   -0.9072  0.8787   
+p2:      0.9044   -0.9733  1.0      -0.9903  0.9701   -0.9483  
+p3:      -0.8555  0.9396   -0.9903  1.0      -0.9939  0.9815   
+p4:      0.8168   -0.9072  0.9701   -0.9939  1.0      -0.9965  
+p5:      -0.786   0.8787   -0.9483  0.9815   -0.9965  1.0      
+
+energy        isotope  efficiency  residual
+834.85 keV       54Mn    0.001043   -1.61 %
+898.04 keV        88Y     0.00102    1.16 %
+122.06 keV       57Co     0.00292   -1.15 %
+165.85 keV      139Ce    0.002985     0.9 %
+391.7 keV       113Sn    0.001801   -0.64 %
+661.66 keV      137Cs     0.00125    0.42 %
+136.47 keV       57Co     0.00302    0.33 %
+1836.07 keV       88Y    0.000605   -0.31 %
+88.03 keV       109Cd    0.002368    0.28 %
+1173.23 keV      60Co    0.000842    0.25 %
+1115.54 keV      65Zn    0.000871    0.22 %
+1332.49 keV      60Co     0.00077    0.17 %
+59.54 keV       241Am    0.000855   -0.02 %
+
+Vertical variability of detection efficiency assumed equal to the user assigned value of 3.0 % efficiency variation per mm throughout the energy range considered, from 50 keV to 3103 keV
+
