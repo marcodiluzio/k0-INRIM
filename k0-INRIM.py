@@ -40,8 +40,8 @@ from matplotlib.figure import Figure
 from classes.naaobj import *
 
 #Version #update these in case of modifications
-VERSION = 1.2
-VERSION_DATE = '7 October 2020'
+VERSION = 1.3
+VERSION_DATE = '21 October 2020'
 
 #Matplotlib graph visualization parameters
 matplotlib.rcParams['font.size'] = 8
@@ -2094,8 +2094,80 @@ def main():
                     r[gla]=r[gla].replace('\t',' ')
                     selection.append(r[gla])
                 B.configure(state='disable')
-            
+                
             def viewSL(VWS,selection,B):
+                def _on_mousewheel(self, event):
+                    canvas.yview_scroll(-1*(event.delta/120), "units")
+                
+                def push_selector(vb,cb,selection,B):
+                    B.configure(state='disable')
+                    if vb.get()=='':
+                        selection.remove(cb.cget('onvalue'))
+                    else:
+                        if vb.get() not in selection:
+                            selection.append(cb.cget('onvalue'))
+                if VWS.get()!='':
+                    f=open('data/sources/'+VWS.get()+'.sce','r')
+                    r=f.readlines()
+                    f.close()
+                    for gla in range(len(r)):
+                        r[gla]=r[gla].replace('\n','')
+                        r[gla]=r[gla].replace('\t',' ')
+                    dt=r[0]
+                    r.pop(0)
+                    TSCL=Toplevel()
+                    TSCL.resizable(False,False)
+                    TSCL.title('Source')
+                    TSCL.focus()
+                    F=Frame(TSCL)
+                    L=Label(F, text='', width=1).pack(side=LEFT)
+                    L=Label(F, text=f'certificate date: {dt}', anchor=W).pack(side=LEFT)
+                    L=Label(F, width=5).pack(side=LEFT)
+                    L=Label(F, text=VWS.get(), anchor=W).pack(side=LEFT)
+                    F.pack(anchor=W)
+                    L=Label(TSCL).pack()
+                    F=Frame(TSCL)
+                    L=Label(F, text='', width=6).pack(side=LEFT)
+                    L=Label(F, text='energy / keV', width=12).pack(side=LEFT)
+                    L=Label(F, text='nuclide', width=12).pack(side=LEFT)
+                    L=Label(F, text='activity / Bq', width=12).pack(side=LEFT)
+                    L=Label(F, text='γ yield / 1', width=12).pack(side=LEFT)
+                    L=Label(F, text='half-life / s', width=12).pack(side=LEFT)
+                    F.pack(anchor=W)
+                    
+                    container = Frame(TSCL)
+                    canvas = Canvas(container, height=450)
+                    scrollbar = Scrollbar(container, orient="vertical", command=canvas.yview)
+                    scrollable_frame = Frame(canvas)
+                    
+                    scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+                    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+                    canvas.configure(yscrollcommand=scrollbar.set)
+                    
+                    for item in r:
+                        F=Frame(scrollable_frame)
+                        var = StringVar(TSCL)
+                        var.set('')
+                        cb = Checkbutton(F, variable=var, onvalue=item, offvalue='', width=3)
+                        cb.pack(side=LEFT)
+                        if item in selection:
+                            cb.select()
+                        else:
+                            cb.deselect()
+                        cb.configure(command=lambda vb=var,cb=cb,selection=selection: push_selector(vb,cb,selection,B))
+                        TT=str.split(item)
+                        L=Label(F, text=f'{TT[0]}', width=12).pack(side=LEFT)
+                        L=Label(F, text=f'{TT[1]}', width=12).pack(side=LEFT)
+                        L=Label(F, text=f'{TT[2]}', width=12).pack(side=LEFT)
+                        L=Label(F, text=f'{TT[3]}', width=12).pack(side=LEFT)
+                        L=Label(F, text=f'{TT[4]}', width=12).pack(side=LEFT)
+                        F.pack(anchor=W)
+                    container.pack(fill="both", expand=True)
+                    canvas.pack(side="left", fill="both", expand=True)
+                    scrollbar.pack(side="right", fill="y")
+                    canvas.bind("<MouseWheel>", lambda : _on_mousewheel(event))
+            
+            def viewSL_deprecated(VWS,selection,B):
                 def push_selector(vb,cb,selection,B):
                     B.configure(state='disable')
                     if vb.get()=='':
@@ -2624,6 +2696,8 @@ def main():
             Buttoncolumns.pack()
             F = Frame(Buttoncolumn)
             F.pack(pady=2)
+            #B_merge = Button(Buttoncolumn, text='Merge', width=18)
+            #B_merge.pack()
             B_fit = Button(Buttoncolumn, text='Compute', width=18)
             B_fit.pack()
             Buttoncolumn.pack(side=RIGHT, anchor=NE)
