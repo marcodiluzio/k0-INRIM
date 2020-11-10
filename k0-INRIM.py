@@ -4449,7 +4449,7 @@ def main():
             event="<FocusOut>"
             NF.bind(event, lambda event=event,G=NF : G.destroy())
         
-        def check_allright(EMC,EUMC,EMS,EUMS,EDDC,EDDS,EMUD,EUMUD,EGTHC,EUGTHC,EGEC,EUGEC,EGTHS,EUGTHS,ECOIC,EUCOIC,EWC,EUWC,BETAS,UBETAS,DXS,UDXS,NAA):
+        def check_allright(EMC,EUMC,EMS,EUMS,EDDC,EDDS,EMUD,EUMUD,EGTHC,EUGTHC,EGEC,EUGEC,EGTHS,EUGTHS,ECOIC,EUCOIC,EWC,EUWC,DDDS,DDDM,BETAS,UBETAS,DXS,UDXS,NAA):
             try:
                 float(EMC.get())
                 float(EUMC.get())
@@ -4473,12 +4473,15 @@ def main():
                 float(UBETAS.get())
                 float(DXS.get())
                 float(UDXS.get())
+                float(DDDS.get())
+                float(DDDM.get())
             except:
                 messagebox.showerror('Invalid data entered','values in the spin-boxes should have floating point data type')
                 print('Invalid data entered\na) values in the spin-boxes should have floating point data type')
             else:
                 if float(EMC.get())>0 and float(EMS.get())>0 and float(EWC.get()):
                     NAA.masses=[float(EMC.get()),float(EUMC.get()),float(EMS.get()),float(EUMS.get())]
+                    NAA.ddvaluecomparator,NAA.ddvaluesample=float(DDDM.get()),float(DDDS.get())
                     NAA.ddcomparator,NAA.ddsample=float(EDDC.get()),float(EDDS.get())
                     NAA.detector_mu=[float(EMUD.get()),float(EUMUD.get())]
                     NAA.comparatorselfshieldingth=[float(EGTHC.get()),float(EUGTHC.get())]
@@ -4710,7 +4713,7 @@ def main():
         DDDS.pack(side=LEFT)
         DDDS.delete(0,END)
         DDDS.insert(END,'0.0')
-        DDDS.configure(state='disabled')
+        #DDDS.configure(state='disabled')
         L=Label(F, text='', width=2).pack(side=LEFT)
         L=Label(F, text='u(Δd) / mm', width=10, anchor=W).pack(side=LEFT)
         EDDS=Spinbox(F, from_=0, to=50, width=10, increment=0.1)
@@ -4816,7 +4819,7 @@ def main():
         DDDM.pack(side=LEFT)
         DDDM.delete(0,END)
         DDDM.insert(END,'0.0')
-        DDDM.configure(state='disabled')
+        #DDDM.configure(state='disabled')
         L=Label(F, text='', width=2).pack(side=LEFT)
         L=Label(F, text='u(Δd) / mm', width=10, anchor=W).pack(side=LEFT)
         EDDC=Spinbox(F, from_=0, to=50, width=10, increment=0.1)
@@ -4850,7 +4853,7 @@ def main():
         Linv_nucl.pack(side=LEFT)
         Binv_nucl.configure(command=lambda NASN=NAA.selected_nuclides,Lb=Linv_nucl: select_nuclides_k0(NASN,Lb))
         F.pack(anchor=W, pady=heightsize)
-        Bopti.configure(command=lambda EMC=EMC,EUMC=EUMC,EMS=EMS,EUMS=EUMS,EDDC=EDDC,EDDS=EDDS,EMUD=EMUD,EUMUD=EUMUD,EGTHC=EGTHC,EUGTHC=EUGTHC,EGEC=EGEC,EUGEC=EUGEC,EGTHS=EGTHS,EUGTHS=EUGTHS,ECOIC=ECOIC,EUCOIC=EUCOIC,EWC=EWC,EUWC=EUWC,BETAS=BETAS,UBETAS=UBETAS,DXS=DXS,UDXS=UDXS,NAA=NAA : check_allright(EMC,EUMC,EMS,EUMS,EDDC,EDDS,EMUD,EUMUD,EGTHC,EUGTHC,EGEC,EUGEC,EGTHS,EUGTHS,ECOIC,EUCOIC,EWC,EUWC,BETAS,UBETAS,DXS,UDXS,NAA))
+        Bopti.configure(command=lambda EMC=EMC,EUMC=EUMC,EMS=EMS,EUMS=EUMS,EDDC=EDDC,EDDS=EDDS,EMUD=EMUD,EUMUD=EUMUD,EGTHC=EGTHC,EUGTHC=EUGTHC,EGEC=EGEC,EUGEC=EUGEC,EGTHS=EGTHS,EUGTHS=EUGTHS,ECOIC=ECOIC,EUCOIC=EUCOIC,EWC=EWC,EUWC=EUWC,DDDS=DDDS,DDDM=DDDM,BETAS=BETAS,UBETAS=UBETAS,DXS=DXS,UDXS=UDXS,NAA=NAA : check_allright(EMC,EUMC,EMS,EUMS,EDDC,EDDS,EMUD,EUMUD,EGTHC,EUGTHC,EGEC,EUGEC,EGTHS,EUGTHS,ECOIC,EUCOIC,EWC,EUWC,DDDS,DDDM,BETAS,UBETAS,DXS,UDXS,NAA))
     
     def on_closing():
         if messagebox.askokcancel('Quit k0-INRIM', 'Unsaved data will be lost.\n\nDo you want to quit?'):
