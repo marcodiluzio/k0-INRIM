@@ -41,7 +41,7 @@ from classes.naaobj import *
 
 #Version #update these in case of modifications
 VERSION = 1.3
-VERSION_DATE = '29 October 2020'
+VERSION_DATE = '10 November 2020'
 
 #Matplotlib graph visualization parameters
 matplotlib.rcParams['font.size'] = 8
@@ -217,15 +217,6 @@ def main():
     def listeffy(f=None):
         H = [file[:-4] for file in os.listdir('data/efficiencies') if file[-4:]=='.efs']
         return H
-    
-    #def openeffy(w):#deprecated
-    #    f=open(w,'r')
-    #    r=f.readlines()
-    #    f.close()
-    #    R=[]
-    #    for i in range(len(r)):
-    #        R.append(str.split(r[i].replace('\n','')))
-    #    return R
         
     def openchannels_drift_values(n):
         """Retrieve b information from file"""
