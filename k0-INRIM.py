@@ -25,7 +25,7 @@ try:
     import xlsxwriter
     from scipy.optimize import fsolve
 except ModuleNotFoundError:
-    answ = input('Additional python modules has not been found.\nThe required modules (modules name and version are found in the requirements.txt file) will be installed in your current python environment, otherwise you will need to manually manage the additional packages.\nInternet connection is necessary.\n\nPress <y> key to confirm the modules installation or any other key to exit: ')
+    answ = input('Additional python modules have not been found.\nThe required modules (modules name and version are found in the requirements.txt file) will be installed in your current python environment, otherwise you will need to manually manage the additional packages.\nInternet connection is necessary.\n\nPress <y> key to confirm the modules installation or any other key to exit: ')
     if answ.lower()=='y':
         os.system('cmd /k "pip install -r requirements.txt"')
         os.system('cmd /c "pip list"')
@@ -41,7 +41,7 @@ from classes.naaobj import *
 
 #Version #update these in case of modifications
 VERSION = 1.3
-VERSION_DATE = '21 October 2020'
+VERSION_DATE = '29 October 2020'
 
 #Matplotlib graph visualization parameters
 matplotlib.rcParams['font.size'] = 8
@@ -218,14 +218,14 @@ def main():
         H = [file[:-4] for file in os.listdir('data/efficiencies') if file[-4:]=='.efs']
         return H
     
-    def openeffy(w):#deprecated
-        f=open(w,'r')
-        r=f.readlines()
-        f.close()
-        R=[]
-        for i in range(len(r)):
-            R.append(str.split(r[i].replace('\n','')))
-        return R
+    #def openeffy(w):#deprecated
+    #    f=open(w,'r')
+    #    r=f.readlines()
+    #    f.close()
+    #    R=[]
+    #    for i in range(len(r)):
+    #        R.append(str.split(r[i].replace('\n','')))
+    #    return R
         
     def openchannels_drift_values(n):
         """Retrieve b information from file"""
@@ -444,6 +444,8 @@ def main():
                 f.write(str(int(P11.get())))
                 f.close()
                 M.destroy()
+                print('\n...Restart')
+                main()
             
             def change_parameter(V,name,somthing,Scale,Label):
                 Label.configure(text=str(Scale.get()))
@@ -1945,22 +1947,91 @@ def main():
                 L.logo = lin
                 B.configure(state='disable')
                 
-            def add_spectra(SPCIn,SPClist,unclimit,setforall,B,SBL,SBD):
+            def add_position(SPCIn,SPClist,C_posix,SBD,SBL):
+                nn = len(C_posix['values']) + 1
+                while f'position {nn}' in C_posix['values']:
+                    nn += 1
+                SPCIn[f'position {nn}'] = []
+                SPClist.delete(0,END)
+                C_posix['values'] = list(SPCIn.keys())
+                C_posix.set(f'position {nn}')
+                indc = PhotoImage(file=f"data/models/dg.png")
+                SBD.configure(to=500, increment=1)
+                SBD.delete(0,END)
+                SBD.insert(END,'0')
+                SBL.configure(image=indc)
+                SBL.logo = indc
+                #B.configure(state='disable')
+                
+            def rename_position(SPCIn,C_posix):
+                def return_confirm_rename_position(ew,E,C_posix,TLRN,SPCIn):
+                    if E.get() not in C_posix.keys():
+                        temporary_storage = SPCIn[C_posix.get()]
+                        SPCIn.pop(C_posix.get())
+                        SPCIn[E.get()] = temporary_storage
+                        C_posix['values'] = list(SPCIn.keys())
+                        C_posix.set(E.get())
+                        TLRN.destroy()
+                h,w,a,b=C_posix.winfo_height(),C_posix.winfo_width(),C_posix.winfo_rootx(),C_posix.winfo_rooty()
+                TLRN=Toplevel()
+                TLRN.geometry(f'{w}x{h}+{a}+{b+h}')
+                TLRN.overrideredirect(True)
+                TLRN.resizable(False,False)
+                E=Entry(TLRN)
+                E.pack(side=LEFT, fill=X, expand=True)
+                E.insert(0,C_posix.get())
+                E.focus()            
+                #BC=Button(TLRN, text='Confirm', width=8, command=lambda E=E,EC=EC,TLRN=TLRN,NAA=NAA : confirm_rename(E,EC,TLRN,NAA)).pack(side=RIGHT)
+                ew='<Return>'
+                E.bind(ew,lambda ew=ew,E=E,C_posix=C_posix,TLRN=TLRN,SPCIn=SPCIn : return_confirm_rename_position(ew,E,C_posix,TLRN,SPCIn))
+                event="<FocusOut>"
+                TLRN.bind(event,lambda event=event,M=TLRN : M.destroy())
+                
+            def delete_position(SPCIn,SPClist,C_posix,SBD,SBL):
+                if len(SPCIn) > 1:
+                    SPCIn.pop(C_posix.get())
+                    C_posix['values'] = list(SPCIn.keys())
+                    C_posix.set(C_posix['values'][0])
+                    SPClist.delete(0,END)
+                    for spectrum in SPCIn[C_posix.get()]:
+                        SPClist.insert(END,spectrum.filename())
+                    if len(SPCIn.keys()) == 1:
+                        indc = PhotoImage(file=f"data/models/der.png")
+                        SBD.configure(to=1, increment=0.001)
+                        SBD.delete(0,END)
+                        SBD.insert(END,'0.00')
+                    elif len(SPCIn.keys()) > 1:
+                        indc = PhotoImage(file=f"data/models/dg.png")
+                        SBD.configure(to=500, increment=1)
+                        SBD.delete(0,END)
+                        SBD.insert(END,'0')
+                    else:
+                        indc = None
+                    SBL.configure(image=indc)
+                    SBL.logo = indc
+                    #B.configure(state='disable')
+                
+            def update_spectralist_by_position(CB,SPCIn,SPClist):
+                SPClist.delete(0,END)
+                for spectrum in SPCIn[CB.get()]:
+                    SPClist.insert(END,spectrum.filename())
+                
+            def add_spectra(SPCIn,SPClist,unclimit,setforall,B,SBL,SBD,C_posix):
                 spectra_names=searchforhypelabmultiplefiles(unclimit,setforall)
                 if spectra_names!=None:
                     for tg in spectra_names:
                         if tg[2]!=None:
                             SPT=Spectrum('Calibration',tg[1],tg[2],tg[3],tg[4],tg[5],tg[0])
-                            SPCIn.append(SPT)
+                            SPCIn[C_posix.get()].append(SPT)
                             SPClist.insert(END,SPT.filename())
                 SPClist.focus()
                 
-                if len(SPCIn) == 1:
+                if len(SPCIn.keys()) == 1:
                     indc = PhotoImage(file=f"data/models/der.png")
                     SBD.configure(to=1, increment=0.001)
                     SBD.delete(0,END)
                     SBD.insert(END,'0.00')
-                elif len(SPCIn) > 1:
+                elif len(SPCIn.keys()) > 1:
                     indc = PhotoImage(file=f"data/models/dg.png")
                     SBD.configure(to=500, increment=1)
                     SBD.delete(0,END)
@@ -1971,7 +2042,7 @@ def main():
                 SBL.logo = indc
                 B.configure(state='disable')
                 
-            def display_peaklist(In,SPClist):
+            def display_peaklist(In,SPClist,CB):
                 """Display multiple calibration spectra"""
                 def singlescreen_of_multiple(NA,SC,NMS=None,Z=None):
                     """Display single of multiple spectra"""
@@ -2057,9 +2128,10 @@ def main():
                     superi = SPClist.curselection()[0]
                 except IndexError:
                     superi = 0
+                In = In[CB.get()]
                 if len(In) > 0:
                     MS=Toplevel()
-                    MS.title(In[0].identity+' peak list')
+                    MS.title(f'{In[0].identity} peak list ({CB.get()})')
                     MS.resizable(False,False)
                     MS.focus()
                     F=Frame(MS)
@@ -2072,14 +2144,11 @@ def main():
                     SC.pack()
                     singlescreen_of_multiple(In[superi],SC)
                 
-            def clear_spectra(SPCIn,SPClist,B,SBL):
-                g=len(SPCIn)
+            def clear_spectra(SPCIn,SPClist,B,SBL,CB):
+                g=len(SPCIn[CB.get()])
                 for _ in range(g):
-                    SPCIn.pop(0)
+                    SPCIn[CB.get()].pop(0)
                 SPClist.delete(0,END)
-                indc = None
-                SBL.configure(image=indc)
-                SBL.logo = indc
                 B.configure(state='disable')
                 
             def source_emission_selection(WN,selection,B):
@@ -2096,7 +2165,7 @@ def main():
                 B.configure(state='disable')
                 
             def viewSL(VWS,selection,B):
-                def _on_mousewheel(self, event):
+                def _on_mousewheel(self, event):#deprecated for the moment
                     canvas.yview_scroll(-1*(event.delta/120), "units")
                 
                 def push_selector(vb,cb,selection,B):
@@ -2166,64 +2235,8 @@ def main():
                     canvas.pack(side="left", fill="both", expand=True)
                     scrollbar.pack(side="right", fill="y")
                     canvas.bind("<MouseWheel>", lambda : _on_mousewheel(event))
-            
-            def viewSL_deprecated(VWS,selection,B):
-                def push_selector(vb,cb,selection,B):
-                    B.configure(state='disable')
-                    if vb.get()=='':
-                        selection.remove(cb.cget('onvalue'))
-                    else:
-                        if vb.get() not in selection:
-                            selection.append(cb.cget('onvalue'))
-                if VWS.get()!='':
-                    f=open('data/sources/'+VWS.get()+'.sce','r')
-                    r=f.readlines()
-                    f.close()
-                    for gla in range(len(r)):
-                        r[gla]=r[gla].replace('\n','')
-                        r[gla]=r[gla].replace('\t',' ')
-                    dt=r[0]
-                    r.pop(0)
-                    TSCL=Toplevel()
-                    TSCL.resizable(False,False)
-                    TSCL.title('Source')
-                    TSCL.focus()
-                    F=Frame(TSCL)
-                    L=Label(F, text='', width=1).pack(side=LEFT)
-                    L=Label(F, text=f'certificate date: {dt}', anchor=W).pack(side=LEFT)
-                    L=Label(F, width=5).pack(side=LEFT)
-                    L=Label(F, text=VWS.get(), anchor=W).pack(side=LEFT)
-                    F.pack(anchor=W)
-                    L=Label(TSCL).pack()
-                    F=Frame(TSCL)
-                    L=Label(F, text='', width=6).pack(side=LEFT)
-                    L=Label(F, text='energy / keV', width=12).pack(side=LEFT)
-                    L=Label(F, text='nuclide', width=12).pack(side=LEFT)
-                    L=Label(F, text='activity / Bq', width=12).pack(side=LEFT)
-                    L=Label(F, text='γ yield / 1', width=12).pack(side=LEFT)
-                    L=Label(F, text='half-life / s', width=12).pack(side=LEFT)
-                    F.pack(anchor=W)
-                    for item in r:
-                        F=Frame(TSCL)
-                        var = StringVar(TSCL)
-                        var.set('')
-                        cb = Checkbutton(F, variable=var, onvalue=item, offvalue='', width=3)
-                        cb.pack(side=LEFT)
-                        if item in selection:
-                            cb.select()
-                        else:
-                            cb.deselect()
-                        cb.configure(command=lambda vb=var,cb=cb,selection=selection: push_selector(vb,cb,selection,B))
-                        TT=str.split(item)
-                        L=Label(F, text=f'{TT[0]}', width=12).pack(side=LEFT)
-                        L=Label(F, text=f'{TT[1]}', width=12).pack(side=LEFT)
-                        L=Label(F, text=f'{TT[2]}', width=12).pack(side=LEFT)
-                        L=Label(F, text=f'{TT[3]}', width=12).pack(side=LEFT)
-                        L=Label(F, text=f'{TT[4]}', width=12).pack(side=LEFT)
-                        F.pack(anchor=W)
-                    L=Label(TSCL).pack()
                     
-            def perform_fit(CB_detector,CB_energy,CB_fwhm,CB_efficiency,SPCIn,selection,SB_der,textB,B,fig,ax_plot,ax_res,canvas,res_energy,res_fwhm,res_efficiency,res_der,res_values,CB_source,CB_distance):
+            def perform_fit(CB_detector,CB_energy,CB_fwhm,CB_efficiency,SPCIn,selection,SB_der,textB,B,fig,ax_plot,ax_res,canvas,res_energy,res_fwhm,res_efficiency,res_der,res_values,CB_source,CB_distance,C_posix):
                 def display_text(text,textB):
                     textB.configure(state='normal')
                     textB.delete('0.0',END)
@@ -2278,7 +2291,7 @@ def main():
                     GSC=GSource(dt,en,Tg,bql,GY,ld)
                     return GSC
                 
-                def get_data_to_fit(source,spectralist):
+                def get_data_to_fit(source,spectralist,C_posix):
                     def calculate_efficiency(n_area,spc,source,nn):
                         _lbd = source.decay_constant[nn]
                         td = spc.datetime - source.datetime
@@ -2295,15 +2308,22 @@ def main():
                         fit_en_line = []
                         fit_fw_line = []
                         fit_efy_line = []
-                        for spc in SPCIn:
-                            for plist_line in spc.peak_list:
-                                if float(plist_line[6])+float(tolerance_energy)>s_energy and float(plist_line[6])-float(tolerance_energy)<s_energy:
-                                    fit_en_line.append(s_energy)
-                                    fit_ch_line.append(float(plist_line[4]))
-                                    fit_fw_line.append(float(plist_line[10]))
-                                    fit_efy_line.append(calculate_efficiency(float(plist_line[8]),spc,source,nn))
-                                    break
-                        if len(fit_en_line)==len(SPCIn):
+                        for position in C_posix['values']:
+                            emission_found = None
+                            for spc in SPCIn[position]:
+                                for plist_line in spc.peak_list:
+                                    if float(plist_line[6])+float(tolerance_energy)>s_energy and float(plist_line[6])-float(tolerance_energy)<s_energy:
+                                        if emission_found is None:
+                                            emission_found = (s_energy, float(plist_line[4]), float(plist_line[10]), calculate_efficiency(float(plist_line[8]),spc,source,nn), float(plist_line[9])/float(plist_line[8]))
+                                        else:
+                                            if float(plist_line[9])/float(plist_line[8]) < emission_found[4]:
+                                                emission_found = (s_energy, float(plist_line[4]), float(plist_line[10]), calculate_efficiency(float(plist_line[8]),spc,source,nn), float(plist_line[9])/float(plist_line[8]))
+                            if emission_found is not None:
+                                fit_en_line.append(emission_found[0])
+                                fit_ch_line.append(emission_found[1])
+                                fit_fw_line.append(emission_found[2])
+                                fit_efy_line.append(emission_found[3])
+                        if len(fit_en_line)==len(SPCIn.keys()):
                             fit_en.append(fit_en_line)
                             fit_ch.append(fit_ch_line)
                             fit_fw.append(fit_fw_line)
@@ -2509,14 +2529,16 @@ def main():
                 
                 text = []
                 fits = {'linear':fit_linear, 'quadratic':fit_quadratic, '6term-polynomial':fit_6polynomial}
-                if CB_detector.get()!='' and len(SPCIn)>0 and len(selection)>7:
+                check_mix = [item_value for dict_value in SPCIn.values() for item_value in dict_value]
+                if CB_detector.get()!='' and len(check_mix)>0 and len(selection)>7:
                     try:
                         ddist = float(CB_distance.get())
                     except ValueError:
                         ddist = -1
-                    text.append(f'Calibration performed on {CB_detector.get()} detector, at nominal distance {ddist} mm.\n\n{len(SPCIn)} spectra selected by acquisition of {CB_source.get()} source:\n'+'\n'.join([spc.filename() for spc in SPCIn])+'\n')
+                    positional = [f'{c_position} ('+', '.join([spc.filename() for spc in SPCIn[c_position]])+')' for c_position in C_posix['values']]
+                    text.append(f'Calibration performed on {CB_detector.get()} detector, at nominal distance {ddist} mm.\n\n{len(SPCIn.keys())} positions selected to acquire {CB_source.get()} source over {len(check_mix)} spectra:\n'+'\n'.join(positional)+'\n')#[spc.filename() for pos in for spc in SPCIn[pos]])+'\n')
                     Cal_source = get_source(selection)
-                    fit_ch, fit_en, fit_fw, fit_efy, nn = get_data_to_fit(Cal_source,SPCIn)
+                    fit_ch, fit_en, fit_fw, fit_efy, nn = get_data_to_fit(Cal_source,SPCIn,C_posix)
                     lines = [lineofsource(Cal_source,ii) for ii in nn]
                     if len(fit_en)>6:
                         text.append(f'{len(fit_en)} of the selected emissions were found in the spectra:\n'+'\n'.join(lines)+'\n')
@@ -2565,7 +2587,7 @@ def main():
             def save_calibration(res_energy,res_fwhm,res_efficiency,res_der,res_values,CB_detector,CB_energy,CB_fwhm,CB_efficiency,SPCIn,selection,SB_geo,textB,fn):
                 def thatshowitsdone(CB_master,CB_std,CB_sample):
                     with open('data/efficiencies/'+fn.get()+'.efs','w') as f:
-                        f.write(f'detector: {CB_detector.get()}\ngeometry: {SB_geo.get()}\nenergy: {CB_energy.get()}\n{" ".join([str(ene) for ene in res_energy[0]])}\nfwhm: {CB_fwhm.get()}\n{" ".join([str(fwh) for fwh in res_fwhm[0]])}\nefficiency: {CB_efficiency.get()}\n{" ".join([str(eff) for eff in res_efficiency[0]])}\ncov_matrix:\n'+'\n'.join([' '.join([f'{col}' for col in row]) for row in res_efficiency[1]])+f'\nder_kind: {res_der["kind"]}\nder_value: {res_der["delta"]}\nder_uvalue: {res_der["udelta"]}\nder_h_curve:\n{" ".join([str(derp) for derp in res_der["h_curve"]])}\nder_h_curve_pcov:\n'+'\n'.join([' '.join([f'{col}' for col in row]) for row in res_der["h_pcov"]])+f'\nder_l_curve:\n{" ".join([str(derp) for derp in res_der["l_curve"]])}\nder_l_curve_pcov:\n'+'\n'.join([' '.join([f'{col}' for col in row]) for row in res_der["l_pcov"]])+f'\ncertificate: {selection.get()}\nx_points:\n{" ".join([f"{xpt}" for xpt in res_values[0]])}\ny_points:\n{" ".join([f"{ypt}" for ypt in res_values[1]])}\nspectra:\n'+'\n'.join([spectrum.filename() for spectrum in SPCIn]))
+                        f.write(f'detector: {CB_detector.get()}\ngeometry: {SB_geo.get()}\nenergy: {CB_energy.get()}\n{" ".join([str(ene) for ene in res_energy[0]])}\nfwhm: {CB_fwhm.get()}\n{" ".join([str(fwh) for fwh in res_fwhm[0]])}\nefficiency: {CB_efficiency.get()}\n{" ".join([str(eff) for eff in res_efficiency[0]])}\ncov_matrix:\n'+'\n'.join([' '.join([f'{col}' for col in row]) for row in res_efficiency[1]])+f'\nder_kind: {res_der["kind"]}\nder_value: {res_der["delta"]}\nder_uvalue: {res_der["udelta"]}\nder_h_curve:\n{" ".join([str(derp) for derp in res_der["h_curve"]])}\nder_h_curve_pcov:\n'+'\n'.join([' '.join([f'{col}' for col in row]) for row in res_der["h_pcov"]])+f'\nder_l_curve:\n{" ".join([str(derp) for derp in res_der["l_curve"]])}\nder_l_curve_pcov:\n'+'\n'.join([' '.join([f'{col}' for col in row]) for row in res_der["l_pcov"]])+f'\ncertificate: {selection.get()}\nx_points:\n{" ".join([f"{xpt}" for xpt in res_values[0]])}\ny_points:\n{" ".join([f"{ypt}" for ypt in res_values[1]])}\nspectra:\n'+'\n'.join([spectrum.filename() for spectrum in [item_value for dict_value in SPCIn.values() for item_value in dict_value]]))
                     with open('data/efficiencies/'+fn.get()+'_log.txt','w') as f:
                         f.write(textB.get('0.0',END))
                     CBeff_values = listeffy()
@@ -2591,7 +2613,7 @@ def main():
             MTL=Toplevel()
             MTL.title('Calibration')
             MTL.resizable(False,False)
-            MTL.spectra_list = []
+            MTL.spectra_list = {} #spectra_list dict of lists, key is the name of counting position : value is a list of spectum objects
             MTL.selection_sources = []
             MTL.res_energy = []
             MTL.res_fwhm = []
@@ -2656,7 +2678,18 @@ def main():
             F = Frame(F_commands)
             F.pack(anchor=W, padx=5, pady=5)
             F = Frame(F_commands)
-            L=Label(F, text='spectra', anchor=W).pack()
+            L=Label(F, text='spectra', anchor=W, width=12).pack(side=LEFT)
+            values_positions = ['position 1']
+            CB_positions = ttk.Combobox(F, width=12, values=values_positions, state='readonly')
+            CB_positions.pack(side=LEFT, padx=3)
+            CB_positions.set(values_positions[0])
+            B_add_position = Button(F, text='Add', width=8)
+            B_add_position.pack(side=LEFT)
+            B_rename_position = Button(F, text='Rename', width=8)
+            B_rename_position.pack(side=LEFT)
+            B_delete_position = Button(F, text='Delete', width=8)
+            B_delete_position.pack(side=LEFT)
+            F.pack(anchor=W, padx=5, pady=2)
             F.pack(anchor=W, padx=5, pady=2)
             BigBox = Frame(F_commands)
             ListFrame = Frame(BigBox)
@@ -2666,6 +2699,7 @@ def main():
             scrollbar.pack(side=RIGHT, fill=Y)
             listbox.pack(side=LEFT, fill=BOTH, expand=1)
             ListFrame.pack(side=LEFT, anchor=NW, fill=BOTH, expand=1)
+            MTL.spectra_list[CB_positions.get()] = []
             
             Buttoncolumn = Frame(BigBox)
             Buttoncolumns = Frame(Buttoncolumn)
@@ -2696,8 +2730,6 @@ def main():
             Buttoncolumns.pack()
             F = Frame(Buttoncolumn)
             F.pack(pady=2)
-            #B_merge = Button(Buttoncolumn, text='Merge', width=18)
-            #B_merge.pack()
             B_fit = Button(Buttoncolumn, text='Compute', width=18)
             B_fit.pack()
             Buttoncolumn.pack(side=RIGHT, anchor=NE)
@@ -2750,12 +2782,16 @@ def main():
             SB_der.bind('<FocusIn>', lambda event='<FocusIn>',B=B_save : B.configure(state='disable'))
             SB_der.configure(command= lambda B=B_save : B.configure(state='disable'))
             
+            B_rename_position.configure(command=lambda SPCIn=MTL.spectra_list,C_posix=CB_positions: rename_position(SPCIn,C_posix))
+            B_delete_position.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox,C_posix=CB_positions,SBD=SB_der,SBL=Line : delete_position(SPCIn,SPClist,C_posix,SBD,SBL))
+            CB_positions.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>', CB=CB_positions,SPCIn=MTL.spectra_list,SPClist=listbox : update_spectralist_by_position(CB,SPCIn,SPClist))
             CB_source.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>',WN=CB_source,selection=MTL.selection_sources,B=B_save: source_emission_selection(WN,selection,B))
+            B_add_position.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox,C_posix=CB_positions,SBD=SB_der,SBL=Line : add_position(SPCIn,SPClist,C_posix,SBD,SBL))
             B_select.configure(command=lambda VWS=CB_source,selection=MTL.selection_sources,B=B_save : viewSL(VWS,selection,B))
-            B_add.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox,unclimit=unclimit_calib,setforall=True,B=B_save,SBL=Line,SBD=SB_der : add_spectra(SPCIn,SPClist,unclimit,setforall,B,SBL,SBD))#NAA.limit, NAA.set_true_forall
-            B_pklist.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox : display_peaklist(SPCIn,SPClist))
-            B_clear.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox,B=B_save,SBL=Line : clear_spectra(SPCIn,SPClist,B,SBL))
-            B_fit.configure(command= lambda CB_detector=CB_detector,CB_energy=CB_model,CB_fwhm=CB_Fmodel,CB_efficiency=CB_EFmodel,SPCIn=MTL.spectra_list,selection=MTL.selection_sources,SB_der=SB_der,textB=textbox,B=B_save,fig=f,ax_plot=ax_plot,ax_res=ax_res,canvas=canvas,res_energy=MTL.res_energy,res_fwhm=MTL.res_fwhm,res_efficiency=MTL.res_efficiency,res_der=MTL.res_der,res_values=MTL.res_values,CB_source=CB_source,CB_distance=SB_geometry : perform_fit(CB_detector,CB_energy,CB_fwhm,CB_efficiency,SPCIn,selection,SB_der,textB,B,fig,ax_plot,ax_res,canvas,res_energy,res_fwhm,res_efficiency,res_der,res_values,CB_source,CB_distance))
+            B_add.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox,unclimit=unclimit_calib,setforall=True,B=B_save,SBL=Line,SBD=SB_der,C_posix=CB_positions : add_spectra(SPCIn,SPClist,unclimit,setforall,B,SBL,SBD,C_posix))#NAA.limit, NAA.set_true_forall
+            B_pklist.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox,CB=CB_positions : display_peaklist(SPCIn,SPClist,CB))
+            B_clear.configure(command=lambda SPCIn=MTL.spectra_list,SPClist=listbox,B=B_save,SBL=Line,CB=CB_positions : clear_spectra(SPCIn,SPClist,B,SBL,CB))
+            B_fit.configure(command= lambda CB_detector=CB_detector,CB_energy=CB_model,CB_fwhm=CB_Fmodel,CB_efficiency=CB_EFmodel,SPCIn=MTL.spectra_list,selection=MTL.selection_sources,SB_der=SB_der,textB=textbox,B=B_save,fig=f,ax_plot=ax_plot,ax_res=ax_res,canvas=canvas,res_energy=MTL.res_energy,res_fwhm=MTL.res_fwhm,res_efficiency=MTL.res_efficiency,res_der=MTL.res_der,res_values=MTL.res_values,CB_source=CB_source,CB_distance=SB_geometry,C_posix=CB_positions : perform_fit(CB_detector,CB_energy,CB_fwhm,CB_efficiency,SPCIn,selection,SB_der,textB,B,fig,ax_plot,ax_res,canvas,res_energy,res_fwhm,res_efficiency,res_der,res_values,CB_source,CB_distance,C_posix))
             B_save.configure(command= lambda res_energy=MTL.res_energy,res_fwhm=MTL.res_fwhm,res_efficiency=MTL.res_efficiency,res_der=MTL.res_der,res_values=MTL.res_values,CB_detector=CB_detector,CB_energy=CB_model,CB_fwhm=CB_Fmodel,CB_efficiency=CB_EFmodel,SPCIn=MTL.spectra_list,selection=CB_source,SB_geo=SB_geometry,textB=textbox,fn=E_geometry: save_calibration(res_energy,res_fwhm,res_efficiency,res_der,res_values,CB_detector,CB_energy,CB_fwhm,CB_efficiency,SPCIn,selection,SB_geo,textB,fn))
             
         def showfit(box):
