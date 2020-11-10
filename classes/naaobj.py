@@ -273,8 +273,10 @@ class NAAnalysis:
     def __init__(self):
         self.irradiation=None
         self.comparator=None
+        self.ddvaluecomparator=None
         self.ddcomparator=None
         self.sample=None
+        self.ddvaluesample=None
         self.ddsample=None
         self.calibration = None
         self.masses=[None,None,None,None]
@@ -404,8 +406,8 @@ class NAAnalysis:
         MP[36,0],MP[36,1]=der, uder
         der, uder = self.calibration.der_fit(np.array([iline[26]]))
         MP[37,0],MP[37,1]=der, uder
-        MP[38,0],MP[38,1]=0,self.ddsample
-        MP[39,0],MP[39,1]=0,self.ddcomparator
+        MP[38,0],MP[38,1]=self.ddvaluesample,self.ddsample
+        MP[39,0],MP[39,1]=self.ddvaluecomparator,self.ddcomparator
         MP[40,0],MP[40,1]=self.detector_mu[0],self.detector_mu[1]
         MP[41,0],MP[41,1]=self.beta_flux[0],self.beta_flux[1]
         MP[42,0],MP[42,1]=self._Delta_x[0],self._Delta_x[1]
@@ -485,8 +487,8 @@ class NAAnalysis:
             MP[36,0],MP[36,1]=der, uder
             der, uder = self.calibration.der_fit(np.array([iline[5]]))
             MP[37,0],MP[37,1]=der, uder
-            MP[38,0],MP[38,1]=0,self.ddsample
-            MP[39,0],MP[39,1]=0,self.ddcomparator
+            MP[38,0],MP[38,1]=self.ddvaluesample,self.ddsample
+            MP[39,0],MP[39,1]=self.ddvaluecomparator,self.ddcomparator
             MP[40,0],MP[40,1]=self.detector_mu[0],0.0
             MP[41,0],MP[41,1]=self.beta_flux[0],0
             MP[42,0],MP[42,1]=self._Delta_x[0],0
@@ -596,8 +598,8 @@ class NAAnalysis:
         MP[37,0],MP[37,1]=der, uder
         der, uder = self.calibration.der_fit(np.array([iline[26]]))
         MP[38,0],MP[38,1]=der, uder
-        MP[39,0],MP[39,1]=0,self.ddsample
-        MP[40,0],MP[40,1]=0,self.ddcomparator
+        MP[39,0],MP[39,1]=self.ddvaluesample,self.ddsample
+        MP[40,0],MP[40,1]=self.ddvaluecomparator,self.ddcomparator
         MP[41,0],MP[41,1]=self.detector_mu[0],self.detector_mu[1]
         MP[42,0],MP[42,1]=self.beta_flux[0],self.beta_flux[1]
         MP[43,0],MP[43,1]=self._Delta_x[0],self._Delta_x[1]
@@ -689,8 +691,8 @@ class NAAnalysis:
             MP[37,0],MP[37,1]=der, uder
             der, uder = self.calibration.der_fit(np.array([iline[5]]))
             MP[38,0],MP[38,1]=der, uder
-            MP[39,0],MP[39,1]=0,self.ddsample
-            MP[40,0],MP[40,1]=0,self.ddcomparator
+            MP[39,0],MP[39,1]=self.ddvaluesample,self.ddsample
+            MP[40,0],MP[40,1]=self.ddvaluecomparator,self.ddcomparator
             MP[41,0],MP[41,1]=self.detector_mu[0],0.0
             MP[42,0],MP[42,1]=self.beta_flux[0],0.0
             MP[43,0],MP[43,1]=self._Delta_x[0],0.0
