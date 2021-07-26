@@ -3034,9 +3034,10 @@ def _store_analysis_data(NAA,filepath=os.path.join(os.path.join('data','results'
 	data = []
 	for item in NAA.budgets:
 		target, emitter, values = item._solve(full=True)
-		if not np.isnan(values[3]):
-			data_row = [NAA.irradiation.datetime, NAA.irradiation.channel_name, NAA.irradiation.f_value, NAA.irradiation.a_value, NAA.irradiation.irradiation_time, target, emitter, 'sample', values[0], values[1], values[2], values[3], item.cert_name]
-			data.append(data_row)
+		if values is not None:
+			if not np.isnan(values[3]):
+				data_row = [NAA.irradiation.datetime, NAA.irradiation.channel_name, NAA.irradiation.f_value, NAA.irradiation.a_value, NAA.irradiation.irradiation_time, target, emitter, 'sample', values[0], values[1], values[2], values[3], item.cert_name]
+				data.append(data_row)
 	df = pd.DataFrame(data, columns=columns)
 	df.to_csv(filepath, columns=columns, header=False, index=False, mode='a', date_format="%d/%m/%Y %H:%M:%S")
 
