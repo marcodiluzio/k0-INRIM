@@ -1,1 +1,0 @@
-#Irradiation trend data {This line is for comments and is ignored}
