@@ -491,6 +491,7 @@ class MainWindow:
         if E_name.get().replace(' ','') != '' and E_name.get() not in reserved_names:
             os.rename(os.path.join(folder,f'{box.get()}{ext}'), os.path.join(folder,f'{E_name.get()}{ext}'))
             os.rename(os.path.join(folder,f'{box.get()}_log.txt'), os.path.join(folder,f'{E_name.get()}_log.txt'))
+            os.rename(os.path.join(folder,f'{box.get()}.pkl'), os.path.join(folder,f'{E_name.get()}.pkl'))
             box['values'] = [filename[:-len(ext)] for filename in os.listdir(folder) if filename[-len(ext):] == ext]
             box.set(E_name.get())
             NAA.calibration.name = E_name.get()
