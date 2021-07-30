@@ -443,7 +443,8 @@ class MainWindow:
             Ins = tk.Toplevel(parent)
             Ins.resizable(False, False)
             Ins.geometry(f'{width}x{height}+{xpos}+{ypos+height}')
-            Ins.overrideredirect(True)
+            if sys.platform != 'darwin':
+                Ins.overrideredirect(True)
             E_name = tk.Entry(Ins)
             E_name.pack(fill=tk.X)
             E_name.delete(0, tk.END)
@@ -475,7 +476,8 @@ class MainWindow:
             Ins = tk.Toplevel(parent)
             Ins.resizable(False, False)
             Ins.geometry(f'{width}x{height}+{xpos}+{ypos+height}')
-            Ins.overrideredirect(True)
+            if sys.platform != 'darwin':
+                Ins.overrideredirect(True)
             E_name = tk.Entry(Ins)
             E_name.pack(fill=tk.X)
             E_name.delete(0, tk.END)
@@ -1533,7 +1535,8 @@ class IrradiationWindow:
         cwidth, xpos, ypos = irradiation_date_label.winfo_width(), irradiation_date_label.winfo_rootx(), irradiation_date_label.winfo_rooty()
         TempTL = tk.Toplevel(irradiation_date_label)
         TempTL.resizable(False, False)
-        TempTL.overrideredirect(True)
+        if sys.platform != 'darwin':
+            TempTL.overrideredirect(True)
         day, month, year, hour, minute, second = self.irr_date.day, self.irr_date.month, self.irr_date.year, self.irr_date.hour, self.irr_date.minute, self.irr_date.second
         TempTLF = tk.Frame(TempTL, background='#A3A3A3', bd=3)
         DaySpin = tk.Spinbox(TempTLF, from_=1, to=31, width=3, increment=1)
@@ -1822,7 +1825,8 @@ class DatabasesWindow:
                 cwidth, xpos, ypos = certificate_date_label.winfo_width(), certificate_date_label.winfo_rootx(), certificate_date_label.winfo_rooty()
                 TempTL = tk.Toplevel(certificate_date_label)
                 TempTL.resizable(False, False)
-                TempTL.overrideredirect(True)
+                if sys.platform != 'darwin':
+                    TempTL.overrideredirect(True)
                 day, month, year, hour, minute, second = self.actual_source.datetime.day, self.actual_source.datetime.month, self.actual_source.datetime.year, self.actual_source.datetime.hour, self.actual_source.datetime.minute, self.actual_source.datetime.second
                 TempTLF = tk.Frame(TempTL, background='#A3A3A3', bd=3)
                 DaySpin = tk.Spinbox(TempTLF, from_=1, to=31, width=3, increment=1)
@@ -4708,7 +4712,8 @@ class DetectorCharacterizationWindow:
         Ins = tk.Toplevel(parent)
         Ins.resizable(False, False)
         Ins.geometry(f'{width}x{height}+{xpos}+{ypos+height}')
-        Ins.overrideredirect(True)
+        if sys.platform != 'darwin':
+            Ins.overrideredirect(True)
         distance = tk.Spinbox(Ins, from_=0.0, to=300.0, increment=0.1)
         distance.pack(fill=tk.X)
         distance.delete(0, tk.END)
@@ -6287,7 +6292,8 @@ class FluxEvaluationWindow:
         cwidth, xpos, ypos = irradiation_date_label.winfo_width(), irradiation_date_label.winfo_rootx(), irradiation_date_label.winfo_rooty()
         TempTL = tk.Toplevel(irradiation_date_label)
         TempTL.resizable(False, False)
-        TempTL.overrideredirect(True)
+        if sys.platform != 'darwin':
+            TempTL.overrideredirect(True)
         day, month, year, hour, minute, second = self.date.day, self.date.month, self.date.year, self.date.hour, self.date.minute, self.date.second
         TempTLF = tk.Frame(TempTL, background='#A3A3A3', bd=3)
         DaySpin = tk.Spinbox(TempTLF, from_=1, to=31, width=3, increment=1)
@@ -7544,7 +7550,8 @@ class FluxGradientEvaluationWindow:
         cwidth, xpos, ypos = irradiation_date_label.winfo_width(), irradiation_date_label.winfo_rootx(), irradiation_date_label.winfo_rooty()
         TempTL = tk.Toplevel(irradiation_date_label)
         TempTL.resizable(False, False)
-        TempTL.overrideredirect(True)
+        if sys.platform != 'darwin':
+            TempTL.overrideredirect(True)
         day, month, year, hour, minute, second = self.date.day, self.date.month, self.date.year, self.date.hour, self.date.minute, self.date.second
         TempTLF = tk.Frame(TempTL, background='#A3A3A3', bd=3)
         DaySpin = tk.Spinbox(TempTLF, from_=1, to=31, width=3, increment=1)
