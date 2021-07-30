@@ -450,7 +450,8 @@ class MainWindow:
             E_name.insert(0, old_name)
             E_name.focus_force()
 
-            Ins.bind('<FocusOut>', lambda e='<FocusOut>': Ins.destroy())
+            if sys.platform != 'darwin':
+                Ins.bind('<FocusOut>', lambda e='<FocusOut>': Ins.destroy())
             E_name.bind('<Return>', lambda e='<Return>': self.check_accept_irradiation_rename(E_name, box, Ins, NAA, parent))
 
     def check_accept_irradiation_rename(self, E_name, box, Ins, NAA, parent, folder=os.path.join('data','irradiation')):
@@ -481,7 +482,8 @@ class MainWindow:
             E_name.insert(0, old_name)
             E_name.focus_force()
 
-            Ins.bind('<FocusOut>', lambda e='<FocusOut>': Ins.destroy())
+            if sys.platform != 'darwin':
+                Ins.bind('<FocusOut>', lambda e='<FocusOut>': Ins.destroy())
             E_name.bind('<Return>', lambda e='<Return>': self.check_accept_calibration_rename(E_name, box, Ins, NAA, parent))
     
     def check_accept_calibration_rename(self, E_name, box, Ins, NAA, parent, folder=os.path.join('data','characterization')):
@@ -1261,7 +1263,7 @@ class CreditsWindow:
         k0logo.pack(anchor=tk.NW, pady=5, padx=5)
         k0logo.image = logo_k0main
 
-        self.brief_text = "k0-INRIM software\nversion 1.5 (2021)\n\ncontacts:\nm.diluzio@inrim.it\n\nliterature:\nG D'Agostino et al 2020;\nMeas. Sci. Technol. 31 017002\ndoi: 10.1088/1361-6501/ab57c8"
+        self.brief_text = "k0-INRIM software\nversion 1.5 (2021)\n\ncontacts:\nm.diluzio@inrim.it\n\nliterature:\nG D'Agostino et al 2020;\nMeas. Sci. Technol. 31 017002\ndoi: 10.1088/1361-6501/ab57c8\n\nM Di Luzio et al 2020;\nMeas. Sci. Technol. 31 074006\ndoi: 10.1088/1361-6501/ab7ca8"
         self.contact_info_panel = tk.Label(left_side, width=23, text=self.brief_text, anchor=tk.W, justify=tk.LEFT)
         self.contact_info_panel.pack(anchor=tk.NW, fill=tk.X)
         left_side.grid(row=0, column=0, sticky=tk.NW)
