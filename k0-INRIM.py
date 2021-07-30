@@ -7335,12 +7335,14 @@ class FluxGradientEvaluationWindow:
                 proceed = False
                 ttext.append('- acquisition date of lower spectrum is before the end of irradiation!')
             if proceed == True:
-                ttext.append(f'Irradiation performed on {self.date.strftime("%d/%m/%Y %H:%M:%S")}\nAdopted emission for monitor: {monitor_CB.get()} keV\nCalibration: {self.calibration.name}, counting distance {self.calibration.reference_calibration.distance} mm on {self.calibration.detector} detector ({format(der*100,".2f")} % efficiency variability per mm of vertical displacement)\n')
+                ttext.append(f'Irradiation performed on {self.date.strftime("%d/%m/%Y %H:%M:%S")}\nAdopted emission for monitor: {monitor_CB.get()} keV\nCalibration: {self.calibration.name}, counting distance {self.calibration.reference_calibration.distance} mm on {self.calibration.detector} detector ({format(der,".1f")} mm inside detector to reach the maximum efficiency)\n')
                 ttext.append(f'- Monitor found on higher spectrum "{self.higher_spectrum.filename()}" ({format(np_hi,".0f")} net area counts with {format(unp_hi/np_hi*100,".2f")} % relative uncertainty)\n- Monitor found on lower spectrum "{self.lower_spectrum.filename()}" ({format(np_lo,".0f")} net area counts with {format(unp_lo/np_lo*100,".2f")} % relative uncertainty)\n- Distance between two monitor positions (ΔL) is {format(hi_deltal_in,".1f")} mm\n')
 
+                dref = deltal_monitor_distance.get()
+
                 ff, uuff, aa, uuaa = self.channel_data.loc[channel_CB.get(), ['f_value', 'unc_f_value', 'a_value', 'unc_a_value']]
-                Asp_lo = self.specific_count_rate(np_lo, self.lower_spectrum.real_time, self.lower_spectrum.live_time, lamb, td_lo, lo_mass_in, der, 0.0, lo_Gs_in, lo_Ge_in, ff, Q0, Er, aa)
-                Asp_hi = self.specific_count_rate(np_hi, self.higher_spectrum.real_time, self.higher_spectrum.live_time, lamb, td_hi, hi_mass_in, der, 0.0, hi_Gs_in, hi_Ge_in, ff, Q0, Er, aa)
+                Asp_lo = self.specific_count_rate(np_lo, self.lower_spectrum.real_time, self.lower_spectrum.live_time, lamb, td_lo, lo_mass_in, der, 0.0, lo_Gs_in, lo_Ge_in, ff, Q0, Er, aa, dref)
+                Asp_hi = self.specific_count_rate(np_hi, self.higher_spectrum.real_time, self.higher_spectrum.live_time, lamb, td_hi, hi_mass_in, der, 0.0, hi_Gs_in, hi_Ge_in, ff, Q0, Er, aa, dref)
                 # beta evaluation
                 self.beta = (Asp_hi / Asp_lo - 1) / hi_deltal_in
 
@@ -7351,10 +7353,10 @@ class FluxGradientEvaluationWindow:
                 for idx in range(len(original_values)):
                     comput_values[idx] = original_values[idx] + uncertainties[idx]
                     _np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _dd_lo, _gs_lo, _ge_lo, _np_hi, _tr_hi, _tl_hi, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, _dx = comput_values
-                    solplus = (self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa) / Asp_lo - self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa) / Asp_lo) / _dx
+                    solplus = (self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, dref) / Asp_lo - self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa, dref) / Asp_lo) / _dx
                     comput_values[idx] = original_values[idx] - uncertainties[idx]
                     _np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _dd_lo, _gs_lo, _ge_lo, _np_hi, _tr_hi, _tl_hi, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, _dx = comput_values
-                    solminus = (self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa) / Asp_lo - self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa) / Asp_lo) / _dx
+                    solminus = (self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, dref) / Asp_lo - self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa, dref) / Asp_lo) / _dx
                     comput_values[idx] = original_values[idx]
                     res.append((solplus-solminus) / (2*uncertainties[idx] + 1E-14))
                 res = np.array(res)
@@ -7398,8 +7400,11 @@ class FluxGradientEvaluationWindow:
             ttext = ['Issues were identified while checking for consistency of the input data; error messages are reported\n'] + ttext
             stext._update('\n'.join(ttext))
 
-    def specific_count_rate(self, _np, _tr, _tl, _lb, _td, _m, _der, _dd, _Gth, _Ge, _f, _Q0, _Er, _a):
-        return (_np * _tr) / (_tl * np.exp(-_lb*_td) * (1-np.exp(-_lb*_tr)) * _m * (1-_der*_dd) * (_Gth + _Ge / _f * ((_Q0 - 0.429)/(_Er**_a) + 0.429/((2*_a + 1) * 0.55**_a))))
+    #def specific_count_rate(self, _np, _tr, _tl, _lb, _td, _m, _der, _dd, _Gth, _Ge, _f, _Q0, _Er, _a):
+    #    return (_np * _tr) / (_tl * np.exp(-_lb*_td) * (1-np.exp(-_lb*_tr)) * _m * (1-_der*_dd) * (_Gth + _Ge / _f * ((_Q0 - 0.429)/(_Er**_a) + 0.429/((2*_a + 1) * 0.55**_a))))
+
+    def specific_count_rate(self, _np, _tr, _tl, _lb, _td, _m, _der, _dd, _Gth, _Ge, _f, _Q0, _Er, _a,_dref):
+        return (_np * _tr) / (_tl * np.exp(-_lb*_td) * (1-np.exp(-_lb*_tr)) * _m * ((_dref-_der)/(_dref+_dd-_der))**2 * (_Gth + _Ge / _f * ((_Q0 - 0.429)/(_Er**_a) + 0.429/((2*_a + 1) * 0.55**_a))))
 
     def g_discr(self,i):
         if i == 2.0:
