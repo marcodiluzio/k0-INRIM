@@ -3010,7 +3010,7 @@ class SettingsWindow:
         if NAA.settings_dict['database'] in variable_database['values']:
             variable_database.set(NAA.settings_dict['database'])
         gui_things.Label(parent, text='ΔE / keV', hint='tolerance energy to find matching database entries', hint_destination=explanation_bar).grid(row=1, column=0, padx=5, pady=2, sticky=tk.W)
-        variable_energy_tolerance = gui_things.FSlider(parent, decimals=1, label_width=4, resolution=0.1, from_=0.1, to=2.0, default=NAA.settings_dict['energy tolerance'])
+        variable_energy_tolerance = gui_things.FSlider(parent, decimals=2, label_width=4, resolution=0.05, from_=0.1, to=2.0, default=NAA.settings_dict['energy tolerance'])
         variable_energy_tolerance.grid(row=1, column=1, sticky=tk.E)
         gui_things.Label(parent, text='items per page', hint='lines displayed in peaklists windows, depends on screen size', hint_destination=explanation_bar).grid(row=2, column=0, padx=5, pady=2, sticky=tk.W)
         variable_page_height = gui_things.Slider(parent, resolution=1, label_width=4, from_=15, to=30, default=NAA.settings_dict['page height'])
