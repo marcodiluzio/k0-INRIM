@@ -132,6 +132,28 @@ class MainWindow:
         Buttons_frame = tk.Frame(M)
         nln = 0
         
+        #analysis name
+        tk.Label(Buttons_frame, text='Analysis name', anchor=tk.W).grid(row=nln, column=0, columnspan=3, sticky=tk.W)
+        nln += 1
+        logo_newanalysis_name = tk.PhotoImage(data=gui_things.newname)
+        B_new_irradiation = gui_things.Button(Buttons_frame, image=logo_newanalysis_name, hint='Modify analysis name!', hint_destination=M.infotask, command=lambda: self.go_to_changeanalysisname(M, NAA))
+        B_new_irradiation.grid(row=nln, column=0)
+        B_new_irradiation.image = logo_newanalysis_name
+        M.analysisname_combobox = ttk.Entry(Buttons_frame, width=30, state='readonly')
+        M.analysisname_combobox.grid(row=nln, column=1, padx=3)
+        #check load
+        if NAA.analysis_name is not None:
+            M.analysisname_combobox.configure(state='normal')
+            M.analysisname_combobox.delete(0,tk.END)
+            M.analysisname_combobox.insert(0, '#loaded: '+NAA.analysis_name)
+            M.analysisname_combobox.configure(state='readonly')
+        Buttons_frame.pack(anchor=tk.W, padx=5)
+
+        ttk.Separator(M, orient="horizontal").pack(anchor=tk.W, padx=5, pady=5, fill=tk.X, expand=True)
+
+        Buttons_frame = tk.Frame(M)
+        nln = 0
+        
         #irradiation
         tk.Label(Buttons_frame, text='Irradiation', anchor=tk.W).grid(row=nln, column=0, columnspan=3, sticky=tk.W)
         nln += 1
@@ -205,7 +227,7 @@ class MainWindow:
         logo_dsample = tk.PhotoImage(data=gui_things.flask)
         ttk.Separator(Buttons_frame, orient="vertical").grid(
             row=nln, column=6, sticky=tk.NS, padx=3)
-        B_background_definesample = gui_things.Button(Buttons_frame, image=logo_dsample, hint='Define sample!', hint_destination=M.infotask, command=lambda: self.go_to_sampledefinition(M, NAA, M.background_combobox, 'background'))
+        B_background_definesample = gui_things.Button(Buttons_frame, image=logo_dsample, hint='Define material!', hint_destination=M.infotask, command=lambda: self.go_to_sampledefinition(M, NAA, M.background_combobox, 'background'))
         B_background_definesample.grid(row=nln, column=7)
         B_background_definesample.image = logo_dsample
 
@@ -253,14 +275,14 @@ class MainWindow:
         B_standard_delete.configure(command=lambda : self.delete_spectrum_file(M.standard_combobox, NAA.standard_spectra, M.delete_selector_standard, M.standard_spectra, M.infotask))
         ttk.Separator(Buttons_frame, orient="vertical").grid(
             row=nln, column=6, sticky=tk.NS, padx=3)
-        B_standard_definesample = gui_things.Button(Buttons_frame, image=logo_dsample, hint='Define sample!', hint_destination=M.infotask, command=lambda: self.go_to_sampledefinition(M, NAA, M.standard_combobox, 'standard'))
+        B_standard_definesample = gui_things.Button(Buttons_frame, image=logo_dsample, hint='Define material!', hint_destination=M.infotask, command=lambda: self.go_to_sampledefinition(M, NAA, M.standard_combobox, 'standard'))
         B_standard_definesample.grid(row=nln, column=7)
         B_standard_definesample.image = logo_dsample
         #ttk.Separator(Buttons_frame, orient="vertical").grid(
         #    row=nln, column=8, sticky=tk.NS, padx=3)
-        B_standard_otherparameters = gui_things.Button(Buttons_frame, image=logo_settings, hint='Other parameters sample!', hint_destination=M.infotask, command=lambda: self.go_to_otherparameters(M, NAA, M.standard_combobox, 'standard'))
+        #B_standard_otherparameters = gui_things.Button(Buttons_frame, image=logo_settings, hint='Other parameters sample!', hint_destination=M.infotask, command=lambda: self.go_to_otherparameters(M, NAA, M.standard_combobox, 'standard'))
         #B_standard_otherparameters.grid(row=nln, column=9)
-        B_standard_otherparameters.image = logo_settings
+        #B_standard_otherparameters.image = logo_settings
         nln += 1
         R1 = tk.Radiobutton(Buttons_frame, text='', anchor=tk.W, value=0, variable=M.regular_calibration_variable)
         R1.grid(row=nln, column=0)
@@ -326,15 +348,15 @@ class MainWindow:
         B_sample_delete.configure(command=lambda : self.delete_spectrum_file(M.sample_combobox, NAA.sample_spectra, M.delete_selector_sample, M.sample_spectra, M.infotask))
         ttk.Separator(Buttons_frame, orient="vertical").grid(
             row=nln, column=6, sticky=tk.NS, padx=3)
-        B_sample_definesample = gui_things.Button(Buttons_frame, image=logo_dsample, hint='Define sample!', hint_destination=M.infotask, command=lambda: self.go_to_sampledefinition(M, NAA, M.sample_combobox,'sample'))
+        B_sample_definesample = gui_things.Button(Buttons_frame, image=logo_dsample, hint='Define material!', hint_destination=M.infotask, command=lambda: self.go_to_sampledefinition(M, NAA, M.sample_combobox,'sample'))
         B_sample_definesample.grid(row=nln, column=7)
         B_sample_definesample.image = logo_dsample
         #ttk.Separator(Buttons_frame, orient="vertical").grid(
         #    row=nln, column=8, sticky=tk.NS, padx=3)
         #logo_settings = tk.PhotoImage(data=gui_things.ggear)
-        B_sample_otherparameters = gui_things.Button(Buttons_frame, image=logo_settings, hint='Other parameters sample!', hint_destination=M.infotask, command=lambda: self.go_to_otherparameters(M, NAA, M.sample_combobox, 'sample'))
+        #B_sample_otherparameters = gui_things.Button(Buttons_frame, image=logo_settings, hint='Other parameters sample!', hint_destination=M.infotask, command=lambda: self.go_to_otherparameters(M, NAA, M.sample_combobox, 'sample'))
         #B_sample_otherparameters.grid(row=nln, column=9)
-        B_sample_otherparameters.image = logo_settings
+        #B_sample_otherparameters.image = logo_settings
         nln += 1
         R2 = tk.Radiobutton(Buttons_frame, text='', anchor=tk.W, value=1, variable=M.regular_calibration_variable)
         R2.grid(row=nln, column=0)
@@ -396,14 +418,6 @@ class MainWindow:
         B_elaborate_results = gui_things.Button(Buttons_frame, image=logo_elaborate_results, hint='Elaborate!', hint_destination=M.infotask, command=lambda: self.go_to_elaboration(M, NAA))
         B_elaborate_results.grid(row=nln, column=3)
         B_elaborate_results.image = logo_elaborate_results
-
-        ttk.Separator(Buttons_frame, orient="vertical").grid(
-            row=nln, column=4, sticky=tk.NS, padx=3)
-
-        logo_glance_results = tk.PhotoImage(data=gui_things.resulti)
-        B_glance_results = gui_things.Button(Buttons_frame, image=logo_glance_results, hint='Validation of results!', hint_destination=M.infotask, command=lambda: self.go_to_review_data(M))
-        B_glance_results.grid(row=nln, column=5)
-        B_glance_results.image = logo_glance_results
 
         Buttons_frame.pack(anchor=tk.W, padx=5)
 
@@ -510,6 +524,40 @@ class MainWindow:
                     spectrum.calibration.name = E_name.get()
             Ins.destroy()
             parent.infotask.configure(text='calibration name updated')
+        else:
+            parent.infotask.configure(text='invalid name, try another one')
+
+    def go_to_changeanalysisname(self, parent, NAA):
+        if NAA.analysis_name is not None:
+            old_name = NAA.analysis_name
+        else:
+            old_name = ''
+
+        width, height, xpos, ypos = parent.analysisname_combobox.winfo_width(), parent.analysisname_combobox.winfo_height(), parent.analysisname_combobox.winfo_rootx(), parent.analysisname_combobox.winfo_rooty()
+        Ins = tk.Toplevel(parent)
+        Ins.resizable(False, False)
+        Ins.geometry(f'{width}x{height}+{xpos}+{ypos+height}')
+        if sys.platform != 'darwin':
+            Ins.overrideredirect(True)
+        E_name = tk.Entry(Ins)
+        E_name.pack(fill=tk.X)
+        E_name.delete(0, tk.END)
+        E_name.insert(0, old_name)
+        E_name.focus_force()
+
+        if sys.platform != 'darwin':
+            Ins.bind('<FocusOut>', lambda e='<FocusOut>': Ins.destroy())
+        E_name.bind('<Return>', lambda e='<Return>': self.check_accept_analysis_rename(E_name, Ins, NAA, parent))
+
+    def check_accept_analysis_rename(self, E_name, Ins, NAA, parent):
+        if E_name.get().replace(' ','') != '' and E_name.get().replace(' ','') != NAA.analysis_name:
+            NAA.analysis_name = E_name.get()
+            parent.analysisname_combobox.configure(state='normal')
+            parent.analysisname_combobox.delete(0, tk.END)
+            parent.analysisname_combobox.insert(0, NAA.analysis_name)
+            parent.analysisname_combobox.configure(state='readonly')
+            Ins.destroy()
+            parent.infotask.configure(text='analysis name updated')
         else:
             parent.infotask.configure(text='invalid name, try another one')
 
@@ -680,26 +728,19 @@ class MainWindow:
         else:
             M.infotask.configure(text='no detector characterization is selected!')
 
-    def go_to_otherparameters(self, M, NAA, box, button='standard'):
-        #open the window to display the calibration information
-        if self.secondary_window is not None:
-            self.secondary_window.destroy()
-        idx = box.current()
-        if idx >= 0:
-            self.secondary_window = tk.Toplevel(M)
-            if button == 'sample':
-                OthercorrectionsWindow(self.secondary_window, NAA.sample_spectra, idx)
-            elif button == 'standard':
-                OthercorrectionsWindow(self.secondary_window, NAA.standard_spectra, idx)
-        else:
-            M.infotask.configure(text='no spectrum selected')
-
-    def go_to_review_data(self, M):
-        #open the window
-        if self.secondary_window is not None:
-            self.secondary_window.destroy()
-        self.secondary_window = tk.Toplevel(M)
-        StoredDataWindow(self.secondary_window)
+    # def go_to_otherparameters(self, M, NAA, box, button='standard'):
+    #     #open the window to display the calibration information
+    #     if self.secondary_window is not None:
+    #         self.secondary_window.destroy()
+    #     idx = box.current()
+    #     if idx >= 0:
+    #         self.secondary_window = tk.Toplevel(M)
+    #         if button == 'sample':
+    #             OthercorrectionsWindow(self.secondary_window, NAA.sample_spectra, idx)
+    #         elif button == 'standard':
+    #             OthercorrectionsWindow(self.secondary_window, NAA.standard_spectra, idx)
+    #     else:
+    #         M.infotask.configure(text='no spectrum selected')
 
     def go_to_sampledefinition(self, M, NAA, box, button='background'):
         #open the window to modify sample information
@@ -929,6 +970,9 @@ class SaveWindow:
         mframe = tk.Frame(parent)
         self.filesavename = tk.Entry(mframe)
         self.filesavename.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        if NAA.analysis_name is not None:
+            self.filesavename.delete(0, tk.END)
+            self.filesavename.insert(0, NAA.analysis_name)
         self.variable_date = tk.IntVar(parent)
         CB = tk.Checkbutton(mframe, text='date', variable=self.variable_date, onvalue=1, offvalue=0)
         CB.pack(side=tk.LEFT)
@@ -1041,205 +1085,465 @@ class LoadWindow:
                 main_script(saved_NAA)
 
 
-class StoredDataWindow:
-    def __init__(self, parent):
-        parent.title('Validation of results')
+class ValidationWindow:
+    def __init__(self, parent, dataset, analysis_name):
+        parent.title(f'Validation of results for {analysis_name}')
         parent.resizable(False, False)
-        self.data = naaobject._get_stored_data()
-        self.selection = naaobject._get_true_table(self.data)
 
-        Fm = tk.Frame(parent)
-        infobar = tk.Label(Fm, text='', anchor=tk.W)
-        tk.Label(Fm, text='channel').grid(row=0, column=0)
-        channel_values = ['']+list(set(self.data['channel']))
-        channel_CB = ttk.Combobox(Fm, values=channel_values, width=15, state='readonly')
-        channel_CB.grid(row=0, column=1, padx=5)
-        tk.Label(Fm, text='target').grid(row=0, column=2)
-        target_values = ['']+list(set(self.data['target']))
-        target_CB = ttk.Combobox(Fm, values=target_values, width=15, state='readonly')
-        target_CB.grid(row=0, column=3, padx=5)
+        self.subwindow = None
+        self.color_scheme = ['#000000', '#FFFFFF', '#A80000', '#3342C4', '#FFC400', '#9362C4', '#62BA27', '#FB6400', '#733381', '#85582C', '#DE5283', '#A4DDED']
+        self.show_legend = False
+        self.legend_positions = ('center', 'upper right', 'upper center', 'upper left', 'center left', 'lower left', 'lower center', 'lower right', 'right')
+        self.legend_position_index = 0
+        self.show_ticklabels = True
+        self.ticklabels = []
+        self.x1_grid = True
 
-        tk.Label(Fm, text='emitter').grid(row=0, column=4)
-        emitter_values = ['']
-        emitter_CB = ttk.Combobox(Fm, values=emitter_values, width=15, state='readonly')
-        emitter_CB.grid(row=0, column=5, padx=5)
+        binfoline = tk.Label(parent, text='')
 
-        today_reference = datetime.datetime.today()
-        dates = self.data['irradiation_date'].copy(deep=True)
-        dates.drop_duplicates(inplace=True)
-        dates = dates - today_reference
-        dates = [date.days for date in dates]
-        if dates == []:
-            dates = [0]
+        finformation = tk.Frame(parent)
+        tk.Label(finformation, text='end of irradiation:').grid(row=0, column=0, sticky=tk.W)
+        tk.Label(finformation, text=dataset.iloc[0,0].strftime("%d/%m/%Y %H:%M:%S")).grid(row=0, column=1, sticky=tk.W)
+        tk.Frame(finformation).grid(row=0, column=2, padx=15)
+        tk.Label(finformation, text='channel:').grid(row=0, column=3, sticky=tk.W)
+        tk.Label(finformation, text=dataset.iloc[0,1]).grid(row=0, column=4, sticky=tk.W)
+        tk.Frame(finformation).grid(row=0, column=5, padx=15)
+        tk.Label(finformation, text='duration:').grid(row=0, column=6, sticky=tk.W)
+        tk.Label(finformation, text=self.readable_time(dataset.iloc[0,4])).grid(row=0, column=7, sticky=tk.W)
+        tk.Frame(finformation).grid(row=0, column=8, padx=15)
 
-        datebackSlide = gui_things.FDiscreteSlider(Fm, decimals=0, values=dates, unit_format=' d')
-        datebackSlide.grid(row=1, column=0, columnspan=4, sticky=tk.EW)
-        tk.Label(Fm, text='today').grid(row=1, column=4, sticky=tk.W)
-        dateswitch_variable = tk.IntVar(parent)
-        dateswitch_variable.set(0)
-        CB_checkdate = tk.Checkbutton(Fm, offvalue=0, onvalue=1, variable=dateswitch_variable)
-        CB_checkdate.grid(row=1, column=5, sticky=tk.W)
+        finformation.pack(anchor=tk.W, padx=5, pady=5)
 
-        tk.Label(Fm, text='certificate').grid(row=2, column=0)
-        certificate_values = ['']+list(set(self.data['certificate']))
-        certificate_CB = ttk.Combobox(Fm, values=certificate_values, width=15, state='readonly')
-        certificate_CB.grid(row=2, column=1, padx=5)
+        ftext = tk.Frame(parent)
 
-        stext = gui_things.ScrollableText(Fm, height=20, width=71)
-        stext.grid(row=3, column=0, columnspan=6, sticky=tk.EW, pady=5)
+        tk.Label(ftext, text=f'{"target".ljust(8)}{"emitter".ljust(20)}{"w / g g-1".ljust(13)}{"u(w) / g g-1".ljust(15)}{"z / 1".ljust(9)}{"reference".ljust(15)}', anchor=tk.W, font=('Courier', 11)).grid(row=0, column=0, columnspan=6, sticky=tk.EW)
 
-        visual_frame = tk.Frame(Fm)
-        f = Figure(figsize=(4.5, 4))
-        ax_show_data = f.add_subplot(111)
-        Figur = tk.Frame(visual_frame)
-        Figur.pack(anchor=tk.CENTER, fill=tk.BOTH, expand=True)
-        canvas = FigureCanvasTkAgg(f, master=Figur)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        f.tight_layout()
-        canvas.draw()
-        visual_frame.grid(row=0, column=6, rowspan=4)
+        stext = gui_things.ScrollableText(ftext, data='\n'.join([f'{target.ljust(8)}{emitter.ljust(20)}{format(wvalue, ".2e").ljust(13)}{format(uwvalue, ".1e").ljust(15)}{format(zvalue, ".1f").ljust(9)}{self.shorten(reference_name).ljust(15)}' for target, emitter, wvalue, uwvalue, zvalue, reference_name in zip(dataset["target"], dataset["emitter"], dataset["value"], dataset["uncertainty"], dataset["z"], dataset["certificate"])]), height=20, width=80, font=('Courier', 11))
+        stext.grid(row=1, column=0, columnspan=6, sticky=tk.EW)
+        ftext.pack(anchor=tk.NW, padx=5, pady=5)
 
-        button_frame = tk.Frame(Fm)
-        logo_trim_dataset = tk.PhotoImage(data=gui_things.manygears)
-        B_trim_dataset = gui_things.Button(button_frame, image=logo_trim_dataset, hint='trim dataset!', hint_destination=infobar, command=lambda: self.manage_dataset(channel_CB, target_CB, emitter_CB, dateswitch_variable, datebackSlide, certificate_CB, today_reference, stext))
-        B_trim_dataset.pack(side=tk.LEFT)
-        B_trim_dataset.image = logo_trim_dataset
-        logo_display_dataset = tk.PhotoImage(data=gui_things.resulti)
-        B_display_dataset = gui_things.Button(button_frame, image=logo_display_dataset, hint='plot dataset!', hint_destination=infobar, command=lambda: self.plot_dataset(ax_show_data,f,canvas,infobar))
-        B_display_dataset.pack(side=tk.LEFT)
-        B_display_dataset.image = logo_display_dataset
-        logo_export_dataset = tk.PhotoImage(data=gui_things.xcell)
-        B_export_dataset = gui_things.Button(button_frame, image=logo_export_dataset, hint='export dataset!', hint_destination=infobar, command=lambda: self.export_dataset(parent,infobar))
-        B_export_dataset.pack(side=tk.LEFT)
-        B_export_dataset.image = logo_export_dataset
-        logo_delete_dataset = tk.PhotoImage(data=gui_things.none)
-        B_delete_dataset = gui_things.Button(button_frame, image=logo_delete_dataset, hint='delete dataset!', hint_destination=infobar, command=lambda: None)
-        B_delete_dataset.pack(side=tk.LEFT)
-        B_delete_dataset.image = logo_delete_dataset
-        self.selection_deletion = tk.IntVar(button_frame)
-        selection_frame = tk.Frame(button_frame)
-        R1 = tk.Radiobutton(selection_frame, text='selected', anchor=tk.W, value=0, variable=self.selection_deletion)
-        R1.pack(anchor=tk.W)
-        R2 = tk.Radiobutton(selection_frame, text='invert selection', anchor=tk.W, value=1, variable=self.selection_deletion)
-        R2.pack(anchor=tk.W)
-        selection_frame.pack(side=tk.LEFT, padx=3)
-        self.selection_deletion.set(0)
+        bframe = tk.Frame(parent)
+        logo_z_results = tk.PhotoImage(data=gui_things.resulti)
+        B_z_results = gui_things.Button(bframe, image=logo_z_results, hint='plot z values for all results!', hint_destination=binfoline, command=lambda: self.which_to_plot(parent, dataset))
+        B_z_results.pack(side=tk.LEFT)
+        B_z_results.image = logo_z_results
 
-        button_frame.grid(row=4, column=0, columnspan=6, sticky=tk.W)
-        infobar.grid(row=5, column=0, columnspan=6, sticky=tk.W)
-        Fm.pack(anchor=tk.W, padx=5, pady=5)
+        logo_elem_results = tk.PhotoImage(data=gui_things.graph)
+        B_elem_results = gui_things.Button(bframe, image=logo_elem_results, hint='plot per element agreement with reference!', hint_destination=binfoline, command=lambda: self.which_to_plot(parent, dataset, which='S'))
+        B_elem_results.pack(side=tk.LEFT)
+        B_elem_results.image = logo_elem_results
+        bframe.pack(anchor=tk.W, padx=5)
 
-        B_delete_dataset.configure(command=lambda : self.delete_dataset(stext,infobar, parent))
-        target_CB.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self._update_CB(target_CB, emitter_CB))
+        binfoline.pack(anchor=tk.W, padx=5)
 
-    def _update_CB(self, CB1, CB2):
-        if CB1.get() == '':
-            new_values = []
+    def readable_time(self, time, LIMIT1=120000, LIMIT2=3500):
+        if time > LIMIT1:
+            return f'{time/86400:.2f} d'
+        elif time > LIMIT2:
+            return f'{time/3600:.2f} h'
         else:
-            emitter_filter = self.data['target'] == CB1.get()
-            new_values = [''] + list(set(self.data[emitter_filter]['emitter']))
-        CB2['values'] = new_values
-        CB2.set('')
+            return f'{time:.0f} s'
 
-    def manage_dataset(self, channel_CB, target_CB, emitter_CB, dateswitch_variable, datebackSlide, certificate_CB, today, stext):
-        self.selection = naaobject._get_true_table(self.data)
-        conditions = []
-        if channel_CB.get() != '':
-            filter_channel = self.data['channel'] == channel_CB.get()
-            conditions.append(filter_channel)
-        if target_CB.get() != '':
-            filter_target = self.data['target'] == target_CB.get()
-            conditions.append(filter_target)
-        if emitter_CB.get() != '':
-            filter_target = self.data['emitter'] == emitter_CB.get()
-            conditions.append(filter_target)
-        if dateswitch_variable.get() == 1:
-            filter_date = self.data['irradiation_date'] >= today + datetime.timedelta(int(datebackSlide.get())-1)
-            conditions.append(filter_date)
-        if certificate_CB.get() != '':
-            filter_certificate = self.data['certificate'] == certificate_CB.get()
-            conditions.append(filter_certificate)
-        for filt in conditions:
-            self.selection = self.selection & filt
-        
-        spaces = [4,18,9,11]
-        if self.data[self.selection].empty:
-            head = ''
-            astext = 'no data satisfying the selected conditions'
-        else:
-            head = f'{"target".ljust(spaces[0]+spaces[1]," ")}{"value".rjust(spaces[2]," ")}{"zeta".rjust(spaces[2]," ")}{"irr.".rjust(spaces[2]," ")}{"channel".rjust(spaces[3]," ")}{"cert.".rjust(spaces[3]," ")}\n'
-            astext = '\n'.join([f'{row[0].ljust(spaces[0]," ")}{row[1].ljust(spaces[1]," ")}{format(row[2],".1e").rjust(spaces[2]," ")}{format(row[3],".1f").rjust(spaces[2]," ")}{self._set_irradiation(row[4]).rjust(spaces[2]," ")}{self._set_channel(row[5]).rjust(spaces[3]," ")}{self._set_channel(row[6]).rjust(spaces[3]," ")}' for row in zip(self.data[self.selection]['target'], self.data[self.selection]['emitter'], self.data[self.selection]['value'], self.data[self.selection]['z'], self.data[self.selection]['irradiation_time'], self.data[self.selection]['channel'], self.data[self.selection]['certificate'])])
-        stext._update(head + astext)
-
-    def _set_irradiation(self,item):
-        return f'{item/3600:.1f} h'
-
-    def _set_channel(self,item):
-        if len(item) > 11:
-            return f'{item[:10]}.'
+    def shorten(self, item, limit=15):
+        if len(item) >= limit:
+            return f'{item[:limit-2]}..'
         else:
             return item
 
-    def plot_dataset(self,ax_show_data,f,canvas,infobar,ptype='bars'):
-        max_limit = 25
-        if np.sum(self.selection) >= 1000:
-            infobar.configure(text='not a good idea, more than 2000 values selected')
-        elif np.sum(self.selection) == 0:
-            infobar.configure(text='no values to plot')
+    def which_to_plot(self, parent, dataset, which='Z'):
+        if self.subwindow is not None:
+            self.subwindow.destroy()
+        self.subwindow = tk.Toplevel(parent)
+        if which == 'Z':
+            self.subwindow.title('Plot of z values')
+            self.plot_z(dataset)
         else:
-            if ptype == 'bars':
-                if len(set(self.data[self.selection]['emitter'])) != 1 and len(set(self.data[self.selection]['certificate'])) == 1:
-                    tkl = list(self.data[self.selection]['emitter'])
-                elif len(set(self.data[self.selection]['certificate'])) != 1:
-                    tkl = list(self.data[self.selection]['certificate'])
-                elif len(set(self.data[self.selection]['target'])) != 1:
-                    tkl = list(self.data[self.selection]['target'])
-                else:
-                    tkl = list(self.data[self.selection]['target'])
-                y = np.array(self.data[self.selection]['z'])
-                x = np.arange(1,len(y)+1)
-                if len(y) > max_limit:
-                    x, y, tkl = x[-max_limit:], y[-max_limit:], tkl[-max_limit:]
-                #print(x, y, tkl)
-                f.clear()
-                ax_show_data = f.add_subplot(111)
-                ax_show_data.bar(x, y, color='#8fd076', edgecolor='k', tick_label=[f'{item}' for item in x])
-                ax_show_data.axhline(y=2, xmin=0, xmax=1, linestyle='--', linewidth=0.5, color='b')
-                ax_show_data.axhline(y=-2, xmin=0, xmax=1, linestyle='--', linewidth=0.5, color='b')
-                ax_show_data.axhline(y=3, xmin=0, xmax=1, linestyle='-', linewidth=0.75, color='r')
-                ax_show_data.axhline(y=-3, xmin=0, xmax=1, linestyle='-', linewidth=0.75, color='r')
-                ax_show_data.set_ylim(-4,4)
-                ax_show_data.set_xlim(x[0]-0.5,x[-1]+0.5)
-                #, rotation=90
-                ax_show_data.set_ylabel(r'$z_\mathrm{score}$ / 1')
-                f.tight_layout()
-                canvas.draw()
+            self.subwindow.title('Plot of agreements with reference')
+            self.plot_s(dataset)
 
-    def export_dataset(self,parent,infobar):
-        filetypes = (('Microsoft Excel file','*.xlsx'),)
-        filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
-        if filename != '' and filename is not None:
-            if filename[-len('.xlsx'):] != '.xlsx':
-                filename += '.xlsx'
-            columns = ['irradiation_date', 'channel', 'f', 'a', 'irradiation_time', 'target', 'emitter', 'value', 'uncertainty', 'DL', 'z', 'certificate']
-            self.data[self.selection].to_excel(filename, columns=columns, index=False, header=['irradiation_date', 'channel', 'f / 1', 'a / 1', 'irradiation_time / s', 'target', 'emitter', 'x / g g-1', 'u(x) / g g-1', 'DL / g g-1', 'zeta_score / 1', 'certificate'])
-            infobar.configure(text='selection saved to file')
+    def plot_z(self, dataset):
+        visual_frame = tk.Frame(self.subwindow)
+        fig = Figure(figsize=(8, 5.5), dpi=100)
+        axes_Q = fig.add_subplot(111)
+        ax2 = None
+        Figur = tk.Frame(visual_frame)
+        Figur.pack(anchor=tk.CENTER, fill=tk.BOTH, expand=True)
+        canvas = FigureCanvasTkAgg(fig, master=Figur)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.draw_plotz(dataset, axes_Q, fig, canvas)
+        visual_frame.pack(anchor=tk.NW, fill=tk.BOTH, expand=True)
+        infolabel = tk.Label(self.subwindow)
+        button_frame = tk.Frame(self.subwindow)
+
+        ylimit_setter = gui_things.FSlider(button_frame, decimals=1, default=5, hint='move the limits of y axis', hint_destination=infolabel, from_=2.5, to=7.0, resolution=0.5)
+        ylimit_setter.pack(side=tk.LEFT)
+        logo_confirm = tk.PhotoImage(data=gui_things.beye)
+        B_adjust_yaxis = gui_things.Button(button_frame, image=logo_confirm, hint='adjust left y axis', hint_destination=infolabel, command=lambda: self.adjust_ylim(axes_Q, fig, canvas, ylimit_setter))
+        B_adjust_yaxis.pack(side=tk.LEFT)
+        B_adjust_yaxis.image = logo_confirm
+        logo_tight = tk.PhotoImage(data=gui_things.tight_layout)
+        B_tight_axis = gui_things.Button(button_frame, image=logo_tight, hint='reset axes when resized', hint_destination=infolabel, command=lambda: self.tight(fig, canvas))
+        B_tight_axis.pack(side=tk.LEFT)
+        B_tight_axis.image = logo_tight
+        logo_legend = tk.PhotoImage(data=gui_things.legend)
+        B_show_legend = gui_things.Button(button_frame, image=logo_legend, hint='show/hide the legend', hint_destination=infolabel, command=lambda: self.legend(axes_Q, fig, canvas))
+        B_show_legend.pack(side=tk.LEFT)
+        B_show_legend.image = logo_legend
+        logo_ticks = tk.PhotoImage(data=gui_things.ticks)
+        B_show_ticks = gui_things.Button(button_frame, image=logo_ticks, hint='show/hide ticklabels', hint_destination=infolabel, command=lambda: self.tickinfos(axes_Q, fig, canvas))
+        B_show_ticks.pack(side=tk.LEFT)
+        B_show_ticks.image = logo_ticks
+        logo_save_figure = tk.PhotoImage(data=gui_things.sparadrap)
+        B_save = gui_things.Button(button_frame, image=logo_save_figure, hint='save figure', hint_destination=infolabel, command = lambda : self.savefigure(fig, self.subwindow, infolabel))
+        B_save.pack(side=tk.LEFT)
+        B_save.image = logo_save_figure
+
+        button_frame.pack(anchor=tk.W, padx=5)
+        infolabel.pack(anchor=tk.W, padx=5)
+
+    def adjust_ylim(self, ax, fig, canvas, yslider):
+        ax.set_ylim(-yslider.get(), yslider.get())
+        self.tight(fig, canvas)
+
+    def tight(self, fig, canvas):
+        fig.tight_layout()
+        canvas.draw()
+
+    def legend(self, ax, fig, canvas):
+        if self.show_legend:
+            self.show_legend = False
+            ax.legend().remove()
         else:
-            infobar.configure(text='invalid filename')
+            self.show_legend = True
+            try:
+                self.legend_position_index += 1
+                self.legend_positions[self.legend_position_index]
+            except IndexError:
+                self.legend_position_index = 0
+            ax.legend(loc=self.legend_positions[self.legend_position_index])
+        self.tight(fig, canvas)
 
-    def delete_dataset(self,stext,infobar, parent):
-        if messagebox.askyesno(title='Remove validation data', message='\nAre you sure to remove all data from selection?\n', parent=parent):
-            if self.selection_deletion.get() == 0:
-                df = self.data[~self.selection].copy(deep=True)
-                naaobject._update_analysis_data(df)
-                head = ''
-                astext = 'no data satisfying the selected conditions'
-                stext._update(head + astext)
+    def tickinfos(self, ax, fig, canvas):
+        if self.show_ticklabels:
+            self.show_ticklabels = False
+            ax.set_xticklabels(['' for item in self.ticklabels])
+        else:
+            self.show_ticklabels = True
+            ax.set_xticklabels(self.ticklabels, rotation=90)
+        self.tight(fig, canvas)
+
+    def savefigure(self, fig, parent, infolabel):
+        filetypes = (('PNG image','*.png'),)
+        filename = asksaveasfilename(parent=parent, title='Save figure',filetypes=filetypes)
+        if filename != '':
+            fig.savefig(filename, dpi=1000)
+        infolabel.configure(text='file saved')
+
+    def draw_plotz(self, dataset, ax1, fig, canvas, ylim=5, ax2=None):
+        ax1.clear()
+        if ax2 is not None:
+            ax2.clear()
+
+        origins = set(dataset['certificate'])
+
+        i_range = len(self.ticklabels)
+        for i in range(i_range):
+            self.ticklabels.pop(0)
+
+        target_labels = []
+        n_index = 0
+        n_color = 0
+
+        for orig in sorted(origins):
+            s_origin = dataset['certificate'] == orig
+            part_data = dataset[s_origin]
+            if len(part_data.index) > 0:
+                try:
+                    facecolor = self.color_scheme[n_color]
+                except IndexError:
+                    n_color = 0
+                    facecolor = self.color_scheme[n_color]
+                x1 = np.arange(n_index, n_index + len(part_data['target']))
+                ax1.bar(x1, part_data['z'], color=facecolor, edgecolor='#000000', linewidth=0.5, alpha=0.85, label=orig)
+                n_color += 1
+                try:
+                    n_index = np.max(x1) + 1
+                except TypeError:
+                    pass
+                self.ticklabels += list(part_data['emitter'].astype(str) + ' ' + part_data['sample'].astype(str))
+                target_labels += list(part_data['target'])
+
+        
+        outliers = (dataset['z'] > 3) | (dataset['z'] < -3)
+        questionable = np.sum(((dataset['z'] > 2) & (dataset['z'] < 3)) | ((dataset['z'] < -2) & (dataset['z'] > -3)))
+        if len(dataset['z'].index) == 0:
+            title = f"{len(dataset['z'])} data"
+        else:
+            title = f"{len(dataset['z'])} data, {np.sum(outliers)} outliers, {questionable} questionable values (" + r'$2\leq \left|x\right| \leq 3$' + f')'#, average = {np.average(dataset[~outliers]["z"]):.2f}'
+
+        x_concat = np.arange(0, n_index)
+        xmax = len(x_concat)
+        if xmax == 0:
+            xmax = 1
+        xx = np.arange(-1,xmax+1)
+
+        ax1.fill_between(xx, -3, -2, facecolor='green', alpha=0.3)
+        ax1.fill_between(xx, 3, 2, facecolor='green', alpha=0.3)
+        ax1.set_xlim(np.min(xx),np.max(xx))
+        ax1.set_xticks(x_concat)
+        ax1.set_xticklabels(self.ticklabels, rotation=90)
+
+        rects = ax1.patches
+
+        for rect, label in zip(rects, target_labels):
+            height = rect.get_height()
+            if height > ylim - ylim/10:
+                where = (rect.get_x() + rect.get_width() / 2, ylim -0.5)
+            elif height < -ylim + ylim/10:
+                where = (rect.get_x() + rect.get_width() / 2, -ylim + 0.5)
+            elif height > 0:
+                where = (rect.get_x() + rect.get_width() / 2, height + 0.25)
             else:
-                df = self.data[self.selection].copy(deep=True)
-                naaobject._update_analysis_data(df)
-            infobar.configure(text='selection deleted from disk, restart this window to work with the updated database')
+                where = (rect.get_x() + rect.get_width() / 2, height - 0.5)
+            ax1.text(where[0], where[1], label, ha="center", va="bottom", rotation=90)
+
+        ax1.set_ylim(-ylim, ylim)
+        ax1.fill_between(xx, -3, -7, facecolor='red', alpha=0.4)
+        ax1.fill_between(xx, 3, 7, facecolor='red', alpha=0.4)
+        ax1.set_title(title)
+        ax1.set_ylabel(r'$z_\mathrm{score}$ / 1')
+
+        self.tight(fig,canvas)
+
+    def button_minus(self, element_list, dataset, axes_Q, ax2, fig, canvas, B_left, B_right):
+        plus = element_list[self.element_index]
+        if self.element_index == 0:
+            self.element_index = len(element_list) - 1
+        else:
+            self.element_index -= 1
+        element = element_list[self.element_index]
+        self.draw_plots(element, dataset, axes_Q, ax2, fig, canvas)
+
+        go_to_minus, go_to_plus = f'go to {element_list[self.element_index - 1]}', f'go to {plus}'
+
+        B_left.hint = go_to_minus
+        B_right.hint = go_to_plus
+        B_left.event_generate("<Leave>")
+        B_left.event_generate("<Enter>")
+
+    def button_plus(self, element_list, dataset, axes_Q, ax2, fig, canvas, B_left, B_right):
+        minus = element_list[self.element_index]
+        if self.element_index + 1 == len(element_list):
+            self.element_index = 0
+        else:
+            self.element_index += 1
+        element = element_list[self.element_index]
+        self.draw_plots(element, dataset, axes_Q, ax2, fig, canvas)
+
+        try:
+            plus = element_list[self.element_index + 1]
+        except IndexError:
+            plus = element_list[0]
+
+        go_to_minus, go_to_plus = f'go to {minus}', f'go to {plus}'
+
+        B_left.hint = go_to_minus
+        B_right.hint = go_to_plus
+        B_right.event_generate("<Leave>")
+        B_right.event_generate("<Enter>")
+
+    def switch_axis(self, ax1, ax2, fig, canvas):
+        if self.x1_grid:
+            self.x1_grid = False
+            ax1.grid(False, axis='y')
+            ax2.grid(True, axis='y')
+        else:
+            self.x1_grid = True
+            ax1.grid(True, axis='y')
+            ax2.grid(False, axis='y')
+        self.tight(fig, canvas)
+
+    def plot_s(self, dataset):
+        self.show_ticklabels = True
+        element_list = sorted(set(dataset['target']))
+        self.element_index = 0
+        element = element_list[self.element_index]
+
+        visual_frame = tk.Frame(self.subwindow)
+        fig = Figure(figsize=(8, 5.5), dpi=100)
+        axes_Q = fig.add_subplot(111)
+        ax2 = axes_Q.twinx()
+        Figur = tk.Frame(visual_frame)
+        Figur.pack(anchor=tk.CENTER, fill=tk.BOTH, expand=True)
+        canvas = FigureCanvasTkAgg(fig, master=Figur)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.draw_plots(element, dataset, axes_Q, ax2, fig, canvas)
+        visual_frame.pack(anchor=tk.NW, fill=tk.BOTH, expand=True)
+        infolabel = tk.Label(self.subwindow)
+        button_frame = tk.Frame(self.subwindow)
+        try:
+            plus = element_list[self.element_index + 1]
+        except IndexError:
+            plus = element_list[0]
+        go_to_minus, go_to_plus = f'go to {element_list[self.element_index - 1]}', f'go to {plus}'
+
+        logo_previous_plot = tk.PhotoImage(data=gui_things.previous)
+        B_left = gui_things.Button(button_frame, image=logo_previous_plot, hint=go_to_minus, hint_destination=infolabel)
+        B_left.pack(side=tk.LEFT)
+        B_left.image = logo_previous_plot
+        logo_following_plot = tk.PhotoImage(data=gui_things.following)
+        B_right = gui_things.Button(button_frame, image=logo_following_plot, hint=go_to_plus, hint_destination=infolabel)
+        B_right.pack(side=tk.LEFT)
+        B_right.image = logo_following_plot
+
+        logo_switch = tk.PhotoImage(data=gui_things.grid)
+        B_switch_axis = gui_things.Button(button_frame, image=logo_switch, hint='switch axis of y grid', hint_destination=infolabel, command=lambda: self.switch_axis(axes_Q, ax2, fig, canvas))
+        B_switch_axis.pack(side=tk.LEFT)
+        B_switch_axis.image = logo_switch
+
+        BF_opt = tk.Frame(button_frame)
+        logo_tight_axis = tk.PhotoImage(data=gui_things.ddistance)
+        B_tight_axis = gui_things.Button(button_frame, image=logo_tight_axis, hint='adjust right axis limits', hint_destination=infolabel, command = lambda : self.get_tight_axis(axes_Q, ax2, fig, canvas, BF_opt, infolabel))
+        B_tight_axis.pack(side=tk.LEFT)
+        B_tight_axis.image = logo_tight_axis
+        BF_opt.pack(side=tk.LEFT)
+
+        logo_tight = tk.PhotoImage(data=gui_things.tight_layout)
+        B_tight_axis = gui_things.Button(button_frame, image=logo_tight, hint='reset axes when resized', hint_destination=infolabel, command=lambda: self.tight(fig, canvas))
+        B_tight_axis.pack(side=tk.LEFT)
+        B_tight_axis.image = logo_tight
+        logo_legend = tk.PhotoImage(data=gui_things.legend)
+        B_show_legend = gui_things.Button(button_frame, image=logo_legend, hint='show/hide the legend', hint_destination=infolabel, command=lambda: self.legend(axes_Q, fig, canvas))
+        B_show_legend.pack(side=tk.LEFT)
+        B_show_legend.image = logo_legend
+        logo_ticks = tk.PhotoImage(data=gui_things.ticks)
+        B_show_ticks = gui_things.Button(button_frame, image=logo_ticks, hint='show/hide ticklabels', hint_destination=infolabel, command=lambda: self.tickinfos(axes_Q, fig, canvas))
+        B_show_ticks.pack(side=tk.LEFT)
+        B_show_ticks.image = logo_ticks
+        logo_save_figure = tk.PhotoImage(data=gui_things.sparadrap)
+        B_save = gui_things.Button(button_frame, image=logo_save_figure, hint='save figure', hint_destination=infolabel, command = lambda : self.savefigure(fig, self.subwindow, infolabel))
+        B_save.pack(side=tk.LEFT)
+        B_save.image = logo_save_figure
+
+        button_frame.pack(anchor=tk.SW, padx=5)
+        infolabel.pack(anchor=tk.W, padx=5)
+
+        B_left.configure(command = lambda : self.button_minus(element_list, dataset, axes_Q, ax2, fig, canvas, B_left, B_right))
+        B_right.configure(command = lambda : self.button_plus(element_list, dataset, axes_Q, ax2, fig, canvas, B_left, B_right))
+
+    def get_tight_axis(self, ax, ax2, fig, canvas, BF_opt, infolabel):
+        cdn = BF_opt.winfo_children()
+        for i in cdn:
+            i.destroy()
+        SP_up = tk.Entry(BF_opt, width=8)
+        SP_up.grid(row=0, column=0, padx=3)
+        SP_up.delete(0,tk.END)
+        SP_up.insert(0,f'{ax2.get_ylim()[1]:.2f}')
+        SP_down = tk.Entry(BF_opt, width=8)
+        SP_down.grid(row=1, column=0, padx=3)
+        SP_down.delete(0,tk.END)
+        SP_down.insert(0,f'{ax2.get_ylim()[0]:.2f}')
+        logo_axis_figure = tk.PhotoImage(data=gui_things.beye)
+        BT_conf = gui_things.Button(BF_opt, image=logo_axis_figure, hint='set new axis limits', hint_destination=infolabel, command = lambda : self.set_new_axis(ax, ax2, fig, canvas, BF_opt, SP_up, SP_down))
+        BT_conf.grid(row=0, column=1, rowspan=2)
+        BT_conf.image = logo_axis_figure
+
+    def set_new_axis(self, ax, ax2, fig, canvas, BF_opt, upE, dpwnE):
+        try:
+            new_up = float(upE.get())
+        except TypeError:
+            new_up = ax2.get_ylim()[1]
+        try:
+            new_down = float(dpwnE.get())
+        except TypeError:
+            new_up = ax2.get_ylim()[0]
+        llow, lhigh = ax.get_ylim()
+        rlow, rhigh = ax2.get_ylim()
+        reference = llow / (rlow/100 + 1)
+        ax2.set_ylim(new_down, new_up)
+        ax2.set_yticklabels([f'{item:.1f} %' for item in ax2.get_yticks()])
+        ax.set_ylim(reference*(new_down/100 +1), reference*(new_up/100 +1))
+        self.tight(fig, canvas)
+        cdn = BF_opt.winfo_children()
+        for i in cdn:
+            i.destroy()
+        BF_opt.configure(width=1)
+
+    def draw_plots(self, element, dataset, ax1, ax2, fig, canvas, how_many_sigma=2):
+        ax1.clear()
+        if ax2 is not None:
+            ax2.clear()
+
+        subzdata_filter = dataset['target'] == element
+        subzdata = dataset[subzdata_filter]
+
+        origins = set(dataset['certificate'])
+
+        i_range = len(self.ticklabels)
+        for i in range(i_range):
+            self.ticklabels.pop(0)
+
+        n_index = 0
+        n_color = 0
+
+        title = f'{element}'
+
+        for orig in sorted(origins):
+            s_origin = subzdata['certificate'] == orig
+            part_data = subzdata[s_origin]
+            if len(part_data.index) > 0:
+                try:
+                    markerfacecolor = self.color_scheme[n_color]
+                except IndexError:
+                    n_color = 0
+                    markerfacecolor = self.color_scheme[n_color]
+                x1 = np.arange(n_index, n_index + len(part_data['target']))
+                ax1.errorbar(x1, part_data['value'], yerr=[part_data['uncertainty']*how_many_sigma, part_data['uncertainty']*how_many_sigma], linestyle='', marker='o', markersize=4, color='k', elinewidth=0.5, markerfacecolor=markerfacecolor, label=orig)
+
+                x_comp = np.linspace(np.min(x1)-0.25, np.max(x1)+0.25, 2)
+                yw, yuw = part_data.iloc[0,13], part_data.iloc[0,14]
+                ax1.fill_between(x_comp, yw-how_many_sigma*yuw, yw+how_many_sigma*yuw, facecolor='#A7DB8C', alpha=0.3)
+
+                n_color += 1
+                try:
+                    n_index = np.max(x1) + 1
+                except TypeError:
+                    pass
+                self.ticklabels += list(part_data['emitter'].astype(str) + ' ' + part_data['sample'].astype(str))#list(part_data['emitter'])
+
+        x_concat = np.arange(0, n_index)
+        xmax = len(x_concat)
+        if xmax == 0:
+            xmax = 1
+        xx = np.arange(-1,xmax+1)
+
+        ax1.set_title(title)
+        ax1.set_ylabel(r'$w$ / g g$^{-1}$ ($k=2$)')
+
+        ax1.set_xlim(np.min(xx),np.max(xx))
+        ax1.set_xticks(x_concat)
+        if self.show_ticklabels:
+            ax1.set_xticklabels(self.ticklabels, rotation=90)
+        else:
+            ax1.set_xticklabels(['' for item in self.ticklabels])
+
+        if ax2 is not None:
+            ref_data = subzdata.drop_duplicates(subset=['w', 'uw'])
+            reference = np.average(ref_data['w'], weights=1/np.power(ref_data['uw'],2))
+            low_lim, up_lim = ax1.get_ylim()
+            ax2.set_ylim((low_lim/reference - 1)*100, (up_lim/reference - 1)*100)
+            ax2.set_yticklabels([f'{item:.1f} %' for item in ax2.get_yticks()])
+            ax2.set_ylabel(r'variability to $\bar{w}_\mathrm{reference}$ / 1')
+        if self.x1_grid:
+            ax1.grid(True, axis='y')
+            ax2.grid(False, axis='y')
+        else:
+            ax1.grid(False, axis='y')
+            ax2.grid(True, axis='y')
+
+        self.tight(fig,canvas)
 
 
 class CreditsWindow:
@@ -1351,11 +1655,17 @@ class IrradiationWindow:
         tk.Label(mframe, text='irradiation code', anchor=tk.W).grid(row=0, column=0, sticky=tk.W)
         E_irradiation_code = tk.Entry(mframe, width=20)
         E_irradiation_code.grid(row=0, column=1, columnspan=2, sticky=tk.EW)
+        if NAA.irradiation is not None:
+            E_irradiation_code.delete(0, tk.END)
+            E_irradiation_code.insert(0, NAA.irradiation.irradiation_code)
         tk.Frame(mframe).grid(row=1, column=0, pady=5)
         tk.Label(mframe, text='channel name', anchor=tk.W).grid(row=2, column=0, sticky=tk.W)
         CB_channel_name = ttk.Combobox(mframe, width=20)
         CB_channel_name['values'] = ch_list
         CB_channel_name.grid(row=2, column=1, columnspan=2, sticky=tk.EW)
+        if NAA.irradiation is not None:
+            CB_channel_name.delete(0, tk.END)
+            CB_channel_name.insert(0, NAA.irradiation.channel_name)
         tk.Label(mframe, text='x').grid(row=3, column=1, pady=3)
         tk.Label(mframe, text='u(x)').grid(row=3, column=2)
         tk.Label(mframe, text='f / 1', anchor=tk.W).grid(row=4, column=0, sticky=tk.W)
@@ -1363,6 +1673,11 @@ class IrradiationWindow:
         SB_f_value.grid(row=4, column=1)
         SB_unc_f_value = tk.Spinbox(mframe, from_=0.0, to=500, increment=0.1, width=10)
         SB_unc_f_value.grid(row=4, column=2)
+        if NAA.irradiation is not None:
+            SB_f_value.delete(0, tk.END)
+            SB_f_value.insert(0, f'{NAA.irradiation.f_value:.3f}')
+            SB_unc_f_value.delete(0, tk.END)
+            SB_unc_f_value.insert(0, f'{NAA.irradiation.unc_f_value:.3f}')
         tk.Label(mframe, text='α / 1', anchor=tk.W).grid(row=5, column=0, sticky=tk.W)
         SB_a_value = tk.Spinbox(mframe, from_=-1.0000, to=1.0000, increment=0.0001, width=10)
         SB_a_value.grid(row=5, column=1)
@@ -1372,6 +1687,11 @@ class IrradiationWindow:
         SB_unc_a_value.grid(row=5, column=2)
         SB_unc_a_value.delete(0, tk.END)
         SB_unc_a_value.insert(tk.END, '0.0000')
+        if NAA.irradiation is not None:
+            SB_a_value.delete(0, tk.END)
+            SB_a_value.insert(0, f'{NAA.irradiation.a_value:.4f}')
+            SB_unc_a_value.delete(0, tk.END)
+            SB_unc_a_value.insert(0, f'{NAA.irradiation.unc_a_value:.4f}')
         tk.Label(mframe, text='ϕthermal / cm-2 s-1', anchor=tk.W).grid(row=6, column=0, sticky=tk.W)
         E_thermal = tk.Entry(mframe, width=10)
         E_thermal.grid(row=6, column=1, sticky=tk.EW)
@@ -1381,6 +1701,11 @@ class IrradiationWindow:
         E_unc_thermal.grid(row=6, column=2, sticky=tk.EW)
         E_unc_thermal.delete(0, tk.END)
         E_unc_thermal.insert(tk.END, f'{0.0:.1e}')
+        if NAA.irradiation is not None:
+            E_thermal.delete(0, tk.END)
+            E_thermal.insert(0, f'{NAA.irradiation.thermal_flux:.2e}')
+            E_unc_thermal.delete(0, tk.END)
+            E_unc_thermal.insert(0, f'{NAA.irradiation.unc_thermal_flux:.1e}')
         tk.Label(mframe, text='ϕepithermal / cm-2 s-1', anchor=tk.W).grid(row=7, column=0, sticky=tk.W)
         E_epithermal = tk.Entry(mframe, width=10)
         E_epithermal.grid(row=7, column=1, sticky=tk.EW)
@@ -1390,6 +1715,11 @@ class IrradiationWindow:
         E_unc_epithermal.grid(row=7, column=2, sticky=tk.EW)
         E_unc_epithermal.delete(0, tk.END)
         E_unc_epithermal.insert(tk.END, f'{0.0:.1e}')
+        if NAA.irradiation is not None:
+            E_epithermal.delete(0, tk.END)
+            E_epithermal.insert(0, f'{NAA.irradiation.epithermal_flux:.2e}')
+            E_unc_epithermal.delete(0, tk.END)
+            E_unc_epithermal.insert(0, f'{NAA.irradiation.unc_epithermal_flux:.1e}')
         tk.Label(mframe, text='ϕfast / cm-2 s-1', anchor=tk.W).grid(row=8, column=0, sticky=tk.W)
         E_fast = tk.Entry(mframe, width=10)
         E_fast.grid(row=8, column=1, sticky=tk.EW)
@@ -1399,31 +1729,58 @@ class IrradiationWindow:
         E_unc_fast.grid(row=8, column=2, sticky=tk.EW)
         E_unc_fast.delete(0, tk.END)
         E_unc_fast.insert(tk.END, f'{0.0:.1e}')
-        tk.Label(mframe, text='β / mm-1', anchor=tk.W).grid(row=9, column=0, sticky=tk.W)
+        if NAA.irradiation is not None:
+            E_fast.delete(0, tk.END)
+            E_fast.insert(0, f'{NAA.irradiation.fast_flux:.2e}')
+            E_unc_fast.delete(0, tk.END)
+            E_unc_fast.insert(0, f'{NAA.irradiation.unc_fast_flux:.1e}')
+        tk.Frame(mframe).grid(row=9, column=0, pady=5)
+        
+        tk.Label(mframe, text='position name', anchor=tk.W).grid(row=10, column=0, sticky=tk.W)
+        CB_beta_list = naaobject._get_beta_data()
+        CB_beta_key = ttk.Combobox(mframe, width=20, state='readonly')
+        CB_beta_key.grid(row=10, column=1, columnspan=2, sticky=tk.EW)
+        tk.Label(mframe, text='evaluation date', anchor=tk.W).grid(row=11, column=0, sticky=tk.W)
+        label_beta_date = tk.Label(mframe, text='', anchor=tk.W)
+        label_beta_date.grid(row=11, column=1, columnspan=2, sticky=tk.EW)
+        tk.Label(mframe, text='β / mm-1', anchor=tk.W).grid(row=12, column=0, sticky=tk.W)
         SB_beta = tk.Spinbox(mframe, from_=-1.0000, to=1.0000, increment=0.0001, width=10)
-        SB_beta.grid(row=9, column=1)
+        SB_beta.grid(row=12, column=1)
         SB_beta.delete(0, tk.END)
         SB_beta.insert(tk.END, '0.0000')
         SB_unc_beta = tk.Spinbox(mframe, from_=0.0000, to=0.1000, increment=0.0001, width=10)
-        SB_unc_beta.grid(row=9, column=2)
+        SB_unc_beta.grid(row=12, column=2)
+        if NAA.irradiation is not None:
+            SB_beta.delete(0, tk.END)
+            SB_beta.insert(0, f'{NAA.irradiation.beta:.4f}')
+            SB_unc_beta.delete(0, tk.END)
+            SB_unc_beta.insert(0, f'{NAA.irradiation.unc_beta:.4f}')
 
-        tk.Frame(mframe).grid(row=10, column=0, pady=5)
-        tk.Label(mframe, text='end of irradiation date', anchor=tk.W).grid(row=11, column=0, columnspan=3, sticky=tk.W)
+        tk.Frame(mframe).grid(row=13, column=0, pady=5)
+        tk.Label(mframe, text='end of irradiation date', anchor=tk.W).grid(row=14, column=0, columnspan=3, sticky=tk.W)
         #date and button
-        self.irr_date = datetime.datetime.today()#None
+        if NAA.irradiation is not None:
+            self.irr_date = NAA.irradiation.datetime
+        else:
+            self.irr_date = datetime.datetime.today()#None
         irradiation_date_label = gui_things.Label(mframe, text='', width=25)
-        irradiation_date_label.grid(row=12, column=0, columnspan=2, sticky=tk.W)
+        irradiation_date_label.grid(row=15, column=0, columnspan=2, sticky=tk.W)
         if self.irr_date is not None:
             irradiation_date_label.configure(text=self.irr_date.strftime("%d/%m/%Y %H:%M:%S"))
         logo_calendar = tk.PhotoImage(data=gui_things.calendar)
         B_modify_date = gui_things.Button(mframe, image=logo_calendar, command=lambda : self.change_end_irradiation_date(irradiation_date_label, hints))
-        B_modify_date.grid(row=12, column=2, padx=5)
+        B_modify_date.grid(row=15, column=2, padx=5)
         B_modify_date.image = logo_calendar
-        tk.Label(mframe, text='irradiation time / s', anchor=tk.W).grid(row=13, column=0, sticky=tk.W)
+        tk.Label(mframe, text='irradiation time / s', anchor=tk.W).grid(row=16, column=0, sticky=tk.W)
         SB_irradiation_time = tk.Spinbox(mframe, from_=0.0, to=1000000.0, increment=0.1, width=10)
-        SB_irradiation_time.grid(row=13, column=1, sticky=tk.EW)
+        SB_irradiation_time.grid(row=16, column=1, sticky=tk.EW)
         SB_unc_irradiation_time = tk.Spinbox(mframe, from_=0.0, to=2000.0, increment=0.1, width=10)
-        SB_unc_irradiation_time.grid(row=13, column=2, sticky=tk.EW, pady=3)
+        SB_unc_irradiation_time.grid(row=16, column=2, sticky=tk.EW, pady=3)
+        if NAA.irradiation is not None:
+            SB_irradiation_time.delete(0, tk.END)
+            SB_irradiation_time.insert(0, f'{NAA.irradiation.irradiation_time:.1f}')
+            SB_unc_irradiation_time.delete(0, tk.END)
+            SB_unc_irradiation_time.insert(0, f'{NAA.irradiation.unc_irradiation_time:.1f}')
         mframe.pack(anchor=tk.NW, padx=5, pady=5)
         bframe = tk.Frame(parent)
         logo_confirm = tk.PhotoImage(data=gui_things.beye)
@@ -1433,7 +1790,8 @@ class IrradiationWindow:
         bframe.pack(fill=tk.X, pady=5)
         hints.pack(fill=tk.X, padx=5)
 
-        CB_channel_name.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>' : self.select_facility(CB_channel_name, ch_data, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, SB_beta, SB_unc_beta))
+        CB_channel_name.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>' : self.select_facility(CB_channel_name, ch_data, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, CB_beta_list))
+        CB_beta_key.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>' : self.select_beta(CB_beta_key, CB_beta_list, label_beta_date, SB_beta, SB_unc_beta))
 
     def confirm_irradiation_data(self, M, E_irradiation_code, CB_channel_name, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, SB_beta, SB_unc_beta, SB_irradiation_time, SB_unc_irradiation_time, hints, NAA, folder=os.path.join('data', 'irradiation')):
         #check of data
@@ -1578,8 +1936,8 @@ class IrradiationWindow:
         if sys.platform != 'darwin':
             TempTLF.bind('<FocusOut>', lambda e='<FocusOut>': TempTL.destroy())
 
-    def select_facility(self, CB, ch_data, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, SB_beta, SB_unc_beta):
-        data_f_value, data_unc_f_value, data_a_value, data_unc_a_value, data_thermal, data_unc_thermal, data_epithermal, data_unc_epithermal, data_fast, data_unc_fast, data_beta, data_unc_beta = ch_data.loc[CB.get(),['f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux', 'beta', 'unc_beta']]
+    def select_facility(self, CB, ch_data, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, CB_beta_list):
+        data_f_value, data_unc_f_value, data_a_value, data_unc_a_value, data_thermal, data_unc_thermal, data_epithermal, data_unc_epithermal, data_fast, data_unc_fast = ch_data.loc[CB.get(),['f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux']]
         SB_f_value.delete(0, tk.END)
         SB_f_value.insert(tk.END, f'{data_f_value:.3f}')
         SB_unc_f_value.delete(0, tk.END)
@@ -1600,10 +1958,17 @@ class IrradiationWindow:
         E_fast.insert(tk.END, f'{data_fast:.2e}')
         E_unc_fast.delete(0, tk.END)
         E_unc_fast.insert(tk.END, f'{data_unc_fast:.1e}')
+        filter_beta = CB_beta_list.index == CB.get()
+        CB_beta_key['values'] = list(CB_beta_list[filter_beta]['position'])
+
+    def select_beta(self, CB, CB_beta_list, label_beta_date, SB_beta, SB_unc_beta):
+        datum = CB_beta_list.iloc[CB.current()]
+
+        label_beta_date.configure(text=datum["datetime"].strftime("%d/%m/%Y"))
         SB_beta.delete(0, tk.END)
-        SB_beta.insert(tk.END, f'{data_beta:.6f}')
+        SB_beta.insert(tk.END, f'{datum["beta"]:.6f}')
         SB_unc_beta.delete(0, tk.END)
-        SB_unc_beta.insert(tk.END, f'{data_unc_beta:.6f}')
+        SB_unc_beta.insert(tk.END, f'{datum["unc_beta"]:.6f}')
 
 
 class DetectionLimitWindow:
@@ -1638,7 +2003,7 @@ class DatabasesWindow:
             row=0, column=1, sticky=tk.NS, padx=3)
 
         logo_dsample = tk.PhotoImage(data=gui_things.flask)
-        B_sample_database = gui_things.Button(Buttons_frame, image=logo_dsample, hint='sample database', hint_destination=self.information)
+        B_sample_database = gui_things.Button(Buttons_frame, image=logo_dsample, hint='material database', hint_destination=self.information)
         B_sample_database.grid(row=0, column=4)
         B_sample_database.image = logo_dsample
 
@@ -1677,11 +2042,13 @@ class DatabasesWindow:
 
             def rewrite_file(folder=os.path.join('data', 'facility')):
                 with open(os.path.join(folder,'channels.csv'), 'w') as channel_file:
-                    channel_file.write('datetime,channel_name,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux,beta,unc_beta\n')
-                    for save_time, CH_name, result_f, result_f_unc, result_a, result_a_unc, result_thermal, result_thermal_unc, result_epithermal, result_epithermal_unc, result_fast, result_fast_unc, result_beta, result_beta_unc in zip(self.fdata['datetime'], self.fdata.index, self.fdata['f_value'], self.fdata['unc_f_value'], self.fdata['a_value'], self.fdata['unc_a_value'], self.fdata['thermal_flux'], self.fdata['unc_thermal_flux'], self.fdata['epithermal_flux'], self.fdata['unc_epithermal_flux'], self.fdata['fast_flux'], self.fdata['unc_fast_flux'], self.fdata['beta'], self.fdata['unc_beta']):
-                        channel_file.write(f'{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name},{result_f},{result_f_unc},{result_a},{result_a_unc},{result_thermal},{result_thermal_unc},{result_epithermal},{result_epithermal_unc},{result_fast},{result_fast_unc},{result_beta},{result_beta_unc}\n')
+                    channel_file.write('datetime,channel_name,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux\n')
+                    for save_time, CH_name, result_f, result_f_unc, result_a, result_a_unc, result_thermal, result_thermal_unc, result_epithermal, result_epithermal_unc, result_fast, result_fast_unc in zip(self.fdata['datetime'], self.fdata.index, self.fdata['f_value'], self.fdata['unc_f_value'], self.fdata['a_value'], self.fdata['unc_a_value'], self.fdata['thermal_flux'], self.fdata['unc_thermal_flux'], self.fdata['epithermal_flux'], self.fdata['unc_epithermal_flux'], self.fdata['fast_flux'], self.fdata['unc_fast_flux']):
+                        channel_file.write(f'{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name},{result_f},{result_f_unc},{result_a},{result_a_unc},{result_thermal},{result_thermal_unc},{result_epithermal},{result_epithermal_unc},{result_fast},{result_fast_unc}\n')
+                with open(os.path.join(folder,'beta.csv'), 'w') as beta_file:
+                    beta_file.write('channel_name,datetime,position,beta,unc_beta\n')
 
-            if messagebox.askyesno(title='Delete flux measurement entries', message=f'\nAre you sure to remove all outdated flux measurement entries?\n', parent=parent):
+            if messagebox.askyesno(title='Delete flux measurement entries', message=f'\nAre you sure to remove all outdated flux measurement entries?\nthis also deletes all β values\n', parent=parent):
                 self.fdata_list, self.fdata = naaobject._get_channel_data()
                 rewrite_file()
                 CB['values'] = [''] + self.fdata_list
@@ -1690,7 +2057,7 @@ class DatabasesWindow:
         def export_xcell(CB, parent):
             filetypes = (('Microsoft Excel file','*.xlsx'),)
             filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
-            header = ['datetime', 'f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1', 'b / 1', 'u(b) / 1']
+            header = ['datetime', 'f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1']
             if filename != '' and filename is not None:
                 if filename[-len('.xlsx'):] != '.xlsx':
                     filename += '.xlsx'
@@ -1716,11 +2083,11 @@ class DatabasesWindow:
             else:
                 return text.ljust(limit," ")
 
-        def _as_text_display(data, header=['channel','date','f / 1', 'a / 1','thermal','b / mm-1']):
+        def _as_text_display(data, header=['channel','date','f / 1', 'a / 1','thermal', 'fast']):
             spaces = [15,12,10,10,10,10]
             head = f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}\n'
 
-            astext = '\n'.join([f'{text_cut(idx,spaces[0])}{dtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{format(ff,".2f").rjust(spaces[2]," ")}{format(aa,".5f").rjust(spaces[3]," ")}{format(thermal,".2e").rjust(spaces[4]," ")}{format(beta,".5f").rjust(spaces[5]," ")}' for idx, dtime, ff, aa, thermal, beta in zip(data.index, data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['beta'])])
+            astext = '\n'.join([f'{text_cut(idx,spaces[0])}{dtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{format(ff,".2f").rjust(spaces[2]," ")}{format(aa,".5f").rjust(spaces[3]," ")}{format(thermal,".2e").rjust(spaces[4]," ")}{format(fast,".2e").rjust(spaces[5]," ")}' for idx, dtime, ff, aa, thermal, fast in zip(data.index, data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])])
             return head + astext
         
         children = frame.winfo_children()
@@ -2098,13 +2465,13 @@ class DatabasesWindow:
         B_delete_source.grid(row=0, column=4)
         general_buttons.grid(row=3, column=0, columnspan=4, sticky=tk.W)
         buttons_frame = tk.Frame(source_subwindow)
-        second_source_selection_CB = gui_things.Combobox(buttons_frame, width=25, state='readonly')
-        second_source_selection_CB.grid(row=0, column=2, columnspan=2)
+        second_source_selection_CB = gui_things.Combobox(buttons_frame, width=25, state='readonly', hint='merging source name', hint_destination=self.information)
+        second_source_selection_CB.grid(row=3, column=2, columnspan=2)
         second_source_selection_CB['values'] = [filename[:-len('.csv')] for filename in os.listdir(os.path.join('data','sources')) if filename[-len('.sce'):].lower()=='.sce']
         logo_merge = tk.PhotoImage(data=gui_things.mergemission)
         B_merge_source = gui_things.Button(buttons_frame, image=logo_merge, hint='merge with selected source', hint_xoffset=5, hint_destination=self.information)
         B_merge_source.image = logo_merge
-        B_merge_source.grid(row=0, column=4)
+        B_merge_source.grid(row=3, column=4)
         ttk.Separator(buttons_frame, orient="vertical").grid(row=0, column=5, rowspan=4, sticky=tk.NS, padx=3)
 
         little_patch = tk.Frame(buttons_frame)
@@ -2122,19 +2489,19 @@ class DatabasesWindow:
         B_update_single_emission.image = logo_update_single
         B_update_single_emission.grid(row=1, column=7)
         
-        B_new_emitter = gui_things.Button(buttons_frame, image=logo_new, hint='add or update an emitter', hint_xoffset=5, hint_destination=self.information)
-        B_new_emitter.image = logo_new
-        B_new_emitter.grid(row=3, column=4)
-        tk.Label(buttons_frame, text='emitter').grid(row=1, column=2, sticky=tk.W)
+        B_new_emitter = gui_things.Button(buttons_frame, image=logo_update_single, hint='add or update an emitter', hint_xoffset=5, hint_destination=self.information)
+        B_new_emitter.image = logo_update_single
+        B_new_emitter.grid(row=2, column=4)
+        tk.Label(buttons_frame, text='emitter').grid(row=0, column=2, sticky=tk.W)
         emitter_selection_CB = gui_things.Combobox(buttons_frame, width=12, state='readonly')
-        emitter_selection_CB.grid(row=1, column=3)
+        emitter_selection_CB.grid(row=0, column=3)
         emitter_selection_CB['values'] = sorted(set(master['emitter']))
-        tk.Label(buttons_frame, text='activity / Bq').grid(row=2, column=2, sticky=tk.W)
+        tk.Label(buttons_frame, text='activity / Bq').grid(row=1, column=2, sticky=tk.W)
         E_activity = tk.Entry(buttons_frame, width=15)
-        E_activity.grid(row=2, column=3)
-        tk.Label(buttons_frame, text='half-life / s').grid(row=3, column=2, sticky=tk.W)
+        E_activity.grid(row=1, column=3)
+        tk.Label(buttons_frame, text='half-life / s').grid(row=2, column=2, sticky=tk.W)
         E_half_life = tk.Entry(buttons_frame, width=15)
-        E_half_life.grid(row=3, column=3)
+        E_half_life.grid(row=2, column=3)
 
         emitter_deletion_CB = gui_things.Combobox(buttons_frame, width=25, state='readonly')
         emitter_deletion_CB.grid(row=0, column=6)
@@ -2176,7 +2543,7 @@ class DatabasesWindow:
             if name == '':
                 self.information.configure(text='invalid name!')
             elif self.actual_sample is None:
-                self.information.configure(text='no sample is selected!')
+                self.information.configure(text='no material is selected!')
             else:
                 self.actual_sample.name = name
                 self.actual_sample.description = description
@@ -2191,12 +2558,12 @@ class DatabasesWindow:
                 except:
                     self.information.configure(text='some error occurred!')
                 else:
-                    self.information.configure(text='sample saved')
+                    self.information.configure(text='material saved')
                     sample_selection_CB['values'] = [filename[:-len('.csv')] for filename in os.listdir(folder) if filename[-len('.csv'):].lower()=='.csv']
 
         def _delete_sample(sample_selection_CB,description_text,sample_type_selection_CB,physical_state_selection_CB,stext,parent, folder=os.path.join('data','samples')):
             #Delete {also from disk} the current sample
-            if messagebox.askyesno(title='Delete current sample', message=f'\nAre you sure to delete (from memory and disk) the current sample?\n', parent=parent):
+            if messagebox.askyesno(title='Delete current material', message=f'\nAre you sure to delete (from memory and disk) the current material?\n', parent=parent):
                 filename = sample_selection_CB.get()
                 sample_selection_CB.set('')
                 description_text._update()
@@ -2228,7 +2595,7 @@ class DatabasesWindow:
                 self.information.configure(text='updated')
             else:
                 if self.actual_sample is None:
-                    self.information.configure(text='no sample selected')
+                    self.information.configure(text='no material selected')
                 else:
                     self.information.configure(text='invalid element')
 
@@ -2256,9 +2623,9 @@ class DatabasesWindow:
         def _add_new_sample(sample_selection_CB,description_text,sample_type_selection_CB,physical_state_selection_CB,stext,element_CB):
             #create a new sample file
             self.actual_sample = naaobject.Sample('new.csv')
-            self.actual_sample.name = 'new_sample'
+            self.actual_sample.name = 'new_material'
             self.actual_sample.description = 'No description provided'
-            sample_selection_CB.set('new_sample')
+            sample_selection_CB.set('new_material')
             description_text._update(self.actual_sample.description)
             sample_type_selection_CB.set(self.actual_sample.sample_type)
             physical_state_selection_CB.set(self.actual_sample.state)
@@ -2270,7 +2637,7 @@ class DatabasesWindow:
             if element_CB.get() not in element_CB['values']:
                 self.information.configure(text='no element is selected!')
             elif self.actual_sample is None:
-                self.information.configure(text='no sample is selected!')
+                self.information.configure(text='no material is selected!')
             else:
                 idx = unit_list.index(unit_element_BT.cget('text'))
                 convertion_factor = unit_conversions[0] / unit_conversions[idx]
@@ -2315,13 +2682,13 @@ class DatabasesWindow:
         children = frame.winfo_children()
         for widget in children:
             widget.destroy()
-        tk.Label(frame, text='sample database', anchor=tk.W).pack(anchor=tk.W)
+        tk.Label(frame, text='material database', anchor=tk.W).pack(anchor=tk.W)
 
         self.actual_sample = None
         self.information.configure(text='')
 
         sample_subwindow = tk.Frame(frame)
-        tk.Label(sample_subwindow, text='sample name', anchor=tk.W, width=17).grid(row=0, column=0, sticky=tk.W)
+        tk.Label(sample_subwindow, text='material name', anchor=tk.W, width=17).grid(row=0, column=0, sticky=tk.W)
         sample_selection_CB = gui_things.Combobox(sample_subwindow, width=25)
         sample_selection_CB.grid(row=0, column=1, sticky=tk.W)
         sample_selection_CB['values'] = [filename[:-len('.csv')] for filename in os.listdir(os.path.join('data','samples')) if filename[-len('.csv'):].lower()=='.csv']
@@ -2330,10 +2697,10 @@ class DatabasesWindow:
         description_text = gui_things.ScrollableText(sample_subwindow, state='normal', width=60, height=3)
         description_text.grid(row=1, column=1, columnspan=3, sticky=tk.EW)
 
-        tk.Label(sample_subwindow, text='sample type', anchor=tk.W, width=17).grid(row=2, column=0, sticky=tk.W)
+        tk.Label(sample_subwindow, text='material type', anchor=tk.W, width=17).grid(row=2, column=0, sticky=tk.W)
         sample_type_selection_CB = gui_things.Combobox(sample_subwindow, width=25)
         sample_type_selection_CB.grid(row=2, column=1, sticky=tk.W)
-        sample_type_selection_CB['values'] = ['organic','soil']
+        sample_type_selection_CB['values'] = ['organic','soil', 'Reference Material']
 
         tk.Label(sample_subwindow, text='physical state', anchor=tk.W, width=17).grid(row=3, column=0, sticky=tk.W)
         physical_state_selection_CB = gui_things.Combobox(sample_subwindow, width=25)
@@ -2345,17 +2712,17 @@ class DatabasesWindow:
 
         buttons_frame = tk.Frame(sample_subwindow)
         logo_new = tk.PhotoImage(data=gui_things.plus)
-        B_new_sample = gui_things.Button(buttons_frame, image=logo_new, hint='add a new sample', hint_xoffset=5, hint_destination=self.information)
+        B_new_sample = gui_things.Button(buttons_frame, image=logo_new, hint='add a new material', hint_xoffset=5, hint_destination=self.information)
         B_new_sample.image = logo_new
         B_new_sample.pack(side=tk.LEFT)
 
         logo_update = tk.PhotoImage(data=gui_things.beye)
-        B_update = gui_things.Button(buttons_frame, image=logo_update, hint='update changes to this sample', hint_xoffset=5, hint_destination=self.information)
+        B_update = gui_things.Button(buttons_frame, image=logo_update, hint='update changes to this material', hint_xoffset=5, hint_destination=self.information)
         B_update.image = logo_update
         B_update.pack(side=tk.LEFT)
 
         logo_delete = tk.PhotoImage(data=gui_things.none)
-        B_delete_sample = gui_things.Button(buttons_frame, image=logo_delete, hint='delete sample', hint_xoffset=5, hint_destination=self.information)
+        B_delete_sample = gui_things.Button(buttons_frame, image=logo_delete, hint='delete material', hint_xoffset=5, hint_destination=self.information)
         B_delete_sample.image = logo_delete
         B_delete_sample.pack(side=tk.LEFT)
 
@@ -2415,6 +2782,9 @@ class ElaborationProcess:
         k0_standard_id = []
         missing_massfraction = []
         not_simple_decay = []
+        if NAA.analysis_name is None:
+            text.append('- analysis name is not defined')
+            check_passed = False
         if NAA.irradiation is None:
             text.append('- irradiation data are missing')
             check_passed = False
@@ -2457,7 +2827,7 @@ class ElaborationProcess:
         if len(not_simple_decay) > 0:
             text.append(f'- k0 monitor shows a complex activation/decay scheme in those standard spectra: ({", ".join([f"{spct.get_k0_monitor().emission} in {spct.filename()}" for spct in not_simple_decay])})')
             check_passed = False
-        if check_passed == True:
+        if check_passed:
             self._continue_to_output_frame(parent, NAA, text, M)
         else:
             self._requiremnts_not_met_frame(parent, text)
@@ -2533,7 +2903,8 @@ class ElaborationProcess:
         stext = gui_things.ScrollableText(parent, height=20, width=60, data='\n'.join(text))
         stext.pack(anchor=tk.NW, padx=5, pady=5)
         info_box = tk.Label(parent, text='', anchor=tk.W)
-        button_frame = tk.Frame(parent)
+        main_button_frame = tk.Frame(parent)
+        button_frame = tk.Frame(main_button_frame)
         logo_excel_output = tk.PhotoImage(data=gui_things.xcell)
         B_excel_output = gui_things.Button(button_frame, image=logo_excel_output, hint='Process Excel output!', hint_xoffset=5, hint_destination=info_box)
         B_excel_output.image = logo_excel_output
@@ -2566,16 +2937,23 @@ class ElaborationProcess:
         ttk.Separator(button_frame, orient="vertical").pack(side=tk.LEFT, fill=tk.Y, padx=3)
 
         logo_store_periodically = tk.PhotoImage(data=gui_things.resulti)
-        B_store_periodically = gui_things.Button(button_frame, image=logo_store_periodically, hint='Store data for validation!', hint_xoffset=5, hint_destination=info_box)
-        B_store_periodically.image = logo_store_periodically
-        B_store_periodically.pack(side=tk.LEFT)
+        B_visualize_validation = gui_things.Button(button_frame, image=logo_store_periodically, hint='Perform a validation inspection!', hint_xoffset=5, hint_destination=info_box)
+        B_visualize_validation.image = logo_store_periodically
+        B_visualize_validation.pack(side=tk.LEFT)
 
-        button_frame.pack(fill=tk.X, expand=True, pady=5, padx=5)
+        button_frame.pack(fill=tk.X, expand=True)
+        option_frame = tk.Frame(main_button_frame)
+        self.save_input_variable = tk.IntVar(parent)
+        self.save_input_variable.set(0)
+        CBO = tk.Checkbutton(option_frame, text='produce a software savefile alongside the excel output', variable=self.save_input_variable)
+        CBO.pack(anchor=tk.W)
+        option_frame.pack(fill=tk.X, expand=True)
+        main_button_frame.pack(fill=tk.X, expand=True, pady=5, padx=5)
         info_box.pack(fill=tk.X, anchor=tk.W, expand=True, padx=5)
 
         B_excel_output.configure(command=lambda : self._excel_output(NAA, parent, M))
         B_periodic_overview.configure(command=lambda : self._periodic_overview(NAA, parent, M))
-        B_store_periodically.configure(command=lambda : self._store_data(NAA, M, info_box))
+        B_visualize_validation.configure(command=lambda : self._store_data(NAA, M, info_box, parent))
 
     def find_detections(self, database_k0, element_list):
         try:
@@ -2585,9 +2963,13 @@ class ElaborationProcess:
         found = f_k0# + f_rel
         return tuple(found)
 
-    def _store_data(self, NAA, M, infobox):
-        naaobject._store_analysis_data(NAA)
-        infobox.configure(text='saved!')
+    def _store_data(self, NAA, M, infobox, parent):
+        df_zvalues = naaobject._store_analysis_data(NAA)
+        if len(df_zvalues) > 0:
+            validation_window = tk.Toplevel(parent)
+            ValidationWindow(validation_window, df_zvalues, NAA.analysis_name)
+        else:
+            infobox.configure(text='not available data!')
 
     def _save_sample_form(self, sample_c, sample_name, Rsample):
 
@@ -2603,7 +2985,7 @@ class ElaborationProcess:
             if name == '':
                 infoline.configure(text='invalid name!')
             elif self.actual_sample is None:
-                infoline.configure(text='no sample is selected!')
+                infoline.configure(text='no material is selected!')
             else:
                 self.actual_sample.name = name
                 self.actual_sample.description = description
@@ -2618,7 +3000,7 @@ class ElaborationProcess:
                 except:
                     infoline.configure(text='some error occurred!')
                 else:
-                    infoline.configure(text='sample saved')
+                    infoline.configure(text='material saved')
 
         def _delete_element(element_CB, stext, infoline):
             if element_CB.get() in element_CB['values']:
@@ -2654,7 +3036,7 @@ class ElaborationProcess:
             if element_CB.get() not in element_CB['values']:
                 infoline.configure(text='no element is selected!')
             elif self.actual_sample is None:
-                infoline.configure(text='no sample is selected!')
+                infoline.configure(text='no material is selected!')
             else:
                 idx = unit_list.index(unit_element_BT.cget('text'))
                 convertion_factor = unit_conversions[0] / unit_conversions[idx]
@@ -2700,7 +3082,7 @@ class ElaborationProcess:
         # constructor
         self.actual_sample = naaobject.Sample(f'{sample_name}.csv')
         self.actual_sample.name = sample_name
-        self.actual_sample.description = f'Sample obtained from elaboration of spectrum {sample_name}'
+        self.actual_sample.description = f'Material obtained from elaboration of spectrum {sample_name}'
         # make elaborations
         elements = set([line[0] for line in sample_c])
         for element in elements:
@@ -2731,12 +3113,12 @@ class ElaborationProcess:
         for widget in children:
             widget.destroy()
         frame = tk.Frame(Rsample)
-        tk.Label(frame, text='sample database', anchor=tk.W).pack(anchor=tk.W)
+        tk.Label(frame, text='material database', anchor=tk.W).pack(anchor=tk.W)
 
         infoline = tk.Label(frame)
 
         sample_subwindow = tk.Frame(frame)
-        tk.Label(sample_subwindow, text='sample name', anchor=tk.W, width=17).grid(row=0, column=0, sticky=tk.W)
+        tk.Label(sample_subwindow, text='material name', anchor=tk.W, width=17).grid(row=0, column=0, sticky=tk.W)
         sample_selection_CB = gui_things.Combobox(sample_subwindow, width=25)
         sample_selection_CB.grid(row=0, column=1, sticky=tk.W)
         sample_selection_CB.set(self.actual_sample.name)
@@ -2745,10 +3127,10 @@ class ElaborationProcess:
         description_text = gui_things.ScrollableText(sample_subwindow, data=self.actual_sample.description, state='normal', width=60, height=3)
         description_text.grid(row=1, column=1, columnspan=3, sticky=tk.EW)
 
-        tk.Label(sample_subwindow, text='sample type', anchor=tk.W, width=17).grid(row=2, column=0, sticky=tk.W)
+        tk.Label(sample_subwindow, text='material type', anchor=tk.W, width=17).grid(row=2, column=0, sticky=tk.W)
         sample_type_selection_CB = gui_things.Combobox(sample_subwindow, width=25)
         sample_type_selection_CB.grid(row=2, column=1, sticky=tk.W)
-        sample_type_selection_CB['values'] = ['organic','soil']
+        sample_type_selection_CB['values'] = ['organic','soil', 'Reference Material']
         sample_type_selection_CB.set(self.actual_sample.sample_type)
 
         tk.Label(sample_subwindow, text='physical state', anchor=tk.W, width=17).grid(row=3, column=0, sticky=tk.W)
@@ -2762,7 +3144,7 @@ class ElaborationProcess:
 
         buttons_frame = tk.Frame(sample_subwindow)
         logo_update = tk.PhotoImage(data=gui_things.beye)
-        B_update = gui_things.Button(buttons_frame, image=logo_update, hint='update changes to this sample', hint_xoffset=5, hint_destination=infoline)
+        B_update = gui_things.Button(buttons_frame, image=logo_update, hint='update changes to this material', hint_xoffset=5, hint_destination=infoline)
         B_update.image = logo_update
         B_update.pack(side=tk.LEFT)
 
@@ -2814,7 +3196,7 @@ class ElaborationProcess:
         sample_name = CB_spectrum.get()
         sample_c = sorted([list(item) + [True] for item in result_nested_list[idx] if 0 < item[2][0] <= 1], key=lambda x : x[1])
         Rsample = tk.Toplevel(parent)
-        Rsample.title('Create sample')
+        Rsample.title('Create material')
         Rsample.resizable(False, False)
         #options
         elements = set([item[0] for item in sample_c])
@@ -2948,7 +3330,7 @@ class ElaborationProcess:
         groupby = self.group_by_selector.get()
         sort = self.sort_selector.get()
         filetypes = (('Microsoft Excel file','*.xlsx'),)
-        output = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
+        output = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes, initialfile=NAA.analysis_name)
         if output is not None and output != '':
             if output[-len('.xlsx'):] != '.xlsx':
                 output = f'{output}.xlsx'
@@ -2986,9 +3368,46 @@ class ElaborationProcess:
                 for i in range(len(result_nested_list)):
                     result_nested_list[i] = [budget for element in headline for budget in result_nested_list[i] if budget.target==element]
             naaobject.ExcelOutput(output, NAA, M, result_nested_list, btype)
+            if self.save_input_variable.get():
+                if output[-5:].lower() == '.xlsx':
+                    filename = output[:-5]
+                else:
+                    filename = output
+
+                try:
+                    float(M.Deltad_standard_spinbox.get())
+                    dd_std = M.Deltad_standard_spinbox.get()
+                except ValueError:
+                    dd_std = '0.0'
+                try:
+                    float(M.uDeltad_standard_spinbox.get())
+                    udd_std = M.uDeltad_standard_spinbox.get()
+                except ValueError:
+                    udd_std = '0.0'
+                NAA.standard_position = (M.standard_position.get(), dd_std, udd_std)
+
+                try:
+                    float(M.Deltad_sample_spinbox.get())
+                    dd_smp = M.Deltad_sample_spinbox.get()
+                except ValueError:
+                    dd_smp = '0.0'
+                try:
+                    float(M.uDeltad_sample_spinbox.get())
+                    udd_smp = M.uDeltad_sample_spinbox.get()
+                except ValueError:
+                    udd_smp = '0.0'
+                NAA.sample_position = (M.sample_position.get(), dd_smp, udd_smp)
+                if M.regular_calibration_variable.get() >= 0:
+                    NAA.position_selector = M.regular_calibration_variable.get()
+                NAA.detection_elements = M.detection_elements
+                with open(f'{filename}.sav','wb') as filesave:
+                    pickle.dump(NAA, filesave)
+                sentence = '.sav file: YES\n'
+            else:
+                sentence = '.sav file: NO\n'
             M.infotask.configure(text='success!')
             filepath_knowledge = os.path.split(output)
-            messagebox.showinfo(title='Success!', message=f'Excel file successfully saved\nfilename: {filepath_knowledge[1]}\nin folder: {os.path.split(filepath_knowledge[0])[1]}', parent=parent)
+            messagebox.showinfo(title='Success!', message=f'Excel file successfully saved\nfilename: {filepath_knowledge[1]}\n{sentence}in folder: {os.path.split(filepath_knowledge[0])[1]}', parent=parent)
 
     def _requiremnts_not_met_frame(self, parent, text):
         header = ['Issues were identified while checking for consistency of the input data; error messages are reported\n']
@@ -3054,35 +3473,35 @@ class SettingsWindow:
         main_script()
 
 
-class OthercorrectionsWindow:
-    def __init__(self, parent, spectra_list, idx):
-        spectrum = spectra_list[idx]
-        parent.title(f'Overview ({spectrum.filename()})')
-        parent.resizable(False,False)
-        mframe = tk.Frame(parent)
-        nline = 0
-        self.infobox = tk.Label(mframe, text='', anchor=tk.W)
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        nline += 1
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        nline += 1
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        nline += 1
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        nline += 1
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        nline += 1
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        nline += 1
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        nline += 1
-        tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-        #if spectrum.define() == 'standard':
-        #    pass#Ge for monitor emission
-        #elif spectrum.define() == 'sample':
-        #    pass#Dl vertical distance from monitor during irradiation
-        self.infobox.grid(row=12, column=0, columnspan=4, sticky=tk.EW)
-        mframe.pack(anchor=tk.NW, padx=5, pady=5)
+# class OthercorrectionsWindow:
+#     def __init__(self, parent, spectra_list, idx):
+#         spectrum = spectra_list[idx]
+#         parent.title(f'Overview ({spectrum.filename()})')
+#         parent.resizable(False,False)
+#         mframe = tk.Frame(parent)
+#         nline = 0
+#         self.infobox = tk.Label(mframe, text='', anchor=tk.W)
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         nline += 1
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         nline += 1
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         nline += 1
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         nline += 1
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         nline += 1
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         nline += 1
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         nline += 1
+#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
+#         #if spectrum.define() == 'standard':
+#         #    pass#Ge for monitor emission
+#         #elif spectrum.define() == 'sample':
+#         #    pass#Dl vertical distance from monitor during irradiation
+#         self.infobox.grid(row=12, column=0, columnspan=4, sticky=tk.EW)
+#         mframe.pack(anchor=tk.NW, padx=5, pady=5)
 
 
 class SampleWindow:
@@ -3093,7 +3512,10 @@ class SampleWindow:
             spectrum_title = 'Standard'
         elif spectrum.define() == 'background':
             spectrum_title = 'Blank'
-        parent.title(f'{spectrum_title} ({spectrum.filename()})')
+        if spectrum.define() != 'background':
+            parent.title(f'{spectrum_title} ({spectrum.filename()})')
+        else:
+            parent.title(f'{spectrum_title}')
         parent.resizable(False,False)
         self.selected_sample = None
         if spectrum.sample is not None:
@@ -3119,10 +3541,13 @@ class SampleWindow:
         
         mframe = tk.Frame(parent)
         self.infobox = tk.Label(mframe, text='', anchor=tk.W)
-        tk.Label(mframe, text='sample', anchor=tk.W).grid(row=0, column=0, sticky=tk.W)
+        tk.Label(mframe, text='material', anchor=tk.W).grid(row=0, column=0, sticky=tk.W)
         sample_type_CB = ttk.Combobox(mframe, width=20, state='readonly')
         sample_type_CB.grid(row=0, column=1, columnspan=2)
         sample_type_CB['values'] = ['']+[filename[:-len('.csv')] for filename in os.listdir(os.path.join('data','samples')) if filename[-len('.csv'):].lower()=='.csv']
+        RM_label = tk.Label(mframe, text='', width=3)
+        if spectrum.define() == 'sample':
+            RM_label.grid(row=0, column=3, sticky=tk.W)
         stext = gui_things.ScrollableText(mframe, width=45, height=12)
         stext.grid(row=1, column=0, columnspan=5, pady=5)
 
@@ -3139,15 +3564,18 @@ class SampleWindow:
         u_massSpin.grid(row=4, column=2)
         u_massSpin.delete(0, tk.END)
         u_massSpin.insert(tk.END,def_u_mass)
-        tk.Label(mframe, text='moisture / %', anchor=tk.W).grid(row=5, column=0, sticky=tk.W)
         moistureSpin = tk.Spinbox(mframe, from_=0.00, to=100.00, increment=0.01, width=10)
-        moistureSpin.grid(row=5, column=1)
         moistureSpin.delete(0, tk.END)
         moistureSpin.insert(tk.END,def_moisture)
         u_moistureSpin = tk.Spinbox(mframe, from_=0.00, to=10.00, increment=0.01, width=10)
-        u_moistureSpin.grid(row=5, column=2)
         u_moistureSpin.delete(0, tk.END)
         u_moistureSpin.insert(tk.END,def_u_moisture)
+
+        if spectrum.define() != 'background':
+            tk.Label(mframe, text='moisture / %', anchor=tk.W).grid(row=5, column=0, sticky=tk.W)
+            moistureSpin.grid(row=5, column=1)
+            u_moistureSpin.grid(row=5, column=2)
+
         tk.Label(mframe, text='mass / g', anchor=tk.W).grid(row=6, column=0, sticky=tk.W)
         masslabel = tk.Label(mframe, text=f'{total_mass:.3e}')
         masslabel.grid(row=6, column=1)
@@ -3253,23 +3681,32 @@ class SampleWindow:
         self.infobox.grid(row=18, column=0, columnspan=4, sticky=tk.EW)
         mframe.pack(anchor=tk.NW, padx=5, pady=5)
 
-        sample_type_CB.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>' : self.select_sample(sample_type_CB, stext))
+        sample_type_CB.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>' : self.select_sample(sample_type_CB, stext, RM_label))
         B_confirm_information.configure(command=lambda : self.confirm_selection(spectra_list, idx, massSpin, u_massSpin, moistureSpin, u_moistureSpin, GthSpin, u_GthSpin, limit, masslabel, umasslabel, GepiSpin, u_GepiSpin, DLSpin, u_DLSpin, DHSpin, u_DHSpin, DensitySpin, u_DensitySpin))
         if spectrum.sample is not None:
             sample_type_CB.set(sample_name)
             self.selected_sample = spectrum.sample
             text = f'{self.selected_sample.description}\n\n{self.selected_sample._as_text_display()}'
+            if self.selected_sample.sample_type == 'Reference Material':
+                RM_label.configure(text='*RM')
+            else:
+                RM_label.configure(text='')
             stext._update(text)
         elif sample_name in sample_type_CB['values']:
             sample_type_CB.set(sample_name)
-            self.select_sample(sample_type_CB, stext)
+            self.select_sample(sample_type_CB, stext, RM_label)
 
-    def select_sample(self, box, stext):
+    def select_sample(self, box, stext, label):
         if box.get() == '':
             self.selected_sample = None
+            label.configure(text='')
             stext._update()
         else:
             self.selected_sample = naaobject.Sample(f'{box.get()}.csv', non_certified_uncertainty=None)
+            if self.selected_sample.sample_type == 'Reference Material':
+                label.configure(text='*RM')
+            else:
+                label.configure(text='')
             text = f'{self.selected_sample.description}\n\n{self.selected_sample._as_text_display()}'
             stext._update(text)
 
@@ -3347,7 +3784,7 @@ class SampleWindow:
                     spectra_list[idx]._clear_emission_from_certificate()
                 if self.check_find_for_peaks_variable.get() == 1:
                     spectra_list[idx]._select_emission_from_certificate()
-                self.infobox.configure(text='sample information updated to selected')
+                self.infobox.configure(text='material information updated to selected')
             elif self.update_sample_information.get() == 1:
                 spectra_list[idx].update_sample(subsample)
                 if self.check_clear_previous_selection_variable.get() == 1:
@@ -3361,7 +3798,7 @@ class SampleWindow:
                             spc._clear_emission_from_certificate()
                         if self.check_find_for_peaks_variable.get() == 1:
                             spc._select_emission_from_certificate(self.check_clear_previous_selection_variable.get())
-                self.infobox.configure(text='sample information updated to undefined')
+                self.infobox.configure(text='material information updated to undefined')
             else:
                 for spc in spectra_list:
                     spc.update_sample(subsample)
@@ -3369,7 +3806,7 @@ class SampleWindow:
                         spc._clear_emission_from_certificate()
                     if self.check_find_for_peaks_variable.get() == 1:
                         spc._select_emission_from_certificate()
-                self.infobox.configure(text='sample information updated to all')
+                self.infobox.configure(text='material information updated to all')
         else:
             self.infobox.configure(text='mass value should be > 0')
 
@@ -6350,7 +6787,7 @@ class FluxEvaluationWindow:
         self.result_thermal, self.result_thermal_unc = 0.0, 0.0
         self.result_epithermal, self.result_epithermal_unc = 0.0, 0.0
         self.result_fast, self.result_fast_unc = 0.0, 0.0
-        self.result_beta, self.result_beta_unc = 0.0, 0.0
+        #self.result_beta, self.result_beta_unc = 0.0, 0.0
 
     def compute_fluxes(self, CH_name, ti_Spinbox, mon_1, mass_1, umass_1, GS_1, UGS_1, GE_1, UGE_1, cond_1, mon_2, mass_2, umass_2, GS_2, UGS_2, GE_2, UGE_2, cond_2, mon_3, mass_3, umass_3, GS_3, UGS_3, GE_3, UGE_3, cond_3, fast_1, mass_fast, umass_fast, cond_fast, triple_monitor_distance, fast_monitor_distance, stext, tolerance):
         #prerequisites
@@ -6754,7 +7191,7 @@ class FluxEvaluationWindow:
                 self.result_thermal, self.result_thermal_unc = F_th, uF_th
                 self.result_epithermal, self.result_epithermal_unc = F_epi, uF_epi
                 self.result_fast, self.result_fast_unc = F_fast, uF_fast
-                self.result_beta, self.result_beta_unc = 0.0, 0.0
+                #self.result_beta, self.result_beta_unc = 0.0, 0.0
             else:
                 ttext.append('it is not possible to save the obtained values\n')
 
@@ -6926,7 +7363,7 @@ class FluxEvaluationWindow:
         if self.allow_save == True and CH_name.get().replace(' ','') != '':
             save_time = datetime.datetime.today()
             with open(os.path.join(folder,'channels.csv'), 'a') as channel_file:
-                channel_file.write(f'{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name.get()},{self.result_f},{self.result_f_unc},{self.result_a},{self.result_a_unc},{self.result_thermal},{self.result_thermal_unc},{self.result_epithermal},{self.result_epithermal_unc},{self.result_fast},{self.result_fast_unc},{self.result_beta},{self.result_beta_unc}\n')
+                channel_file.write(f'{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name.get()},{self.result_f},{self.result_f_unc},{self.result_a},{self.result_a_unc},{self.result_thermal},{self.result_thermal_unc},{self.result_epithermal},{self.result_epithermal_unc},{self.result_fast},{self.result_fast_unc}\n')
             self.information_box.configure(text='flux evaluation is correctly saved!')
         elif self.allow_save == False:
             self.information_box.configure(text='the elaboration needs to be updated')
@@ -7171,10 +7608,8 @@ class FluxGradientEvaluationWindow:
         B_beta_save.pack(side=tk.LEFT)
         B_beta_save.image = logo_confirm
         F_save_selector = tk.Frame(bframe)
-        self.save_selector_variable = tk.IntVar(parent)
-        RC = tk.Checkbutton(F_save_selector, text='save new', offvalue=0, onvalue=1, variable=self.save_selector_variable)
-        RC.pack(anchor=tk.W, padx=3)
-        self.save_selector_variable.set(0)
+        #self.save_selector_variable = tk.IntVar(parent)
+        tk.Label(F_save_selector, text='position name').pack(anchor=tk.W, padx=3)
         E_newname = tk.Entry(F_save_selector, width=20)
         E_newname.pack(anchor=tk.W, padx=5)
         F_save_selector.pack(side=tk.LEFT, padx=3)
@@ -7193,24 +7628,16 @@ class FluxGradientEvaluationWindow:
 
     def beta_save(self, E_name, channel_CB, folder=os.path.join('data','facility')):
         if self.beta is not None and self.unc_beta is not None:
-            new_line = self.channel_data.loc[channel_CB.get()].copy(deep=True)
-            if self.save_selector_variable.get() == 0:
-                save_time = datetime.datetime.today()#new_line['datetime']
-                ch_name = channel_CB.get()
-            else:
-                save_time = datetime.datetime.today()
-                ch_name = E_name.get()
+            save_time = datetime.datetime.today()
+            ch_name = E_name.get()
             if ch_name.replace(' ','') != '':
-                if self.save_selector_variable.get() == 1 and ch_name == channel_CB.get():
-                    self.information_box.configure(text='changing name is required to be saved as a new entry')
-                else:
-                    with open(os.path.join(folder,'channels.csv'), 'a') as channel_file:
-                        channel_file.write(f'{save_time.strftime("%d/%m/%Y %H:%M:%S")},{ch_name},{new_line["f_value"]},{new_line["unc_f_value"]},{new_line["a_value"]},{new_line["unc_a_value"]},{new_line["thermal_flux"]},{new_line["unc_thermal_flux"]},{new_line["epithermal_flux"]},{new_line["unc_epithermal_flux"]},{new_line["fast_flux"]},{new_line["unc_fast_flux"]},{self.beta},{self.unc_beta}\n')
+                with open(os.path.join(folder,'beta.csv'), 'a') as channel_file:
+                    channel_file.write(f'{channel_CB.get()},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{ch_name},{self.beta},{self.unc_beta}\n')
                     self.information_box.configure(text='saved!')
             else:
                 self.information_box.configure(text='invalid name')
         else:
-            self.information_box.configure(text='?')
+            self.information_box.configure(text='β evaluation not valid')
 
     def beta_elaboration(self, channel_CB, monitor_CB, hi_mass, hi_unc_mass, hi_Gs, hi_unc_Gs, hi_Ge, hi_unc_Ge, hi_dd, hi_deltal, hi_unc_deltal, lo_mass, lo_unc_mass, lo_Gs, lo_unc_Gs, lo_Ge, lo_unc_Ge, lo_dd, deltal_monitor_distance, stext, ax_fit, figg, canvas, tolerance_energy=0.3):
         #prerequisites
@@ -7350,13 +7777,24 @@ class FluxGradientEvaluationWindow:
                 comput_values = [np_lo, self.lower_spectrum.real_time, self.lower_spectrum.live_time, lamb, td_lo, lo_mass_in, 0.0, lo_Gs_in, lo_Ge_in, np_hi, self.higher_spectrum.real_time, self.higher_spectrum.live_time, td_hi, hi_mass_in, der, 0.0, hi_Gs_in, hi_Ge_in, ff, Q0, Er, aa, hi_deltal_in]
                 uncertainties = [unp_lo, 0.1, 0.1, ulamb, 1, lo_unc_mass_in, lo_dd_in, lo_unc_Gs_in, lo_unc_Ge_in, unp_hi, 0.1, 0.1, 1, hi_unc_mass_in, uder, hi_dd_in, hi_unc_Gs_in, hi_unc_Ge_in, uuff, uQ0, uEr, uuaa, hi_unc_deltal_in]
                 res = []
+                unc_posrelunc = [0.0, 0.0]
+                low_positionals = []
+                hi_positionals = []
                 for idx in range(len(original_values)):
                     comput_values[idx] = original_values[idx] + uncertainties[idx]
                     _np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _dd_lo, _gs_lo, _ge_lo, _np_hi, _tr_hi, _tl_hi, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, _dx = comput_values
                     solplus = (self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, dref) / Asp_lo - self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa, dref) / Asp_lo) / _dx
+                    if idx == 6:
+                        low_positionals.append(self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa, dref))
+                    if idx == 15:
+                        hi_positionals.append(self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, dref))
                     comput_values[idx] = original_values[idx] - uncertainties[idx]
                     _np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _dd_lo, _gs_lo, _ge_lo, _np_hi, _tr_hi, _tl_hi, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, _dx = comput_values
                     solminus = (self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, dref) / Asp_lo - self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa, dref) / Asp_lo) / _dx
+                    if idx == 6:
+                        low_positionals.append(self.specific_count_rate(_np_lo, _tr_lo, _tl_lo, _lamb, _td_lo, _mass_lo, _der, _dd_lo, _gs_lo, _ge_lo, _ff, _Q0, _Er, _aa, dref))
+                    if idx == 15:
+                        hi_positionals.append(self.specific_count_rate(_np_hi, _tr_hi, _tl_hi, _lamb, _td_hi, _mass_hi, _der, _dd_hi, _gs_hi, _ge_hi, _ff, _Q0, _Er, _aa, dref))
                     comput_values[idx] = original_values[idx]
                     res.append((solplus-solminus) / (2*uncertainties[idx] + 1E-14))
                 res = np.array(res)
@@ -7375,10 +7813,12 @@ class FluxGradientEvaluationWindow:
                 ttext.append(f'β value found by calculating the slope of the line through two points\n{"".ljust(4)}{"value".ljust(10)}{"u (k=1)".ljust(9)}rel. u\n{"β".ljust(4)}{format(self.beta,".5f").ljust(10)}{format(self.unc_beta,".5f").ljust(9)}({np.abs(100 * self.unc_beta / self.beta):.1f} %)\n{warning}\nList of 5 major contributors to the combined uncertainty of β evaluation:\n'+'\n'.join(text_major_contributors)+'\n')
 
                 #plot data
+                #((_dref-_der)/(_dref+_dd-_der))**2
+                unc_posrelunc = [np.std(low_positionals) / np.average(low_positionals), np.std(hi_positionals) / np.average(hi_positionals)]
                 X_OFFSET = 3
                 x_plot = [0, hi_deltal_in]
                 y_plot = [1, Asp_hi / Asp_lo]
-                y_uncplot = np.array([y_plot[0]*np.sqrt(np.power(unp_lo/np_lo, 2)+np.power(lo_unc_mass_in/lo_mass_in, 2)+np.power(der*lo_dd_in, 2)), y_plot[1]*np.sqrt(np.power(unp_hi/np_hi, 2)+np.power(hi_unc_mass_in/hi_mass_in, 2)+np.power(der*hi_dd_in, 2))])
+                y_uncplot = np.array([y_plot[0]*np.sqrt(np.power(unp_lo/np_lo, 2)+np.power(lo_unc_mass_in/lo_mass_in, 2)+np.power(unc_posrelunc[0], 2)), y_plot[1]*np.sqrt(np.power(unp_hi/np_hi, 2)+np.power(hi_unc_mass_in/hi_mass_in, 2)+np.power(unc_posrelunc[1],2))])
                 ax_fit.grid(False)
                 h = len(ax_fit.lines)
                 for times in range(h):
@@ -7415,7 +7855,7 @@ class FluxGradientEvaluationWindow:
     def _der_calculation(self, der_exp, der_parm, der_cov, energy):
         E = np.array([energy]) / 1000
         W = E[:, np.newaxis]**der_exp
-        derm = np.exp(der_parm@W.T)
+        derm = -np.exp(der_parm@W.T)
         d_pars = np.array(der_parm,copy=True)
         d_errs = np.sqrt(np.diag(der_cov))
         sensitivity_coefficient = []
@@ -7529,8 +7969,8 @@ class FluxGradientEvaluationWindow:
         a_value, unc_a_value = self.channel_data.loc[box.get(),['a_value','unc_a_value']]
         Lf.configure(text=f'{f_value:.1f} ({naaobject._get_division(unc_f_value,f_value):.1f} %)')
         La.configure(text=f'{a_value:.4f} ({naaobject._get_division(unc_a_value,a_value):.1f} %)')
-        entry.delete(0,tk.END)
-        entry.insert(tk.END, box.get())
+        #entry.delete(0,tk.END)
+        #entry.insert(tk.END, box.get())
         self.beta, self.unc_beta = None, None
 
     def change_end_irradiation_date(self, irradiation_date_label, hints):
