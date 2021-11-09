@@ -887,6 +887,7 @@ def _open_channels_database(filename='channels.csv'):#only_last_update
 class CoreAnalysis:
 	def __init__(self,settings_dict):
 		self.settings_dict = settings_dict
+		self.analysis_name = None
 		self.irradiation = None
 		self.calibration = None
 		self.background = []
@@ -1192,13 +1193,15 @@ class UncBudget:
 		return 0.0, 0.0
 
 	def _get_z_score_info(self, sample_spectrum):
-		z, uz = None, None
+		z, uz, RM = None, None, False
 		if sample_spectrum.sample is not None:
 			self.cert_name = sample_spectrum.sample.name
+			if sample_spectrum.sample.sample_type == 'Reference Material':
+				RM = True
 			y = sample_spectrum.sample.certificate.get(self.target)
 			if y is not None:
-				return y
-		return z, uz
+				return y[0], y[1], RM
+		return z, uz, RM
 
 	def manage_sum(self, emitter_df, Xindex, idxs):
 		correction = 0.0
@@ -2599,7 +2602,7 @@ class ExcelOutput:
         w_bud.write(55, 3, fml, self.font_DL)
 
         #z score test
-        if budget.z_score[0] is not None and budget.smp_np > 0.0:
+        if budget.z_score[0] is not None and budget.smp_np > 0.0 and budget.z_score[2]:
             fml = f'=(D55-{budget.z_score[0]}) / SQRT((E55)^2 + ({budget.z_score[1]})^2)'
             w_bud.write(56, 4, f'ref certificate: {budget.cert_name}')
         else:
@@ -3017,29 +3020,22 @@ def _get_fast_data(path=os.path.join(os.path.join('data','literaturedata'), 'fas
 	df.drop_duplicates(subset=['emitter'], inplace=True)
 	return df
 
-def _get_stored_data(filepath=os.path.join(os.path.join('data','results'),'result_data.csv')):
-	columns = ['irradiation_date', 'channel', 'f', 'a', 'irradiation_time', 'target', 'emitter', 'sample', 'value', 'uncertainty', 'DL', 'z', 'certificate']
-	df = pd.read_csv(filepath, names=columns, parse_dates=['irradiation_date'])
-	df.drop_duplicates(inplace=True)
-	df.loc[:,'channel'] = df.loc[:, 'channel'].astype(str)
-	df.loc[:,'certificate'] = df.loc[:, 'certificate'].astype(str)
-	return df
-
 def _get_true_table(df):
 	#return pd.Series([True]*len(df['target']))
 	return df['target'] != ''
 
-def _store_analysis_data(NAA,filepath=os.path.join(os.path.join('data','results'),'result_data.csv')):
-	columns = ['irradiation_date', 'channel', 'f', 'a', 'irradiation_time', 'target', 'emitter', 'sample', 'value', 'uncertainty', 'DL', 'z', 'certificate']
+def _store_analysis_data(NAA):
+	columns = ['irradiation_date', 'channel', 'f', 'a', 'irradiation_time', 'target', 'emitter', 'sample', 'value', 'uncertainty', 'DL', 'z', 'certificate', 'w', 'uw']
 	data = []
 	for item in NAA.budgets:
 		target, emitter, values = item._solve(full=True)
 		if values is not None:
-			if not np.isnan(values[3]):
-				data_row = [NAA.irradiation.datetime, NAA.irradiation.channel_name, NAA.irradiation.f_value, NAA.irradiation.a_value, NAA.irradiation.irradiation_time, target, emitter, 'sample', values[0], values[1], values[2], values[3], item.cert_name]
+			if not np.isnan(values[3]) and item.z_score[2]:
+				data_row = [NAA.irradiation.datetime, NAA.irradiation.channel_name, NAA.irradiation.f_value, NAA.irradiation.a_value, NAA.irradiation.irradiation_time, target, emitter, item.spectrum_code, values[0], values[1], values[2], values[3], item.cert_name, item.z_score[0], item.z_score[1]]
 				data.append(data_row)
 	df = pd.DataFrame(data, columns=columns)
-	df.to_csv(filepath, columns=columns, header=False, index=False, mode='a', date_format="%d/%m/%Y %H:%M:%S")
+	df['irradiation_date'] = pd.to_datetime(df['irradiation_date'], format="%d/%m/%Y %H:%M:%S")
+	return df
 
 def _update_analysis_data(df,filepath=os.path.join(os.path.join('data','results'),'result_data.csv')):
 	columns = ['irradiation_date', 'channel', 'f', 'a', 'irradiation_time', 'target', 'emitter', 'sample', 'value', 'uncertainty', 'DL', 'z', 'certificate']
@@ -3055,11 +3051,11 @@ def _get_emission_data(filename='emissions.csv', columns=['emitter', 'energy', '
 	return pd.read_csv(os.path.join(os.path.join('data','literaturedata'), filename), header=0, names=columns)
 
 
-def _get_channel_data(filename='channels.csv', columns=['datetime', 'channel_name', 'f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux', 'beta', 'unc_beta'],full_dataset=False):
+def _get_channel_data(filename='channels.csv', columns=['datetime', 'channel_name', 'f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux'],full_dataset=False):
 	channel_df = pd.read_csv(os.path.join(os.path.join('data','facility'), filename), header=0, names=columns)
 	channel_df['datetime'] = pd.to_datetime(channel_df['datetime'], format="%d/%m/%Y %H:%M:%S")
 	channel_df['channel_name'] = channel_df['channel_name'].astype(str)
-	channel_df.dropna(axis=0, how='any', subset=['f_value','unc_f_value', 'a_value','unc_a_value','beta','unc_beta'], inplace=True)
+	channel_df.dropna(axis=0, how='any', subset=['f_value','unc_f_value', 'a_value','unc_a_value'], inplace=True)
 	#selection
 	channel_df.sort_values(by='datetime', inplace=True, ascending=False)
 	if full_dataset == False:
@@ -3069,6 +3065,17 @@ def _get_channel_data(filename='channels.csv', columns=['datetime', 'channel_nam
 	else:
 		channel_df.set_index(keys='channel_name', drop=True, inplace=True)
 		return list(set(channel_df.index)), channel_df
+
+def _get_beta_data(filename='beta.csv', columns=['channel_name', 'datetime','position', 'beta', 'unc_beta']):
+	channel_df = pd.read_csv(os.path.join(os.path.join('data','facility'), filename), header=0, names=columns)
+	channel_df['datetime'] = pd.to_datetime(channel_df['datetime'], format="%d/%m/%Y %H:%M:%S")
+	channel_df['channel_name'] = channel_df['channel_name'].astype(str)
+	channel_df['position'] = channel_df['position'].astype(str)
+	channel_df.dropna(axis=0, how='any', subset=['beta', 'unc_beta'], inplace=True)
+	#selection
+	channel_df.sort_values(by='datetime', inplace=True, ascending=False)
+	channel_df.set_index(keys='channel_name', drop=True, inplace=True)
+	return channel_df
 
 def manage_spectra_files_and_get_infos(filename,limit,look_for_peaklist_option):
 	"""
