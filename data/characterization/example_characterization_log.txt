@@ -1,266 +1,480 @@
-Characterization of detector CA6C performed on date 19/07/2021.
-The used emission source is Multi-element (47 emissions reported at calibration date 07/07/2016 12:00:00).
-Reference position is selected at 203.4 mm distance from detector end-cap.
+Characterization of detector OR50 performed on date 19/10/2021.
+The used emission source is full_source2021_10 (40 emissions reported at calibration date 21/09/2021 17:45:14).
+Reference position is selected at 200.0 mm distance from detector end-cap.
 
-11 spectra evaluated at reference position: (AmC16075k-6, Ba16065k-6, Cd16075k-6, Co16065k-6, Co5716075k-6, Cs16075k-6, Eu16065k-6, Mn16075k-6, RA1121a1-6_up, Ra16065k-6, Zn16065k-6).
+9 spectra evaluated at reference position: (200_Am, 200_Au, 200_Ba, 200_Cd, 200_Co, 200_Cs, 200_Eu, 200_Zn, 200_Cr).
 
-44 emissions from the source are identified in the spectra of reference position:
-59.50 keV Am-241  -> AmC16075k-6
-79.60 keV Ba-133  -> Ba16065k-6
-81.00 keV Ba-133 multiple! (selected: Ba16065k-6 at channel 209.0)
-88.00 keV Cd-109  -> Cd16075k-6
-122.10 keV Co-57  -> Co5716075k-6
-136.50 keV Co-57  -> Co5716075k-6
-186.20 keV Ra-226  -> Ra16065k-6
-242.00 keV Ra-226  -> Ra16065k-6
-244.70 keV Eu-152  -> Eu16065k-6
-276.40 keV Ba-133  -> Ba16065k-6
-295.20 keV Ra-226  -> Ra16065k-6
-302.80 keV Ba-133  -> Ba16065k-6
-344.30 keV Eu-152  -> Eu16065k-6
-351.90 keV Ra-226  -> Ra16065k-6
-356.00 keV Ba-133  -> Ba16065k-6
-383.80 keV Ba-133  -> Ba16065k-6
-411.10 keV Eu-152  -> Eu16065k-6
-411.8 keV Au-198 multiple! (selected: RA1121a1-6_up at channel 1058.6)
-444.00 keV Eu-152  -> Eu16065k-6
-609.30 keV Ra-226  -> Ra16065k-6
-661.70 keV Cs-137  -> Cs16075k-6
-768.40 keV Ra-226  -> Ra16065k-6
-778.90 keV Eu-152  -> Eu16065k-6
-834.90 keV Mn-54  -> Mn16075k-6
-934.10 keV Ra-226  -> Ra16065k-6
-964.10 keV Eu-152 multiple! (selected: Eu16065k-6 at channel 2474.6)
-1085.80 keV Eu-152  -> Eu16065k-6
-1112.10 keV Eu-152  -> Eu16065k-6
-1115.50 keV Zn-65  -> Zn16065k-6
-1120.30 keV Ra-226  -> Ra16065k-6
-1173.20 keV Co-60  -> Co16065k-6
-1238.10 keV Ra-226  -> Ra16065k-6
-1332.50 keV Co-60  -> Co16065k-6
-1377.70 keV Ra-226  -> Ra16065k-6
-1408.00 keV Eu-152 multiple! (selected: Eu16065k-6 at channel 3612.7)
-1509.20 keV Ra-226  -> Ra16065k-6
-1661.30 keV Ra-226  -> Ra16065k-6
-1729.60 keV Ra-226  -> Ra16065k-6
-1764.50 keV Ra-226 multiple! (selected: Ra16065k-6 at channel 4525.6)
-1847.40 keV Ra-226  -> Ra16065k-6
-2118.60 keV Ra-226  -> Ra16065k-6
-2204.20 keV Ra-226  -> Ra16065k-6
-2293.40 keV Ra-226  -> Ra16065k-6
-2447.90 keV Ra-226  -> Ra16065k-6
+36 emissions from the source are identified in the spectra of reference position:
+53.16 keV Ba-133  -> 200_Ba
+59.54 keV Am-241  -> 200_Am
+88.03 keV Cd-109  -> 200_Cd
+121.78 keV Eu-152  -> 200_Eu
+122.06 keV Co-57  -> 200_Co
+136.47 keV Co-57  -> 200_Co
+160.61 keV Ba-133  -> 200_Ba
+223.24 keV Ba-133  -> 200_Ba
+244.7 keV Eu-152  -> 200_Eu
+276.4 keV Ba-133  -> 200_Ba
+295.94 keV Eu-152  -> 200_Eu
+302.85 keV Ba-133  -> 200_Ba
+320.08 keV Cr-51  -> 200_Cr
+344.28 keV Eu-152  -> 200_Eu
+356.01 keV Ba-133  -> 200_Ba
+367.79 keV Eu-152  -> 200_Eu
+383.85 keV Ba-133  -> 200_Ba
+411.12 keV Eu-152  -> 200_Eu
+411.8 keV Au-198  -> 200_Au
+443.97 keV Eu-152  -> 200_Eu
+488.68 keV Eu-152  -> 200_Eu
+661.66 keV Cs-137  -> 200_Cs
+678.62 keV Eu-152  -> 200_Eu
+688.67 keV Eu-152  -> 200_Eu
+778.9 keV Eu-152  -> 200_Eu
+867.38 keV Eu-152  -> 200_Eu
+919.34 keV Eu-152  -> 200_Eu
+964.08 keV Eu-152  -> 200_Eu
+1085.84 keV Eu-152  -> 200_Eu
+1089.74 keV Eu-152  -> 200_Eu
+1112.08 keV Eu-152  -> 200_Eu
+1115.54 keV Zn-65  -> 200_Zn
+1212.95 keV Eu-152  -> 200_Eu
+1299.14 keV Eu-152  -> 200_Eu
+1408.01 keV Eu-152  -> 200_Eu
+1457.64 keV Eu-152  -> 200_Eu
 
 #####
 Energy fit: linear model (exponents: 1, 0)
       value      u (k=1)    rel. u
-p0:   3.90e-01   2.2e-05    (0.01 %)
-p1:   -1.03e+00  6.3e-02    (6.15 %)
+p0:   2.50e-01   6.8e-06    (0.00 %)
+p1:   1.15e-01   2.0e-02    (16.94 %)
 
-Sum of squares of residuals: 2.736846
-Absolute maximum excursion of residuals: 0.88126
+Sum of squares of residuals: 0.159275
+Absolute maximum excursion of residuals: 0.27946
 
 corr. M  p0:      p1:      
-p0:      1.0000   -0.7937  
-p1:      -0.7937  1.0000   
+p0:      1.0000   -0.8123  
+p1:      -0.8123  1.0000   
 
 #####
 FWHM fit: squared linear model (exponents: 1, 0)
       value      u (k=1)    rel. u
-p0:   4.96e-03   5.6e-06    (0.11 %)
-p1:   3.91e+00   1.6e-02    (0.41 %)
+p0:   7.18e-03   7.6e-06    (0.11 %)
+p1:   7.98e+00   2.2e-02    (0.27 %)
 
-Sum of squares of residuals: 0.173499
-Absolute maximum excursion of residuals: 0.22135
+Sum of squares of residuals: 0.196997
+Absolute maximum excursion of residuals: 0.36678
 
 corr. M  p0:      p1:      
-p0:      1.0000   -0.7937  
-p1:      -0.7937  1.0000   
+p0:      1.0000   -0.8123  
+p1:      -0.8123  1.0000   
 
 #####
 Efficiency fit: polynomial model (exponents: 1, 0, -1, -2, -3, -4)
       value      u (k=1)    rel. u
-p0:   -3.16e-01  6.7e-03    (2.13 %)
-p1:   -7.28e+00  1.7e-02    (0.23 %)
-p2:   6.00e-01   1.1e-02    (1.85 %)
-p3:   -7.98e-02  2.6e-03    (3.31 %)
-p4:   4.58e-03   2.4e-04    (5.16 %)
-p5:   -1.07e-04  6.9e-06    (6.41 %)
+p0:   -3.18e-01  2.1e-02    (6.55 %)
+p1:   -6.80e+00  3.6e-02    (0.53 %)
+p2:   4.21e-01   1.8e-02    (4.19 %)
+p3:   -4.46e-02  3.2e-03    (7.14 %)
+p4:   1.77e-03   2.3e-04    (13.16 %)
+p5:   -2.71e-05  5.9e-06    (21.65 %)
 
-Sum of squares of residuals: 0.003227
-Relative maximum excursion of residuals: 4.179 %
+Sum of squares of residuals: 0.003678
+Relative maximum excursion of residuals: 4.485 %
 
 corr. M  p0:      p1:      p2:      p3:      p4:      p5:      
-p0:      1.0000   -0.9659  0.8720   -0.7733  0.7035   -0.6559  
-p1:      -0.9659  1.0000   -0.9562  0.8788   -0.8161  0.7702   
-p2:      0.8720   -0.9562  1.0000   -0.9746  0.9354   -0.9006  
-p3:      -0.7733  0.8788   -0.9746  1.0000   -0.9899  0.9717   
-p4:      0.7035   -0.8161  0.9354   -0.9899  1.0000   -0.9950  
-p5:      -0.6559  0.7702   -0.9006  0.9717   -0.9950  1.0000   
+p0:      1.0000   -0.9821  0.9335   -0.8661  0.7916   -0.7224  
+p1:      -0.9821  1.0000   -0.9789  0.9271   -0.8601  0.7936   
+p2:      0.9335   -0.9789  1.0000   -0.9807  0.9341   -0.8792  
+p3:      -0.8661  0.9271   -0.9807  1.0000   -0.9847  0.9511   
+p4:      0.7916   -0.8601  0.9341   -0.9847  1.0000   -0.9901  
+p5:      -0.7224  0.7936   -0.8792  0.9511   -0.9901  1.0000   
 
 emission            efficiency  residual    
-81.00 keV Ba-133    2.707e-03   +2.14 %
-79.60 keV Ba-133    2.550e-03   -2.04 %
-834.90 keV Mn-54    9.623e-04   -1.79 %
-1112.10 keV Eu-152  7.971e-04   +1.50 %
-1115.50 keV Zn-65   7.719e-04   -1.47 %
-964.10 keV Eu-152   8.880e-04   +1.30 %
-2293.40 keV Ra-226  4.339e-04   +1.21 %
-1377.70 keV Ra-226  6.717e-04   +1.09 %
-768.40 keV Ra-226   1.034e-03   -1.09 %
-186.20 keV Ra-226   3.076e-03   +1.05 %
-1332.50 keV Co-60   6.753e-04   -1.00 %
-1847.40 keV Ra-226  5.165e-04   -1.00 %
-244.70 keV Eu-152   2.578e-03   -0.88 %
-411.10 keV Eu-152   1.750e-03   +0.83 %
-1729.60 keV Ra-226  5.564e-04   +0.81 %
-136.50 keV Co-57    3.267e-03   -0.80 %
-2447.90 keV Ra-226  3.991e-04   -0.80 %
-2204.20 keV Ra-226  4.418e-04   -0.76 %
-276.40 keV Ba-133   2.401e-03   +0.74 %
-1408.00 keV Eu-152  6.576e-04   +0.70 %
-344.30 keV Eu-152   1.994e-03   -0.67 %
-1173.20 keV Co-60   7.494e-04   -0.52 %
-383.80 keV Ba-133   1.846e-03   +0.50 %
-302.80 keV Ba-133   2.235e-03   +0.50 %
-1085.80 keV Eu-152  8.036e-04   +0.47 %
-934.10 keV Ra-226   9.016e-04   +0.39 %
-1238.10 keV Ra-226  7.252e-04   +0.37 %
-609.30 keV Ra-226   1.252e-03   -0.34 %
-661.70 keV Cs-137   1.172e-03   -0.31 %
-351.90 keV Ra-226   1.966e-03   -0.31 %
-1509.20 keV Ra-226  6.164e-04   -0.21 %
-1764.50 keV Ra-226  5.438e-04   +0.20 %
-1661.30 keV Ra-226  5.720e-04   +0.20 %
-295.20 keV Ra-226   2.263e-03   -0.20 %
-1120.30 keV Ra-226  7.820e-04   +0.15 %
-778.90 keV Eu-152   1.035e-03   +0.11 %
-242.00 keV Ra-226   2.618e-03   -0.11 %
-88.00 keV Cd-109    2.852e-03   +0.10 %
-356.00 keV Ba-133   1.955e-03   +0.09 %
-444.00 keV Eu-152   1.627e-03   -0.06 %
-411.8 keV Au-198    1.732e-03   -0.05 %
-122.10 keV Co-57    3.274e-03   -0.03 %
-2118.60 keV Ra-226  4.617e-04   -0.02 %
-59.50 keV Am-241    1.406e-03   +0.01 %
+1457.64 keV Eu-152  9.393e-04   +2.32 %
+136.47 keV Co-57    3.879e-03   -2.17 %
+867.38 keV Eu-152   1.274e-03   -2.07 %
+688.67 keV Eu-152   1.542e-03   +2.00 %
+344.28 keV Eu-152   2.473e-03   +1.67 %
+160.61 keV Ba-133   3.878e-03   +1.61 %
+678.62 keV Eu-152   1.550e-03   +1.51 %
+443.97 keV Eu-152   2.058e-03   +1.15 %
+1299.14 keV Eu-152  9.840e-04   -1.09 %
+919.34 keV Eu-152   1.238e-03   -1.08 %
+302.85 keV Ba-133   2.633e-03   -1.01 %
+1408.01 keV Eu-152  9.315e-04   -0.97 %
+223.24 keV Ba-133   3.223e-03   -0.84 %
+356.01 keV Ba-133   2.357e-03   -0.78 %
+411.12 keV Eu-152   2.163e-03   +0.74 %
+1089.74 keV Eu-152  1.128e-03   +0.72 %
+244.7 keV Eu-152    3.091e-03   +0.70 %
+367.79 keV Eu-152   2.306e-03   -0.66 %
+383.85 keV Ba-133   2.241e-03   -0.55 %
+88.03 keV Cd-109    3.537e-03   +0.52 %
+488.68 keV Eu-152   1.896e-03   -0.43 %
+122.06 keV Co-57    3.995e-03   +0.43 %
+778.9 keV Eu-152    1.389e-03   -0.42 %
+1085.84 keV Eu-152  1.118e-03   -0.35 %
+1112.08 keV Eu-152  1.108e-03   +0.33 %
+59.54 keV Am-241    2.277e-03   -0.32 %
+1115.54 keV Zn-65   1.099e-03   -0.31 %
+661.66 keV Cs-137   1.548e-03   -0.31 %
+411.8 keV Au-198    2.138e-03   -0.30 %
+320.08 keV Cr-51    2.553e-03   -0.26 %
+53.16 keV Ba-133    1.900e-03   +0.15 %
+121.78 keV Eu-152   3.980e-03   +0.08 %
+276.4 keV Ba-133    2.834e-03   +0.07 %
+1212.95 keV Eu-152  1.042e-03   -0.05 %
+964.08 keV Eu-152   1.213e-03   -0.05 %
+295.94 keV Eu-152   2.703e-03   +0.01 %
 
-The selected reference source includes 8 coincidence-free emissions (59.50 keV Am-241, 88.00 keV Cd-109, 122.10 keV Co-57, 136.50 keV Co-57, 411.8 keV Au-198, 661.70 keV Cs-137, 834.90 keV Mn-54, 1115.50 keV Zn-65).
+The selected reference source includes 7 coincidence-free emissions (59.54 keV Am-241, 88.03 keV Cd-109, 122.06 keV Co-57, 320.08 keV Cr-51, 411.8 keV Au-198, 661.66 keV Cs-137, 1115.54 keV Zn-65).
 
 #####
 Other positions
-4 more positions are investigated (123.4, 83.4, 43.4, 23.4) distances in mm.
+9 more positions are investigated (180.0, 160.0, 140.0, 120.0, 100.0, 80.0, 60.0, 40.0, 20.0) distances in mm.
 
 #####
 d0 evaluation
-- 203.4 mm (reference)
+- 200.0 mm (reference)
 polynomial model (exponents: 1, 0, -1, -2, -3)
       value      u (k=1)    rel. u
-p0:   -1.06e-01  3.7e-01    (342.79 %)
-p1:   3.42e+00   6.7e-01    (19.68 %)
-p2:   -5.61e-02  3.5e-01    (627.77 %)
-p3:   -1.88e-02  5.0e-02    (265.90 %)
-p4:   1.04e-03   1.9e-03    (182.50 %)
+p0:   -8.43e-03  2.1e-01    (2516.21 %)
+p1:   3.53e+00   3.4e-01    (9.62 %)
+p2:   -4.25e-02  1.4e-01    (335.59 %)
+p3:   -1.06e-02  1.8e-02    (168.82 %)
+p4:   5.26e-04   6.5e-04    (122.81 %)
 
 
-- 123.4 mm
+- 180.0 mm
 polynomial model (exponents: 1, 0, -1, -2, -3)
       value      u (k=1)    rel. u
-p0:   -6.56e-02  7.6e-02    (116.22 %)
-p1:   3.49e+00   1.4e-01    (3.94 %)
-p2:   -7.82e-02  7.0e-02    (89.41 %)
-p3:   -4.54e-04  9.7e-03    (2132.10 %)
-p4:   1.88e-04   3.6e-04    (191.61 %)
+p0:   -3.52e-03  1.6e-01    (4465.36 %)
+p1:   3.54e+00   2.5e-01    (7.08 %)
+p2:   -4.72e-02  1.0e-01    (221.68 %)
+p3:   -7.54e-03  1.3e-02    (172.56 %)
+p4:   4.09e-04   4.6e-04    (113.45 %)
 
 
-- 83.4 mm
+- 160.0 mm
 polynomial model (exponents: 1, 0, -1, -2, -3)
       value      u (k=1)    rel. u
-p0:   -2.50e-02  5.6e-02    (222.75 %)
-p1:   3.45e+00   9.9e-02    (2.88 %)
-p2:   -5.31e-02  5.0e-02    (94.24 %)
-p3:   -3.56e-04  6.9e-03    (1932.01 %)
-p4:   1.40e-04   2.6e-04    (182.55 %)
+p0:   4.13e-03   1.1e-01    (2713.90 %)
+p1:   3.55e+00   1.8e-01    (5.01 %)
+p2:   -4.82e-02  7.4e-02    (153.32 %)
+p3:   -5.36e-03  9.1e-03    (170.20 %)
+p4:   3.21e-04   3.2e-04    (100.83 %)
 
 
-- 43.4 mm
+- 140.0 mm
 polynomial model (exponents: 1, 0, -1, -2, -3)
       value      u (k=1)    rel. u
-p0:   7.49e-03   8.6e-02    (1145.68 %)
-p1:   3.42e+00   1.5e-01    (4.45 %)
-p2:   -3.09e-02  7.6e-02    (246.35 %)
-p3:   -1.20e-03  1.0e-02    (873.59 %)
-p4:   1.43e-04   3.9e-04    (270.99 %)
+p0:   1.33e-02   7.6e-02    (566.68 %)
+p1:   3.55e+00   1.2e-01    (3.38 %)
+p2:   -4.67e-02  5.0e-02    (106.12 %)
+p3:   -3.84e-03  6.1e-03    (158.64 %)
+p4:   2.55e-04   2.1e-04    (84.25 %)
 
 
-- 23.4 mm
+- 120.0 mm
 polynomial model (exponents: 1, 0, -1, -2, -3)
       value      u (k=1)    rel. u
-p0:   1.91e-02   9.9e-02    (517.76 %)
-p1:   3.41e+00   1.8e-01    (5.14 %)
-p2:   -2.29e-02  8.8e-02    (382.34 %)
-p3:   -1.60e-03  1.2e-02    (750.84 %)
-p4:   1.49e-04   4.4e-04    (298.61 %)
+p0:   2.31e-02   4.9e-02    (213.61 %)
+p1:   3.55e+00   7.8e-02    (2.20 %)
+p2:   -4.38e-02  3.2e-02    (73.48 %)
+p3:   -2.79e-03  3.9e-03    (141.41 %)
+p4:   2.07e-04   1.4e-04    (67.04 %)
+
+
+- 100.0 mm
+polynomial model (exponents: 1, 0, -1, -2, -3)
+      value      u (k=1)    rel. u
+p0:   3.21e-02   3.8e-02    (117.62 %)
+p1:   3.54e+00   6.0e-02    (1.68 %)
+p2:   -4.07e-02  2.5e-02    (60.22 %)
+p3:   -2.02e-03  3.0e-03    (148.25 %)
+p4:   1.69e-04   1.0e-04    (61.77 %)
+
+
+- 80.0 mm
+polynomial model (exponents: 1, 0, -1, -2, -3)
+      value      u (k=1)    rel. u
+p0:   3.99e-02   4.2e-02    (105.94 %)
+p1:   3.54e+00   6.7e-02    (1.88 %)
+p2:   -3.77e-02  2.7e-02    (72.49 %)
+p3:   -1.44e-03  3.3e-03    (230.49 %)
+p4:   1.41e-04   1.2e-04    (82.41 %)
+
+
+- 60.0 mm
+polynomial model (exponents: 1, 0, -1, -2, -3)
+      value      u (k=1)    rel. u
+p0:   4.73e-02   5.4e-02    (113.76 %)
+p1:   3.54e+00   8.5e-02    (2.39 %)
+p2:   -3.44e-02  3.5e-02    (100.57 %)
+p3:   -1.08e-03  4.2e-03    (388.68 %)
+p4:   1.21e-04   1.5e-04    (121.04 %)
+
+
+- 40.0 mm
+polynomial model (exponents: 1, 0, -1, -2, -3)
+      value      u (k=1)    rel. u
+p0:   5.38e-02   6.6e-02    (121.99 %)
+p1:   3.53e+00   1.0e-01    (2.91 %)
+p2:   -3.14e-02  4.2e-02    (133.87 %)
+p3:   -8.65e-04  5.1e-03    (589.73 %)
+p4:   1.08e-04   1.8e-04    (164.57 %)
+
+
+- 20.0 mm
+polynomial model (exponents: 1, 0, -1, -2, -3)
+      value      u (k=1)    rel. u
+p0:   5.89e-02   7.5e-02    (127.90 %)
+p1:   3.53e+00   1.2e-01    (3.34 %)
+p2:   -2.90e-02  4.8e-02    (166.50 %)
+p3:   -7.44e-04  5.8e-03    (785.39 %)
+p4:   9.97e-05   2.0e-04    (203.94 %)
 
 #####
 kedd evaluation.
 
-- reference to 123.4 mm
-polynomial model (exponents: 1, 0, -1, -3, -4)
+- reference to 180.0 mm
+polynomial model (exponents: 1, 0, -1, -2, -3, -4)
       value      u (k=1)    rel. u
-p0:   -3.80e-02  1.3e-02    (33.03 %)
-p1:   -7.92e-01  1.4e-02    (1.78 %)
-p2:   -2.08e-02  3.1e-03    (15.06 %)
-p3:   1.66e-04   3.8e-05    (22.87 %)
-p4:   -6.86e-06  1.8e-06    (25.95 %)
+p0:   2.52e-02   1.7e-03    (6.89 %)
+p1:   -2.30e-01  2.9e-03    (1.28 %)
+p2:   2.25e-02   1.5e-03    (6.45 %)
+p3:   -4.42e-03  2.7e-04    (6.09 %)
+p4:   3.39e-04   2.1e-05    (6.08 %)
+p5:   -8.86e-06  5.5e-07    (6.17 %)
 
 
-- reference to 83.4 mm
-polynomial model (exponents: 0, -1, -2, -4)
-      value      u (k=1)    rel. u
-p0:   -1.44e+00  7.5e-03    (0.52 %)
-p1:   -1.82e-02  4.9e-03    (27.17 %)
-p2:   2.13e-04   5.4e-04    (254.80 %)
-p3:   1.43e-06   1.0e-06    (69.92 %)
-
-
-- reference to 43.4 mm
+- reference to 160.0 mm
 polynomial model (exponents: 0, -2, -3, -4)
       value      u (k=1)    rel. u
-p0:   -2.34e+00  1.7e-03    (0.07 %)
-p1:   -7.50e-03  2.9e-04    (3.86 %)
-p2:   7.13e-04   4.5e-05    (6.30 %)
-p3:   -1.82e-05  1.7e-06    (9.24 %)
+p0:   -3.75e-01  1.6e-03    (0.43 %)
+p1:   -1.27e-03  3.0e-04    (23.42 %)
+p2:   1.54e-04   4.5e-05    (28.99 %)
+p3:   -5.10e-06  1.6e-06    (31.86 %)
 
 
-- reference to 23.4 mm
-polynomial model (exponents: 1, 0, -1, -3, -4)
+- reference to 140.0 mm
+polynomial model (exponents: 1, 0, -1, -3)
       value      u (k=1)    rel. u
-p0:   -3.02e-02  9.5e-03    (31.44 %)
-p1:   -2.89e+00  1.1e-02    (0.37 %)
-p2:   -4.69e-02  2.4e-03    (5.06 %)
-p3:   1.93e-04   2.9e-05    (14.89 %)
-p4:   -4.65e-06  1.3e-06    (28.99 %)
+p0:   -8.30e-03  2.6e-03    (31.28 %)
+p1:   -5.83e-01  2.4e-03    (0.41 %)
+p2:   -7.08e-03  3.5e-04    (4.93 %)
+p3:   1.08e-05   9.2e-07    (8.55 %)
+
+
+- reference to 120.0 mm
+polynomial model (exponents: 0, -2, -3, -4)
+      value      u (k=1)    rel. u
+p0:   -8.40e-01  1.4e-03    (0.16 %)
+p1:   -2.30e-03  2.5e-04    (10.88 %)
+p2:   2.16e-04   3.8e-05    (17.33 %)
+p3:   -5.63e-06  1.4e-06    (24.30 %)
+
+
+- reference to 100.0 mm
+polynomial model (exponents: 1, 0, -2, -3)
+      value      u (k=1)    rel. u
+p0:   2.48e-02   8.5e-03    (34.33 %)
+p1:   -1.14e+00  6.4e-03    (0.56 %)
+p2:   -1.41e-03  1.6e-04    (11.13 %)
+p3:   6.51e-05   8.6e-06    (13.28 %)
+
+
+- reference to 80.0 mm
+polynomial model (exponents: 1, 0, -1, -2, -3, -4)
+      value      u (k=1)    rel. u
+p0:   5.34e-02   8.4e-04    (1.58 %)
+p1:   -1.52e+00  1.4e-03    (0.09 %)
+p2:   3.28e-02   7.1e-04    (2.15 %)
+p3:   -1.04e-02  1.3e-04    (1.26 %)
+p4:   8.88e-04   1.0e-05    (1.13 %)
+p5:   -2.38e-05  2.7e-07    (1.12 %)
+
+
+- reference to 60.0 mm
+polynomial model (exponents: 1, 0, -2, -3, -4)
+      value      u (k=1)    rel. u
+p0:   2.87e-02   9.6e-03    (33.61 %)
+p1:   -1.85e+00  8.5e-03    (0.46 %)
+p2:   -5.44e-03  7.7e-04    (14.16 %)
+p3:   5.33e-04   1.1e-04    (20.22 %)
+p4:   -1.47e-05  3.8e-06    (25.92 %)
+
+
+- reference to 40.0 mm
+polynomial model (exponents: 1, 0, -2, -3, -4)
+      value      u (k=1)    rel. u
+p0:   5.25e-02   5.0e-03    (9.54 %)
+p1:   -2.34e+00  4.4e-03    (0.19 %)
+p2:   -6.57e-03  4.0e-04    (6.09 %)
+p3:   6.12e-04   5.6e-05    (9.16 %)
+p4:   -1.59e-05  2.0e-06    (12.46 %)
+
+
+- reference to 20.0 mm
+polynomial model (exponents: 1, 0, -2, -3, -4)
+      value      u (k=1)    rel. u
+p0:   5.52e-02   1.6e-02    (28.85 %)
+p1:   -2.97e+00  1.4e-02    (0.48 %)
+p2:   -9.29e-03  1.3e-03    (13.69 %)
+p3:   9.12e-04   1.8e-04    (19.54 %)
+p4:   -2.44e-05  6.3e-06    (25.69 %)
 
 
 #####
 PT overview.
 
 - PT at reference
-PT evaluation not performed for this position
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.2813
+p1: 0.8739
+p2: -0.9940
+
+fit junction at 240.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.4650
+l1: 0.5994
 
 
-- PT at 123.4 mm
-PT evaluation not performed for this position
+- PT at 180.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.3464
+p1: 1.1767
+p2: -1.3173
+
+fit junction at 240.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.4721
+l1: 0.6449
 
 
-- PT at 83.4 mm
-PT evaluation not performed for this position
+- PT at 160.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.3662
+p1: 1.2739
+p2: -1.4197
+
+fit junction at 240.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.4695
+l1: 0.6551
 
 
-- PT at 43.4 mm
-PT evaluation not performed for this position
+- PT at 140.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.3956
+p1: 1.4163
+p2: -1.5675
+
+fit junction at 245.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.4740
+l1: 0.6907
 
 
-- PT at 23.4 mm
-PT evaluation not performed for this position
+- PT at 120.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.4662
+p1: 1.7401
+p2: -1.9141
+
+fit junction at 245.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.4874
+l1: 0.7467
+
+
+- PT at 100.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.5177
+p1: 1.9716
+p2: -2.1524
+
+fit junction at 240.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.4928
+l1: 0.7805
+
+
+- PT at 80.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.5512
+p1: 2.1300
+p2: -2.3158
+
+fit junction at 245.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.5039
+l1: 0.8307
+
+
+- PT at 60.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.5810
+p1: 2.2690
+p2: -2.4541
+
+fit junction at 250.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.5172
+l1: 0.8866
+
+
+- PT at 40.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.6648
+p1: 2.6485
+p2: -2.8559
+
+fit junction at 250.0 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.5400
+l1: 0.9670
+
+
+- PT at 20.0 mm
+polynomial model (exponents: 2, 1, 0)
+    value
+p0: -0.8295
+p1: 3.3608
+p2: -3.6024
+
+fit junction at 227.5 keV
+
+linear model (exponents: 1, 0)
+    value
+l0: -0.5496
+l1: 1.0060
 
 
