@@ -1,16 +1,16 @@
-datetime: 30/08/2018 16:53:00
-#irradiation_time: 43200.0
-unc_irradiation_time: 30.0
-channel_name: IL-40
-#f_value: 30.252
-unc_f_value: 2.61
-#a_value: -0.006008
-unc_a_value: 0.014045
+datetime: 18/10/2021 10:21:00
+#irradiation_time: 3600.0
+unc_irradiation_time: 17.0
+channel_name: LS-27
+#f_value: 16.93
+unc_f_value: 0.68
+#a_value: 0.0014
+unc_a_value: 0.006
 #thermal_flux: 1120000000000.0
 unc_thermal_flux: 36000000000.0
 #epithermal_flux: 37100000000.0
 unc_epithermal_flux: 2100000000.0
 #fast_flux: 139000000000.0
 unc_fast_flux: 2400000000.0
-#beta: -0.00717
-unc_beta: 0.000978
+#beta: -0.0017
+unc_beta: 0.0006
