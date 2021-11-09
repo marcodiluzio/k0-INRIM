@@ -728,20 +728,6 @@ class MainWindow:
         else:
             M.infotask.configure(text='no detector characterization is selected!')
 
-    # def go_to_otherparameters(self, M, NAA, box, button='standard'):
-    #     #open the window to display the calibration information
-    #     if self.secondary_window is not None:
-    #         self.secondary_window.destroy()
-    #     idx = box.current()
-    #     if idx >= 0:
-    #         self.secondary_window = tk.Toplevel(M)
-    #         if button == 'sample':
-    #             OthercorrectionsWindow(self.secondary_window, NAA.sample_spectra, idx)
-    #         elif button == 'standard':
-    #             OthercorrectionsWindow(self.secondary_window, NAA.standard_spectra, idx)
-    #     else:
-    #         M.infotask.configure(text='no spectrum selected')
-
     def go_to_sampledefinition(self, M, NAA, box, button='background'):
         #open the window to modify sample information
         if self.secondary_window is not None:
@@ -3471,37 +3457,6 @@ class SettingsWindow:
             settingsfile.write(f'database <#> {variable_database.get()}\nenergy tolerance <#> {variable_energy_tolerance.get()}\npage height <#> {variable_page_height.get()}\nmax allowed calibration uncertainty <#> {variable_calib_uncertainty.get()}\ncalibs statistical uncertainty limit <#> {variable_calib_limit.get()}\nstandard statistical uncertainty limit <#> {variable_standard_limit.get()}\nsample statistical uncertainty limit <#> {variable_sample_limit.get()}\nnon certified standard uncertainties <#> {variable_noncertified_uncertainty.get()}\ndefault tc&tl uncertainties <#> {variable_tctl_default_uncetrainty.get()}\ndefault td uncertainty <#> {variable_td_default_uncetrainty.get()}\nlook for spectrum file <#> {variable_find_spectrumfile.get()}')
         M.destroy()
         main_script()
-
-
-# class OthercorrectionsWindow:
-#     def __init__(self, parent, spectra_list, idx):
-#         spectrum = spectra_list[idx]
-#         parent.title(f'Overview ({spectrum.filename()})')
-#         parent.resizable(False,False)
-#         mframe = tk.Frame(parent)
-#         nline = 0
-#         self.infobox = tk.Label(mframe, text='', anchor=tk.W)
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         nline += 1
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         nline += 1
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         nline += 1
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         nline += 1
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         nline += 1
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         nline += 1
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         nline += 1
-#         tk.Label(mframe, text='sample height / mm').grid(row=nline, column=0)
-#         #if spectrum.define() == 'standard':
-#         #    pass#Ge for monitor emission
-#         #elif spectrum.define() == 'sample':
-#         #    pass#Dl vertical distance from monitor during irradiation
-#         self.infobox.grid(row=12, column=0, columnspan=4, sticky=tk.EW)
-#         mframe.pack(anchor=tk.NW, padx=5, pady=5)
 
 
 class SampleWindow:
