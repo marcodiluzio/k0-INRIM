@@ -1,1 +1,1 @@
-datetime,channel_name,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux
+mdatetime,datetime,channel_name,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux

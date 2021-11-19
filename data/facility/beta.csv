@@ -1,2 +1,1 @@
-channel_name,datetime,position,beta,unc_beta
-IL-40,02/11/2021 17:36:23,pos2,-0.0041807908774010635,0.0003029336990872836
+channel_name,mdatetime,datetime,position,beta,unc_beta
