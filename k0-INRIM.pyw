@@ -877,6 +877,13 @@ class MainWindow:
     def go_to_detectionlimits(self, M, NAA):
         #open the window to select element for detection limit evaluation
         if self.secondary_window is not None:
+            # if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+            #     if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n'):
+            #         self.secondary_window.destroy()
+            #     else:
+            #         return
+            # else:
+            #     self.secondary_window.destroy()
             self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         DetectionLimitWindow(self.secondary_window, NAA, M)
@@ -1635,23 +1642,29 @@ class IrradiationWindow:
     def __init__(self, parent, NAA, M):
         parent.title('Irradiation')
         parent.resizable(False, False)
+        self.subselection_window = None
         hints = tk.Label(parent, anchor=tk.W)
         mframe = tk.Frame(parent)
-        ch_list, ch_data = naaobject._get_channel_data()
+        ch_list, ch_data = naaobject._get_channel_data(full_dataset=True)
         tk.Label(mframe, text='irradiation code', anchor=tk.W).grid(row=0, column=0, sticky=tk.W)
-        E_irradiation_code = tk.Entry(mframe, width=20)
+        E_irradiation_code = ttk.Entry(mframe, width=20)
         E_irradiation_code.grid(row=0, column=1, columnspan=2, sticky=tk.EW)
         if NAA.irradiation is not None:
             E_irradiation_code.delete(0, tk.END)
             E_irradiation_code.insert(0, NAA.irradiation.irradiation_code)
         tk.Frame(mframe).grid(row=1, column=0, pady=5)
         tk.Label(mframe, text='channel name', anchor=tk.W).grid(row=2, column=0, sticky=tk.W)
-        CB_channel_name = ttk.Combobox(mframe, width=20)
-        CB_channel_name['values'] = ch_list
+        CB_channel_name = ttk.Entry(mframe, width=20)
         CB_channel_name.grid(row=2, column=1, columnspan=2, sticky=tk.EW)
         if NAA.irradiation is not None:
             CB_channel_name.delete(0, tk.END)
             CB_channel_name.insert(0, NAA.irradiation.channel_name)
+
+        logo_flux = tk.PhotoImage(data=gui_things.phi)
+        B_select_flux_params = gui_things.Button(mframe, image=logo_flux, hint='select flux parameters from database', hint_destination=hints)
+        B_select_flux_params.grid(row=2, column=3, padx=5)
+        B_select_flux_params.image = logo_flux
+
         tk.Label(mframe, text='x').grid(row=3, column=1, pady=3)
         tk.Label(mframe, text='u(x)').grid(row=3, column=2)
         tk.Label(mframe, text='f / 1', anchor=tk.W).grid(row=4, column=0, sticky=tk.W)
@@ -1675,9 +1688,9 @@ class IrradiationWindow:
         SB_unc_a_value.insert(tk.END, '0.0000')
         if NAA.irradiation is not None:
             SB_a_value.delete(0, tk.END)
-            SB_a_value.insert(0, f'{NAA.irradiation.a_value:.4f}')
+            SB_a_value.insert(0, f'{NAA.irradiation.a_value:.6f}')
             SB_unc_a_value.delete(0, tk.END)
-            SB_unc_a_value.insert(0, f'{NAA.irradiation.unc_a_value:.4f}')
+            SB_unc_a_value.insert(0, f'{NAA.irradiation.unc_a_value:.6f}')
         tk.Label(mframe, text='ϕthermal / cm-2 s-1', anchor=tk.W).grid(row=6, column=0, sticky=tk.W)
         E_thermal = tk.Entry(mframe, width=10)
         E_thermal.grid(row=6, column=1, sticky=tk.EW)
@@ -1724,11 +1737,14 @@ class IrradiationWindow:
         
         tk.Label(mframe, text='position name', anchor=tk.W).grid(row=10, column=0, sticky=tk.W)
         CB_beta_list = naaobject._get_beta_data()
-        CB_beta_key = ttk.Combobox(mframe, width=20, state='readonly')
+        CB_beta_key = ttk.Entry(mframe, width=20)
         CB_beta_key.grid(row=10, column=1, columnspan=2, sticky=tk.EW)
-        tk.Label(mframe, text='evaluation date', anchor=tk.W).grid(row=11, column=0, sticky=tk.W)
-        label_beta_date = tk.Label(mframe, text='', anchor=tk.W)
-        label_beta_date.grid(row=11, column=1, columnspan=2, sticky=tk.EW)
+
+        logo_beta = tk.PhotoImage(data=gui_things.beta)
+        B_select_beta_params = gui_things.Button(mframe, image=logo_beta, hint='select beta parameter from database', hint_destination=hints)
+        B_select_beta_params.grid(row=10, column=3, padx=5)
+        B_select_beta_params.image = logo_beta
+
         tk.Label(mframe, text='β / mm-1', anchor=tk.W).grid(row=12, column=0, sticky=tk.W)
         SB_beta = tk.Spinbox(mframe, from_=-1.0000, to=1.0000, increment=0.0001, width=10)
         SB_beta.grid(row=12, column=1)
@@ -1738,24 +1754,24 @@ class IrradiationWindow:
         SB_unc_beta.grid(row=12, column=2)
         if NAA.irradiation is not None:
             SB_beta.delete(0, tk.END)
-            SB_beta.insert(0, f'{NAA.irradiation.beta:.4f}')
+            SB_beta.insert(0, f'{NAA.irradiation.beta:.6f}')
             SB_unc_beta.delete(0, tk.END)
-            SB_unc_beta.insert(0, f'{NAA.irradiation.unc_beta:.4f}')
+            SB_unc_beta.insert(0, f'{NAA.irradiation.unc_beta:.6f}')
 
         tk.Frame(mframe).grid(row=13, column=0, pady=5)
-        tk.Label(mframe, text='end of irradiation date', anchor=tk.W).grid(row=14, column=0, columnspan=3, sticky=tk.W)
+        tk.Label(mframe, text='end of irradiation date', anchor=tk.W).grid(row=14, column=0, sticky=tk.W)
         #date and button
         if NAA.irradiation is not None:
             self.irr_date = NAA.irradiation.datetime
         else:
             self.irr_date = datetime.datetime.today()#None
-        irradiation_date_label = gui_things.Label(mframe, text='', width=25)
-        irradiation_date_label.grid(row=15, column=0, columnspan=2, sticky=tk.W)
+        irradiation_date_label = gui_things.Label(mframe, text='', width=20)
+        irradiation_date_label.grid(row=14, column=1, columnspan=2, sticky=tk.W)
         if self.irr_date is not None:
             irradiation_date_label.configure(text=self.irr_date.strftime("%d/%m/%Y %H:%M:%S"))
         logo_calendar = tk.PhotoImage(data=gui_things.calendar)
         B_modify_date = gui_things.Button(mframe, image=logo_calendar, command=lambda : self.change_end_irradiation_date(irradiation_date_label, hints))
-        B_modify_date.grid(row=15, column=2, padx=5)
+        B_modify_date.grid(row=14, column=3, padx=5)
         B_modify_date.image = logo_calendar
         tk.Label(mframe, text='irradiation time / s', anchor=tk.W).grid(row=16, column=0, sticky=tk.W)
         SB_irradiation_time = tk.Spinbox(mframe, from_=0.0, to=1000000.0, increment=0.1, width=10)
@@ -1776,8 +1792,8 @@ class IrradiationWindow:
         bframe.pack(fill=tk.X, pady=5)
         hints.pack(fill=tk.X, padx=5)
 
-        CB_channel_name.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>' : self.select_facility(CB_channel_name, ch_data, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, CB_beta_list))
-        CB_beta_key.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>' : self.select_beta(CB_beta_key, CB_beta_list, label_beta_date, SB_beta, SB_unc_beta))
+        B_select_flux_params.configure(command= lambda : self.select_facility(parent, ch_data, CB_channel_name, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, SB_beta, SB_unc_beta))
+        B_select_beta_params.configure(command= lambda : self.select_beta(parent, CB_beta_list, CB_channel_name, CB_beta_key, SB_beta, SB_unc_beta))
 
     def confirm_irradiation_data(self, M, E_irradiation_code, CB_channel_name, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, SB_beta, SB_unc_beta, SB_irradiation_time, SB_unc_irradiation_time, hints, NAA, folder=os.path.join('data', 'irradiation')):
         #check of data
@@ -1916,45 +1932,187 @@ class IrradiationWindow:
 
         TempTL.update()
         width, height = TempTL.winfo_width(), TempTL.winfo_height()
-        TempTL.geometry(f'{width}x{height}+{xpos}+{ypos}')#+int((cwidth-width)/2)
+        TempTL.geometry(f'{width}x{height}+{xpos+int((cwidth-width)/2)}+{ypos}')#+int((cwidth-width)/2)
 
         TempTLF.focus()
         if sys.platform != 'darwin':
             TempTLF.bind('<FocusOut>', lambda e='<FocusOut>': TempTL.destroy())
 
-    def select_facility(self, CB, ch_data, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, CB_beta_list):
-        data_f_value, data_unc_f_value, data_a_value, data_unc_a_value, data_thermal, data_unc_thermal, data_epithermal, data_unc_epithermal, data_fast, data_unc_fast = ch_data.loc[CB.get(),['f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux']]
-        SB_f_value.delete(0, tk.END)
-        SB_f_value.insert(tk.END, f'{data_f_value:.3f}')
-        SB_unc_f_value.delete(0, tk.END)
-        SB_unc_f_value.insert(tk.END, f'{data_unc_f_value:.3f}')
-        SB_a_value.delete(0, tk.END)
-        SB_a_value.insert(tk.END, f'{data_a_value:.6f}')
-        SB_unc_a_value.delete(0, tk.END)
-        SB_unc_a_value.insert(tk.END, f'{data_unc_a_value:.6f}')
-        E_thermal.delete(0, tk.END)
-        E_thermal.insert(tk.END, f'{data_thermal:.2e}')
-        E_unc_thermal.delete(0, tk.END)
-        E_unc_thermal.insert(tk.END, f'{data_unc_thermal:.1e}')
-        E_epithermal.delete(0, tk.END)
-        E_epithermal.insert(tk.END, f'{data_epithermal:.2e}')
-        E_unc_epithermal.delete(0, tk.END)
-        E_unc_epithermal.insert(tk.END, f'{data_unc_epithermal:.1e}')
-        E_fast.delete(0, tk.END)
-        E_fast.insert(tk.END, f'{data_fast:.2e}')
-        E_unc_fast.delete(0, tk.END)
-        E_unc_fast.insert(tk.END, f'{data_unc_fast:.1e}')
-        filter_beta = CB_beta_list.index == CB.get()
-        CB_beta_key['values'] = list(CB_beta_list[filter_beta]['position'])
+    def select_facility(self, parent, ch_data, CB, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, SB_beta, SB_unc_beta):
 
-    def select_beta(self, CB, CB_beta_list, label_beta_date, SB_beta, SB_unc_beta):
-        datum = CB_beta_list.iloc[CB.current()]
+        def text_cut(text,limit):
+            if len(text) > limit - 1:
+                return (text[:limit-3]+'..').ljust(limit," ")
+            else:
+                return text.ljust(limit," ")
 
-        label_beta_date.configure(text=datum["datetime"].strftime("%d/%m/%Y"))
-        SB_beta.delete(0, tk.END)
-        SB_beta.insert(tk.END, f'{datum["beta"]:.6f}')
-        SB_unc_beta.delete(0, tk.END)
-        SB_unc_beta.insert(tk.END, f'{datum["unc_beta"]:.6f}')
+        def _as_text_display(data, spaces=[15,12,12,10,10,10,10]):
+            return [f'{text_cut(idx,spaces[0])}{mtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{format(ff,".2f").rjust(spaces[3]," ")}{format(aa,".5f").rjust(spaces[4]," ")}{format(thermal,".2e").rjust(spaces[5]," ")}{format(fast,".2e").rjust(spaces[6]," ")}' for idx, mtime, dtime, ff, aa, thermal, fast in zip(data['channel_name'], data['m_datetime'], data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])]
+
+        def filter_list(ch_data, listbox, CB_channel):
+            if CB_channel.get() != '':
+                fl_data = _as_text_display(ch_data[ch_data['channel_name'] == CB_channel.get()])
+            else:
+                fl_data = _as_text_display(ch_data)
+            listbox.delete(0, tk.END)
+            for item in fl_data:
+                listbox.insert(tk.END, item)
+
+        if self.subselection_window is not None:
+            self.subselection_window.destroy()
+        self.subselection_window = tk.Toplevel(parent)
+        self.subselection_window.title('Selection of flux parameters')
+        self.subselection_window.resizable(False, False)
+        tframe = tk.Frame(self.subselection_window)
+
+        spaces = [15,12,12,10,10,10,10]
+        header=['channel','meas date','eval date','f / 1', 'a / 1','thermal', 'fast']
+        tk.Label(tframe, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}{header[6].rjust(spaces[6]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
+
+        listframe = tk.Frame(tframe)
+        scrollbar = tk.Scrollbar(listframe, orient="vertical")
+        listbox = tk.Listbox(listframe, width=82, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=listbox.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        listframe.pack(anchor=tk.NW)
+        fl_data = _as_text_display(ch_data)
+        listbox.delete(0, tk.END)
+        for item in fl_data:
+            listbox.insert(tk.END, item)
+
+        hint_label = tk.Label(tframe, text='')
+
+        control_frame = tk.Frame(tframe)
+        CB_channel_name = ttk.Combobox(control_frame, width=20, state='readonly')
+        CB_channel_name['values'] = [''] + sorted(set(ch_data['channel_name']))
+        CB_channel_name.pack(side=tk.LEFT)
+
+        logo_confirm = tk.PhotoImage(data=gui_things.beye)
+        B_confirm_selection = gui_things.Button(control_frame, image=logo_confirm, hint='select the current flux parameters!', hint_destination=hint_label, command=lambda: self.confirm_selected_facility(ch_data, listbox, CB_channel_name, CB, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, SB_beta, SB_unc_beta))
+        B_confirm_selection.pack(side=tk.LEFT, padx=5)
+        B_confirm_selection.image = logo_confirm
+        control_frame.pack(anchor=tk.NW, pady=3)
+
+        hint_label.pack(anchor=tk.W)
+
+        tframe.pack(anchor=tk.NW, padx=5, pady=5)
+
+        CB_channel_name.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>': filter_list(ch_data, listbox, CB_channel_name))
+
+    def confirm_selected_facility(self, ch_data, listbox, CB_channel_name, CB, SB_f_value, SB_unc_f_value, SB_a_value, SB_unc_a_value, E_thermal, E_unc_thermal, E_epithermal, E_unc_epithermal, E_fast, E_unc_fast, CB_beta_key, SB_beta, SB_unc_beta):
+        idx = listbox.curselection()
+        try:
+            idx = idx[0]
+        except:
+            idx = -1
+        if idx >= 0:
+            if CB_channel_name.get() != '':
+                filter_data = ch_data[ch_data['channel_name'] == CB_channel_name.get()]
+            else:
+                filter_data = ch_data[ch_data['channel_name'] != '']
+            prov_index = list(filter_data.index)
+            dataline = ch_data.loc[ch_data.index == prov_index[idx], ['channel_name', 'f_value', 'unc_f_value',
+       'a_value', 'unc_a_value', 'thermal_flux', 'unc_thermal_flux',
+       'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux']]
+            data_name, data_f, data_unc_f, data_a, data_unc_a, data_thermal, data_unc_thermal, data_epithermal, data_unc_epithermal, data_fast, data_unc_fast = [items for items in zip(dataline['channel_name'], dataline['f_value'], dataline['unc_f_value'], dataline['a_value'], dataline['unc_a_value'], dataline['thermal_flux'], dataline['unc_thermal_flux'], dataline['epithermal_flux'], dataline['unc_epithermal_flux'], dataline['fast_flux'], dataline['unc_fast_flux'])][0]
+
+            CB.delete(0, tk.END)
+            CB.insert(0, f'{data_name}')
+            SB_f_value.delete(0, tk.END)
+            SB_f_value.insert(0, f'{data_f:.3f}')
+            SB_unc_f_value.delete(0, tk.END)
+            SB_unc_f_value.insert(0, f'{data_unc_f:.3f}')
+            SB_a_value.delete(0, tk.END)
+            SB_a_value.insert(0, f'{data_a:.6f}')
+            SB_unc_a_value.delete(0, tk.END)
+            SB_unc_a_value.insert(0, f'{data_unc_a:.6f}')
+            E_thermal.delete(0, tk.END)
+            E_thermal.insert(0, f'{data_thermal:.2e}')
+            E_unc_thermal.delete(0, tk.END)
+            E_unc_thermal.insert(0, f'{data_unc_thermal:.1e}')
+            E_epithermal.delete(0, tk.END)
+            E_epithermal.insert(0, f'{data_epithermal:.2e}')
+            E_unc_epithermal.delete(0, tk.END)
+            E_unc_epithermal.insert(0, f'{data_unc_epithermal:.1e}')
+            E_fast.delete(0, tk.END)
+            E_fast.insert(0, f'{data_fast:.2e}')
+            E_unc_fast.delete(0, tk.END)
+            E_unc_fast.insert(0, f'{data_unc_fast:.1e}')
+
+            CB_beta_key.delete(0, tk.END)
+            SB_beta.delete(0, tk.END)
+            SB_beta.insert(tk.END, '0.0000')
+            SB_unc_beta.delete(0, tk.END)
+            SB_unc_beta.insert(tk.END, '0.0000')
+
+    def select_beta(self, parent, CB_beta_list, CB, CB_beta_key, SB_beta, SB_unc_beta):
+
+        def text_cut(text,limit):
+            if len(text) > limit - 1:
+                return (text[:limit-3]+'..').ljust(limit," ")
+            else:
+                return text.ljust(limit," ")
+
+        def _as_text_display(data, spaces=[20,12,12,10,13]):
+            return [f'{text_cut(posit,spaces[0])}{mtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{format(beta,".5f").rjust(spaces[3]," ")}{format(unc_beta,".5f").rjust(spaces[4]," ")}' for mtime, dtime, posit, beta, unc_beta in zip(data['m_datetime'], data['datetime'], data['position'], data['beta'], data['unc_beta'])]
+
+        if self.subselection_window is not None:
+            self.subselection_window.destroy()
+        self.subselection_window = tk.Toplevel(parent)
+        self.subselection_window.title(f'Selection of β parameters for channel: {CB.get()}')
+        self.subselection_window.resizable(False, False)
+        tframe = tk.Frame(self.subselection_window)
+        short_beta = CB_beta_list[CB_beta_list['channel_name'] == CB.get()]
+
+        spaces = [20,12,12,10,13]
+        header=['position', 'meas date', 'eval date', 'β / mm-1', 'u(β) / mm-1']
+        tk.Label(tframe, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
+
+        listframe = tk.Frame(tframe)
+        scrollbar = tk.Scrollbar(listframe, orient="vertical")
+        listbox = tk.Listbox(listframe, width=68, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=listbox.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        listframe.pack(anchor=tk.NW)
+        fl_data = _as_text_display(short_beta)
+        listbox.delete(0, tk.END)
+        for item in fl_data:
+            listbox.insert(tk.END, item)
+
+        hint_label = tk.Label(tframe, text='')
+
+        control_frame = tk.Frame(tframe)
+        logo_confirm = tk.PhotoImage(data=gui_things.beye)
+        B_confirm_selection = gui_things.Button(control_frame, image=logo_confirm, hint='select the current β parameter!', hint_destination=hint_label, command=lambda: self.confirm_selected_beta(short_beta, listbox, CB_beta_key, SB_beta, SB_unc_beta))
+        B_confirm_selection.pack(side=tk.LEFT, padx=5)
+        B_confirm_selection.image = logo_confirm
+        control_frame.pack(anchor=tk.NW, pady=3)
+        hint_label.pack(anchor=tk.W)
+
+        if len(fl_data) == 0:
+            hint_label.configure(text='no β parameters for this channel!')
+
+        tframe.pack(anchor=tk.NW, padx=5, pady=5)
+
+    def confirm_selected_beta(self, short_beta, listbox, CB_beta_key, SB_beta, SB_unc_beta):
+        idx = listbox.curselection()
+        try:
+            idx = idx[0]
+        except IndexError:
+            idx = -1
+        if idx >= 0:
+            index_beta = list(short_beta.index)
+            dataline = short_beta.loc[short_beta.index == index_beta[idx], ['position', 'beta', 'unc_beta']]
+            data_position, data_beta, data_unc_beta = [items for items in zip(dataline['position'], dataline['beta'], dataline['unc_beta'])][0]
+
+            CB_beta_key.delete(0, tk.END)
+            CB_beta_key.insert(0, data_position)
+            SB_beta.delete(0, tk.END)
+            SB_beta.insert(0, f'{data_beta:.6f}')
+            SB_unc_beta.delete(0, tk.END)
+            SB_unc_beta.insert(0, f'{data_unc_beta:.6f}')
 
 
 class DetectionLimitWindow:
@@ -2002,10 +2160,15 @@ class DatabasesWindow:
 
         ttk.Separator(Buttons_frame, orient="vertical").grid(row=0, column=7, sticky=tk.NS, padx=3)
 
-        logo_settings = tk.PhotoImage(data=gui_things.neutrons)
+        logo_settings = tk.PhotoImage(data=gui_things.phi)
         B_channels_database = gui_things.Button(Buttons_frame, image=logo_settings, hint='flux evaluation history database', hint_destination=self.information)
         B_channels_database.grid(row=0, column=8)
         B_channels_database.image = logo_settings
+
+        logo_beta = tk.PhotoImage(data=gui_things.beta)
+        B_beta_database = gui_things.Button(Buttons_frame, image=logo_beta, hint='beta evaluation history database', hint_destination=self.information)
+        B_beta_database.grid(row=0, column=9)
+        B_beta_database.image = logo_beta
 
         Buttons_frame.pack(anchor=tk.W, padx=5, pady=5)
         Action_Frame = tk.Frame(parent)
@@ -2022,74 +2185,195 @@ class DatabasesWindow:
 
         B_channels_database.configure(command=lambda : self.channel_database_management(NAA, Action_Frame))
 
-    def channel_database_management(self, NAA, frame):
+        B_beta_database.configure(command=lambda : self.beta_database_management(NAA, Action_Frame))
 
-        def delete_dat(CB, stext, parent):
-
-            def rewrite_file(folder=os.path.join('data', 'facility')):
-                with open(os.path.join(folder,'channels.csv'), 'w') as channel_file:
-                    channel_file.write('datetime,channel_name,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux\n')
-                    for save_time, CH_name, result_f, result_f_unc, result_a, result_a_unc, result_thermal, result_thermal_unc, result_epithermal, result_epithermal_unc, result_fast, result_fast_unc in zip(self.fdata['datetime'], self.fdata.index, self.fdata['f_value'], self.fdata['unc_f_value'], self.fdata['a_value'], self.fdata['unc_a_value'], self.fdata['thermal_flux'], self.fdata['unc_thermal_flux'], self.fdata['epithermal_flux'], self.fdata['unc_epithermal_flux'], self.fdata['fast_flux'], self.fdata['unc_fast_flux']):
-                        channel_file.write(f'{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name},{result_f},{result_f_unc},{result_a},{result_a_unc},{result_thermal},{result_thermal_unc},{result_epithermal},{result_epithermal_unc},{result_fast},{result_fast_unc}\n')
-                with open(os.path.join(folder,'beta.csv'), 'w') as beta_file:
-                    beta_file.write('channel_name,datetime,position,beta,unc_beta\n')
-
-            if messagebox.askyesno(title='Delete flux measurement entries', message=f'\nAre you sure to remove all outdated flux measurement entries?\nthis also deletes all β values\n', parent=parent):
-                self.fdata_list, self.fdata = naaobject._get_channel_data()
-                rewrite_file()
-                CB['values'] = [''] + self.fdata_list
-                stext._update(_as_text_display(self.fdata))
-
-        def export_xcell(CB, parent):
-            filetypes = (('Microsoft Excel file','*.xlsx'),)
-            filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
-            header = ['datetime', 'f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1']
-            if filename != '' and filename is not None:
-                if filename[-len('.xlsx'):] != '.xlsx':
-                    filename += '.xlsx'
-                columns = self.fdata.columns
-                if CB.get() != '':
-                    self.fdata[self.fdata.index == CB.get()].to_excel(filename, columns=columns, index=True, header=header)
-                else:
-                    self.fdata.to_excel(filename, columns=columns, index=True, header=header)
-                self.information.configure(text='selection saved to file')
-            else:
-                self.information.configure(text='invalid filename')
-
-        def _update(CB, stext):
-            if CB.get() != '':
-                fl_data = _as_text_display(self.fdata[self.fdata.index == CB.get()])
-            else:
-                fl_data = _as_text_display(self.fdata)
-            stext._update(fl_data)
-
+    def beta_database_management(self, NAA, frame):
         def text_cut(text,limit):
             if len(text) > limit - 1:
                 return (text[:limit-3]+'..').ljust(limit," ")
             else:
                 return text.ljust(limit," ")
 
-        def _as_text_display(data, header=['channel','date','f / 1', 'a / 1','thermal', 'fast']):
-            spaces = [15,12,10,10,10,10]
-            head = f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}\n'
+        def _as_text_display(data, spaces=[20,12,12,10,13]):
+            return [f'{text_cut(posit,spaces[0])}{mtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{format(beta,".5f").rjust(spaces[3]," ")}{format(unc_beta,".5f").rjust(spaces[4]," ")}' for mtime, dtime, posit, beta, unc_beta in zip(data['m_datetime'], data['datetime'], data['position'], data['beta'], data['unc_beta'])]
 
-            astext = '\n'.join([f'{text_cut(idx,spaces[0])}{dtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{format(ff,".2f").rjust(spaces[2]," ")}{format(aa,".5f").rjust(spaces[3]," ")}{format(thermal,".2e").rjust(spaces[4]," ")}{format(fast,".2e").rjust(spaces[5]," ")}' for idx, dtime, ff, aa, thermal, fast in zip(data.index, data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])])
-            return head + astext
+        def _update(CB_channel_selector, listbox):
+            filter_channel = self.bdata['channel_name'] == CB_channel_selector.get()
+            fl_data = _as_text_display(self.bdata[filter_channel])
+            listbox.delete(0, tk.END)
+            for item in fl_data:
+                listbox.insert(tk.END, item)
+
+            if len(fl_data) == 0:
+                self.information.configure(text='no β parameters for this channel!')
+            else:
+                self.information.configure(text='')
+
+        def export_xcell(CB, parent):
+            filetypes = (('Microsoft Excel file','*.xlsx'),)
+            filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
+            header = ['channel name', 'position', 'meas date', 'eval date', 'β / mm-1', 'u(β) / mm-1']
+            if filename != '' and filename is not None:
+                if filename[-len('.xlsx'):] != '.xlsx':
+                    filename += '.xlsx'
+                columns = ['channel_name', 'position', 'm_datetime', 'datetime', 'beta', 'unc_beta']
+                if CB.get() != '':
+                    self.bdata[self.bdata['channel_name'] == CB.get()].to_excel(filename, columns=columns, index=False, header=header)
+                else:
+                    self.bdata.to_excel(filename, columns=columns, index=False, header=header)
+                self.information.configure(text='selection saved to file')
+            else:
+                self.information.configure(text='invalid filename')
+
+        children = frame.winfo_children()
+        for widget in children:
+            widget.destroy()
+        tk.Label(frame, text='beta evaluation history database', anchor=tk.W).pack(anchor=tk.W)
+
+        df_channels = naaobject._get_channel_data()[1]
+        df_channels = tuple(df_channels['channel_name'].unique())
+
+        self.bdata = naaobject._get_beta_data()
+        if len(df_channels) > 0:
+            filter_channel = self.bdata['channel_name'] == df_channels[0]
+        else:
+            filter_channel = self.bdata['channel_name'] == ''
+        spaces = [20,12,12,10,13]
+        header=['position', 'meas date', 'eval date', 'β / mm-1', 'u(β) / mm-1']
+        tk.Label(frame, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
+
+        listframe = tk.Frame(frame)
+        scrollbar = tk.Scrollbar(listframe, orient="vertical")
+        listbox = tk.Listbox(listframe, width=68, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=listbox.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        listframe.pack(anchor=tk.NW)
+        fl_data = _as_text_display(self.bdata[filter_channel])
+        listbox.delete(0, tk.END)
+        for item in fl_data:
+            listbox.insert(tk.END, item)
+
+        if len(fl_data) == 0:
+            self.information.configure(text='no β parameters for this channel!')
+        
+        control_frame = tk.Frame(frame)
+        CB_channel_selector = ttk.Combobox(control_frame, width=20, state='readonly')
+        CB_channel_selector['values'] = df_channels
+        if len(CB_channel_selector['values']) > 0:
+            CB_channel_selector.set(CB_channel_selector['values'][0])
+        CB_channel_selector.pack(side=tk.LEFT, padx=5)
+
+        logo_export = tk.PhotoImage(data=gui_things.xcell)
+        B_export_selection = gui_things.Button(control_frame, image=logo_export, hint='export selection as excel file!', hint_destination=self.information)
+        B_export_selection.pack(side=tk.LEFT)
+        B_export_selection.image = logo_export
+
+        logo_delete = tk.PhotoImage(data=gui_things.none)
+        B_delete_selection = gui_things.Button(control_frame, image=logo_delete, hint='delete selected β parameter!', hint_destination=self.information)
+        B_delete_selection.pack(side=tk.LEFT)
+        B_delete_selection.image = logo_delete
+        control_frame.pack(anchor=tk.NW, pady=3)
+
+        CB_channel_selector.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>' : _update(CB_channel_selector, listbox))
+        B_export_selection.configure(command=lambda : export_xcell(CB_channel_selector, frame))
+
+    def channel_database_management(self, NAA, frame):
+
+        def delete_dat(CB, stext, parent):
+
+            def rewrite_file(folder=os.path.join('data', 'facility')):
+                with open(os.path.join(folder,'channels.csv'), 'w') as channel_file:
+                    channel_file.write('mdatetime,datetime,channel_name,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux\n')
+                    for meas_time, save_time, CH_name, result_f, result_f_unc, result_a, result_a_unc, result_thermal, result_thermal_unc, result_epithermal, result_epithermal_unc, result_fast, result_fast_unc in zip(self.fdata['m_datetime'], self.fdata['datetime'], self.fdata['channel_name'], self.fdata['f_value'], self.fdata['unc_f_value'], self.fdata['a_value'], self.fdata['unc_a_value'], self.fdata['thermal_flux'], self.fdata['unc_thermal_flux'], self.fdata['epithermal_flux'], self.fdata['unc_epithermal_flux'], self.fdata['fast_flux'], self.fdata['unc_fast_flux']):
+                        channel_file.write(f'{meas_time.strftime("%d/%m/%Y %H:%M:%S")},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name},{result_f},{result_f_unc},{result_a},{result_a_unc},{result_thermal},{result_thermal_unc},{result_epithermal},{result_epithermal_unc},{result_fast},{result_fast_unc}\n')
+                #check on betas
+                channels = self.fdata['channel_name'].unique()
+                beta_data = naaobject._get_beta_data()
+                newbeta = beta_data[beta_data['channel_name'].isin(channels)]
+                if len(newbeta.index) < len(beta_data.index):
+                    newbeta.to_csv(os.path.join(os.path.join('data','facility'),'beta.csv'), columns=['channel_name', 'm_datetime', 'datetime','position', 'beta', 'unc_beta'], header=['channel_name', 'mdatetime', 'datetime','position', 'beta', 'unc_beta'], index=False)
+
+            if CB.get() != '':
+                prov_data = self.fdata[self.fdata['channel_name'] == CB.get()]
+            else:
+                prov_data = self.fdata[self.fdata['channel_name'] != '']
+            prov_index = list(prov_data.index)
+            idx = stext.curselection()
+            try:
+                idx = idx[0]
+            except IndexError:
+                idx = -1
+            if idx > -1:
+                if messagebox.askyesno(title='Delete the selected measurement entry', message=f'\nAre you sure to remove the currently selected flux measurement entry?\nthis also deletes all β values for removed channels\n', parent=parent):
+                    self.fdata = self.fdata.loc[self.fdata.index != prov_index[idx]]
+                    rewrite_file()
+                    CB['values'] = [''] + list(set(self.fdata['channel_name']))
+                    _update(CB, stext)
+
+        def export_xcell(CB, parent):
+            filetypes = (('Microsoft Excel file','*.xlsx'),)
+            filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
+            header = ['channel', 'meas datetime', 'datetime', 'f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1']
+            if filename != '' and filename is not None:
+                if filename[-len('.xlsx'):] != '.xlsx':
+                    filename += '.xlsx'
+                columns = self.fdata.columns
+                if CB.get() != '':
+                    self.fdata[self.fdata['channel_name'] == CB.get()].to_excel(filename, columns=columns, index=False, header=header)
+                else:
+                    self.fdata.to_excel(filename, columns=columns, index=False, header=header)
+                self.information.configure(text='selection saved to file')
+            else:
+                self.information.configure(text='invalid filename')
+
+        def _update(CB, stext):
+            if CB.get() != '':
+                fl_data = _as_text_display(self.fdata[self.fdata['channel_name'] == CB.get()])
+            else:
+                fl_data = _as_text_display(self.fdata)
+            #stext._update(fl_data)
+            stext.delete(0, tk.END)
+            for item in fl_data:
+                stext.insert(tk.END, item)
+
+        def text_cut(text,limit):
+            if len(text) > limit - 1:
+                return (text[:limit-3]+'..').ljust(limit," ")
+            else:
+                return text.ljust(limit," ")#here
+
+        def _as_text_display(data, channel=None, spaces=[15,12,12,10,10,10,10]):
+            return [f'{text_cut(idx,spaces[0])}{mtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{format(ff,".2f").rjust(spaces[3]," ")}{format(aa,".5f").rjust(spaces[4]," ")}{format(thermal,".2e").rjust(spaces[5]," ")}{format(fast,".2e").rjust(spaces[6]," ")}' for idx, mtime, dtime, ff, aa, thermal, fast in zip(data['channel_name'], data['m_datetime'], data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])]
         
         children = frame.winfo_children()
         for widget in children:
             widget.destroy()
         tk.Label(frame, text='flux evaluation history database', anchor=tk.W).pack(anchor=tk.W)
 
-        self.fdata_list, self.fdata = naaobject._get_channel_data(full_dataset=True)
-        fl_data = _as_text_display(self.fdata)
+        _, self.fdata = naaobject._get_channel_data(full_dataset=True)
+        spaces = [15,12,12,10,10,10,10]
+        header=['channel','meas date','eval date','f / 1', 'a / 1','thermal', 'fast']
+        tk.Label(frame, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}{header[6].rjust(spaces[6]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
 
-        stext = gui_things.ScrollableText(frame, width=70, data=fl_data, height=25)
-        stext.pack(anchor=tk.W)
+        listframe = tk.Frame(frame)
+        scrollbar = tk.Scrollbar(listframe, orient="vertical")
+        listbox = tk.Listbox(listframe, width=82, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=listbox.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        listframe.pack(anchor=tk.NW)
+        fl_data = _as_text_display(self.fdata)
+        listbox.delete(0, tk.END)
+        for item in fl_data:
+            listbox.insert(tk.END, item)
+
+        #stext = gui_things.ScrollableText(frame, width=82, data=fl_data, #height=25, font=('Courier', 11))
+        #stext.pack(anchor=tk.W)
 
         fl_subwindow = tk.Frame(frame)
         subchannel_CB = ttk.Combobox(fl_subwindow, width=20, state='readonly')
-        subchannel_CB['values'] = [''] + self.fdata_list
+        subchannel_CB['values'] = [''] + list(set(self.fdata['channel_name']))
         subchannel_CB.grid(row=1, column=0, sticky=tk.W, padx=5)
 
         logo_xcell = tk.PhotoImage(data=gui_things.xcell)
@@ -2098,12 +2382,12 @@ class DatabasesWindow:
         B_to_excel.image = logo_xcell
 
         logo_delete = tk.PhotoImage(data=gui_things.none)
-        B_delete = gui_things.Button(fl_subwindow, image=logo_delete, hint='delete outdated measurements', hint_destination=self.information, command=lambda : delete_dat(subchannel_CB, stext, frame))
+        B_delete = gui_things.Button(fl_subwindow, image=logo_delete, hint='delete selected measurement', hint_destination=self.information, command=lambda : delete_dat(subchannel_CB, listbox, frame))
         B_delete.grid(row=1, column=3, sticky=tk.W)
         B_delete.image = logo_delete
         fl_subwindow.pack(anchor=tk.NW)
 
-        subchannel_CB.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>' : _update(subchannel_CB, stext))
+        subchannel_CB.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>' : _update(subchannel_CB, listbox))
 
     def k0_database_management(self, NAA, frame):
 
@@ -3863,7 +4147,7 @@ class PeaklistWindow:
             B_clear_selection = tk.Button(pframe, image=logo_clear_selection, command=lambda sel_CB=sel_CB, idx=idx: self.clear_selection_effect(sel_CB, spectrum, idx))
             B_clear_selection.grid(row=idx + 1, column=8)
             B_clear_selection.image = logo_clear_selection
-            if spectrum.define() != 'standard' and spectrum.define() != 'sample':
+            if spectrum.define() not in ('standard', 'sample', 'calibration', 'PT_spectrum'):
                 B_clear_selection.configure(state=tk.DISABLED)
             logo_find_on_profile = tk.PhotoImage(data=gui_things.smallfind)
             B_find_on_spectrum_profile = tk.Button(pframe, image=logo_find_on_profile, command=lambda centroid=line[0]: self.show_spectrum(parent, spectrum, background, centroid))
@@ -4346,7 +4630,7 @@ class DisplayCalibrationWindow:
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         ax_plot.plot(NAA.calibration.x_data, NAA.calibration.y_data, marker='o', markersize=3, markeredgewidth=0.5, linestyle='', markerfacecolor='r', color='k')
-        x_fit = np.linspace(np.min(NAA.calibration.x_data), np.max(NAA.calibration.x_data), 400)
+        x_fit = np.linspace(np.min(NAA.calibration.x_data), LIMIT, 400)#np.max(NAA.calibration.x_data)
         y_fit = NAA.calibration.reference_calibration._display_efficiency_fit(x_fit)
         ax_plot.plot(x_fit, y_fit, marker='', linestyle='-', linewidth=0.75, color='k')
         ax_plot.set_ylim(0, np.max(NAA.calibration.y_data)*1.1)
@@ -4540,6 +4824,7 @@ class DetectorCharacterizationWindow:
     def __init__(self, parent, NAA, M):
         parent.title('Detector characterization')
         parent.resizable(False,False)
+        parent.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(parent))
         self.spectra_list = {} #spectra_list dict of lists, key is the name of counting position : value is a list of spectum objects
         self.source = None
         self.position_list = {}
@@ -4734,8 +5019,12 @@ class DetectorCharacterizationWindow:
         B_save_calibration.configure(command=lambda : self.save_calibration_data(filename_entry, logtext, M.calibration_combobox))
 
         CB_detector.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self.select_detector(CB_detector,mu_value,u_mu_value))
-        CB_source.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self.select_source(CB_source))
+        CB_source.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self.select_source(CB_source,NAA.settings_dict['energy tolerance']))
         CB_positions.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self.select_position(CB_positions,distance_indicator,listbox,B_PT_indicator,logo_PT_indicator_red,logo_PT_indicator_green))
+
+    def on_closing(self, parent, title='Quit Detector characterization window', message='Unsaved data will be lost.\n\nDo you want to quit the window?'):
+        if messagebox.askokcancel(title, message, parent=parent):
+            parent.destroy()
 
     def display_fit(self, CB, parent):
         ttest = CB.get()
@@ -4949,12 +5238,12 @@ class DetectorCharacterizationWindow:
                 peak_list, counts, start_acquisition, real_time, live_time, result, note, source = naaobject.manage_spectra_files_and_get_infos(filename, limit=limit_s, look_for_peaklist_option=True)
                 efficiency = NAA.calibration
                 if result == True:
-                    Spectrum = naaobject.SpectrumAnalysis(identity=f'calibration', start_acquisition=start_acquisition, real_time=real_time, live_time=live_time, peak_list=peak_list, counts=counts, path=filename, source=source, efficiency=efficiency, energy_tolerance=NAA.settings_dict['energy tolerance'], database_k0=NAA.database)
+                    Spectrum = naaobject.SpectrumAnalysis(identity=f'calibration', start_acquisition=start_acquisition, real_time=real_time, live_time=live_time, peak_list=peak_list, counts=counts, path=filename, source=source, efficiency=efficiency, energy_tolerance=NAA.settings_dict['energy tolerance'], database_k0=NAA.database, database_source=self.source)
                     actual_spectra_list = self.spectra_list[box.get()]
                     actual_spectra_list.append(Spectrum)
                     self.spectra_list[box.get()] = actual_spectra_list
                 else:
-                    pass#print(None)#notes.append(note)
+                    pass#notes.append(note)
         listbox.delete(0, tk.END)
         for spect in self.spectra_list[box.get()]:
             listbox.insert(tk.END, spect.filename())
@@ -5005,12 +5294,16 @@ class DetectorCharacterizationWindow:
             local_suspected = nest_list(self.spectra_list[box.get()][idx].suspected, nline)
             PeaklistWindow(self.PT_evaluation_toplevel, self.spectra_list[box.get()][idx], local_peak_list, local_suspected, nline)
 
-    def select_source(self, box):
+    def select_source(self, box, energy_tolerance=0.3):
         self.source = naaobject.GSource(box.get())
         if self.selectemission_toplevel is not None:
             self.selectemission_toplevel.destroy()
         if self.PT_evaluation_toplevel is not None:
             self.PT_evaluation_toplevel.destroy()
+        for key in self.spectra_list.keys():
+            for item in self.spectra_list[key]:
+                item.suspected = item._discriminate_source_peaks(energy_tolerance,self.source)
+                item.assign_nuclide = [-1]*len(item.peak_list)
 
     def select_emissions_from_source(self, parent):
         def check_true_or_false(x):
@@ -5434,8 +5727,15 @@ class DetectorCharacterizationWindow:
                             if emission_found is None:
                                 emission_found = (self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, coifree_data.loc[idx], self.source.datetime, mu, mode='CR'), float(plist_line[5])/float(plist_line[4]))
                             else:
-                                if float(plist_line[5])/float(plist_line[4]) < emission_found[1]:
-                                    emission_found = (self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, coifree_data.loc[idx], self.source.datetime, mu, mode='CR'), float(plist_line[5])/float(plist_line[4]))
+                                idx_selection = spectrum.peak_list.index(plist_line)
+                                show_selection = spectrum.assign_nuclide[idx_selection]
+                                if show_selection == -1:
+                                    if float(plist_line[5])/float(plist_line[4]) < emission_found[1]:
+                                        emission_found = (self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, coifree_data.loc[idx], self.source.datetime, mu, mode='CR'), float(plist_line[5])/float(plist_line[4]))
+                                else:
+                                    if spectrum.suspected[idx_selection][show_selection].reference == self.source.data[self.source.selection].loc[idx,'reference']:
+                                        emission_found = (self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, coifree_data.loc[idx], self.source.datetime, mu, mode='CR'), float(plist_line[5])/float(plist_line[4]))
+                                        break
                         elif float(plist_line[2]) - float(tolerance_energy) > float(coifree_data.loc[idx,'energy']):
                             break
                 if emission_found is not None:
@@ -5693,9 +5993,16 @@ class DetectorCharacterizationWindow:
                         if emission_found is None:
                             emission_found = (float(self.source.data[self.source.selection].loc[idx,'energy']), float(plist_line[0]), float(plist_line[6]), self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, self.source.data[self.source.selection].loc[idx], self.source.datetime, mu), float(plist_line[5])/float(plist_line[4]), spectrum.filename())
                         else:
-                            warning = True
-                            if float(plist_line[5])/float(plist_line[4]) < emission_found[4]:
-                                emission_found = (float(self.source.data[self.source.selection].loc[idx,'energy']), float(plist_line[0]), float(plist_line[6]), self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, self.source.data[self.source.selection].loc[idx], self.source.datetime, mu), float(plist_line[5])/float(plist_line[4]), spectrum.filename())
+                            idx_selection = spectrum.peak_list.index(plist_line)
+                            show_selection = spectrum.assign_nuclide[idx_selection]
+                            if show_selection == -1:
+                                warning = True
+                                if float(plist_line[5])/float(plist_line[4]) < emission_found[4]:
+                                    emission_found = (float(self.source.data[self.source.selection].loc[idx,'energy']), float(plist_line[0]), float(plist_line[6]), self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, self.source.data[self.source.selection].loc[idx], self.source.datetime, mu), float(plist_line[5])/float(plist_line[4]), spectrum.filename())
+                            else:
+                                if spectrum.suspected[idx_selection][show_selection].reference == self.source.data[self.source.selection].loc[idx,'reference']:
+                                    emission_found = (float(self.source.data[self.source.selection].loc[idx,'energy']), float(plist_line[0]), float(plist_line[6]), self.calculate_efficiency_or_countrate(float(plist_line[4]), spectrum, self.source.data[self.source.selection].loc[idx], self.source.datetime, mu), float(plist_line[5])/float(plist_line[4]), spectrum.filename())
+                                    break
                     elif float(plist_line[2]) - float(tolerance_energy) > float(self.source.data[self.source.selection].loc[idx,'energy']):
                         break
             if emission_found is not None:
@@ -5792,7 +6099,7 @@ class PTEvaluateWindow:
 
         tk.Frame(mframe).grid(row=6, column=0, pady=5)
         tk.Label(mframe, text='junction E / keV', anchor=tk.W).grid(row=7, column=0, sticky=tk.W)
-        self.E_joint = gui_things.FSlider(mframe, decimals=1, label_width=5, default=170.0, from_=165.0, to=370.0, length=200)
+        self.E_joint = gui_things.FSlider(mframe, decimals=1, label_width=5, default=170.0, from_=165.0, to=370.0, length=200, resolution=1.0)
         self.E_joint.grid(row=8, column=0, columnspan=4, sticky=tk.W)
         #stick
 
@@ -5823,7 +6130,7 @@ class PTEvaluateWindow:
         mframe.pack(anchor=tk.NW, padx=5, pady=5)
 
         B_add_background_spectra.configure(command=lambda : self.add_background(parent, CB_background))
-        B_add_PT_spectra.configure(command=lambda : self.add_spectra(parent, tolerance_unc, listbox))
+        B_add_PT_spectra.configure(command=lambda : self.add_spectra(parent, tolerance_unc, listbox, source))
         B_peaklist_PT_spectra.configure(command=lambda : self.see_PT_spectra_peak_list(CB_background, listbox, parent))
         B_delete_PT_spectra.configure(command=lambda : self.delete_PTspectrum_file(parent, listbox))
 
@@ -5890,7 +6197,7 @@ class PTEvaluateWindow:
             else:
                 self.information_box.configure(text='failed to import spectrum')
 
-    def add_spectra(self, parent, tol, listbox):
+    def add_spectra(self, parent, tol, listbox, database_source):
         #add spectra for PT calculations
         filetypes = (('HyperLab peak list','*.csv'),('GammaVision report file','*.rpt'))#,('HyperLab ASC file','*.asc'),('CHN spectrum file','*.chn'))
         limit_s = tol
@@ -5905,7 +6212,7 @@ class PTEvaluateWindow:
                 peak_list, counts, start_acquisition, real_time, live_time, result, note, source = naaobject.manage_spectra_files_and_get_infos(filename, limit=limit_s, look_for_peaklist_option=True)
                 efficiency = None#NAA.calibration
                 if result == True:
-                    Spectrum = naaobject.SpectrumAnalysis(identity=f'PT_spectrum', start_acquisition=start_acquisition, real_time=real_time, live_time=live_time, peak_list=peak_list, counts=counts, path=output, source=source, efficiency=efficiency)
+                    Spectrum = naaobject.SpectrumAnalysis(identity=f'PT_spectrum', start_acquisition=start_acquisition, real_time=real_time, live_time=live_time, peak_list=peak_list, counts=counts, path=output, source=source, efficiency=efficiency, database_source=database_source)
                     self.actual_spectra_list.append(Spectrum)
                 else:
                     self.information_box.configure(text='failed to import spectrum')
@@ -6029,8 +6336,22 @@ class PTEvaluateWindow:
                         found, area = False, None
                         for plist_line in spectrum.peak_list:
                             if float(plist_line[2]) + float(tolerance_energy) > float(energy) and float(plist_line[2]) - float(tolerance_energy) < float(energy):
-                                found = True
-                                area = float(plist_line[4])
+                                if area is None:
+                                    found = True
+                                    area = float(plist_line[4])
+                                else:
+                                    idx_selection = spectrum.peak_list.index(plist_line)
+                                    show_selection = spectrum.assign_nuclide[idx_selection]
+                                    if show_selection == -1:
+                                        if float(plist_line[5])/float(plist_line[4]) < np.sqrt(area) / area:
+                                            found = True
+                                            area = float(plist_line[4])
+                                    else:
+                                        if spectrum.suspected[idx_selection][show_selection].reference == ref:
+                                            found = True
+                                            area = float(plist_line[4])
+                                            break
+                            elif float(plist_line[2]) - float(tolerance_energy) > float(energy):
                                 break
                         if found == True:
                             #background correction
@@ -6158,7 +6479,7 @@ class PTViewWindow:
         E_p2 = tk.Entry(data_frame)
         E_p2.grid(row=3, column=1, sticky=tk.EW)
         tk.Label(data_frame, text='Eg / keV').grid(row=4, column=0, columnspan=3, sticky=tk.W)
-        E_joint = gui_things.FSlider(data_frame, decimals=1, label_width=5, default=170.0, from_=165.0, to=270.0)
+        E_joint = gui_things.FSlider(data_frame, decimals=1, label_width=5, default=170.0, from_=165.0, to=270.0, resolution=1.0)
         E_joint.grid(row=5, column=0, columnspan=3)
         tk.Label(data_frame, text='linear (y = l0 x + l1)').grid(row=6, column=0, columnspan=3, sticky=tk.W)
         tk.Label(data_frame, text='l0').grid(row=7, column=0, sticky=tk.W)
@@ -6304,7 +6625,7 @@ class FluxEvaluationWindow:
         tk.Label(info_frame, text='channel', width=12, anchor=tk.W).grid(row=0, column=0, sticky=tk.W)
         channel_CB = ttk.Combobox(info_frame, width=15)
         channel_CB.grid(row=0, column=1, sticky=tk.W)
-        channel_CB['values'] = naaobject._get_channel_data()[0]
+        channel_CB['values'] = list(naaobject._get_channel_data()[1]['channel_name'])
         ti_Spinbox = tk.Spinbox(info_frame, width=10, from_=0, to=1000000, increment=1)
         self.date = datetime.datetime.today()
         if NAA.irradiation is not None:
@@ -7318,7 +7639,7 @@ class FluxEvaluationWindow:
         if self.allow_save == True and CH_name.get().replace(' ','') != '':
             save_time = datetime.datetime.today()
             with open(os.path.join(folder,'channels.csv'), 'a') as channel_file:
-                channel_file.write(f'{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name.get()},{self.result_f},{self.result_f_unc},{self.result_a},{self.result_a_unc},{self.result_thermal},{self.result_thermal_unc},{self.result_epithermal},{self.result_epithermal_unc},{self.result_fast},{self.result_fast_unc}\n')
+                channel_file.write(f'{self.date.strftime("%d/%m/%Y %H:%M:%S")},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name.get()},{self.result_f},{self.result_f_unc},{self.result_a},{self.result_a_unc},{self.result_thermal},{self.result_thermal_unc},{self.result_epithermal},{self.result_epithermal_unc},{self.result_fast},{self.result_fast_unc}\n')
             self.information_box.configure(text='flux evaluation is correctly saved!')
         elif self.allow_save == False:
             self.information_box.configure(text='the elaboration needs to be updated')
@@ -7587,7 +7908,7 @@ class FluxGradientEvaluationWindow:
             ch_name = E_name.get()
             if ch_name.replace(' ','') != '':
                 with open(os.path.join(folder,'beta.csv'), 'a') as channel_file:
-                    channel_file.write(f'{channel_CB.get()},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{ch_name},{self.beta},{self.unc_beta}\n')
+                    channel_file.write(f'{channel_CB.get()},{self.date.strftime("%d/%m/%Y %H:%M:%S")},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{ch_name},{self.beta},{self.unc_beta}\n')
                     self.information_box.configure(text='saved!')
             else:
                 self.information_box.configure(text='invalid name')
