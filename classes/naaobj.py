@@ -72,7 +72,7 @@ class Spectrum:
 class SpectrumAnalysis(Spectrum):
 	"""Defines a spectrum class suitable for NAA analysis wich includes
 	calibration and peak evaluation features."""
-	def __init__(self,identity,start_acquisition,real_time,live_time,peak_list=None,counts=None,path='',filepath_efficiency=None,prompt_peaksearch=True,prompt_peak_identification=True,w_mass=0,moisture_pc=0,source=None,sample=None,monitor=None,energy_tolerance=0.3,database_k0=None,database_relative=None,efficiency=None):
+	def __init__(self,identity,start_acquisition,real_time,live_time,peak_list=None,counts=None,path='',filepath_efficiency=None,prompt_peaksearch=True,prompt_peak_identification=True,w_mass=0,moisture_pc=0,source=None,sample=None,monitor=None,energy_tolerance=0.3,database_k0=None,database_relative=None,efficiency=None,database_source=None):
 		Spectrum.__init__(self,identity,start_acquisition,real_time,live_time,peak_list,counts,path)
 		self.calibration = efficiency
 		self.k0_monitor_index = -1
@@ -81,8 +81,10 @@ class SpectrumAnalysis(Spectrum):
 			self.peak_list = []
 
 		self.sample = sample#Subsample Class -> Inheritance from Sample Class
-		if self.identity == 'sample' or self.identity == 'standard':
+		if self.identity in ('sample', 'standard'):
 			self.suspected = self._discriminate_peaks(energy_tolerance,database_k0,database_relative)
+		elif self.identity in ('calibration', 'PT_spectrum'):
+			self.suspected = self._discriminate_source_peaks(energy_tolerance,database_source)
 		else:
 			self.suspected = [()]*len(self.peak_list)
 		if prompt_peak_identification:
@@ -98,6 +100,13 @@ class SpectrumAnalysis(Spectrum):
 
 	def _discriminate_peaks(self,energy_tolerance,database_k0,database_relative=None):
 		emissions = [self._emission_tuple(line[2],energy_tolerance,database_k0,database_relative) for line in self.peak_list]
+		return emissions
+
+	def _discriminate_source_peaks(self,energy_tolerance,database_source):
+		if database_source is not None:
+			emissions = [self._emission_tuple_source(line[2],energy_tolerance,database_source.data) for line in self.peak_list]
+		else:
+			emissions = [()]*len(self.peak_list)
 		return emissions
 
 	def get_k0_monitor(self):
@@ -192,6 +201,15 @@ class SpectrumAnalysis(Spectrum):
 			f_k0 = []
 		found = f_k0# + f_rel
 		return tuple(found)
+
+	def _emission_tuple_source(self,energy,energy_tolerance,database_source):#budgets should be the main, then emissions computed from it
+		filter_source = (energy - energy_tolerance < database_source['energy'].astype(float)) & (database_source['energy'].astype(float) < energy + energy_tolerance)
+		subdatabase = database_source[filter_source]
+		try:
+			f_source = [GSourceEmission(ene, emitt, ref) for ene, emitt, ref in zip(subdatabase['energy'], subdatabase['emitter'], subdatabase['reference'])]
+		except TypeError:#TypeError:#FilenotFoundError
+			f_source = []
+		return tuple(f_source)
 		
 	def _state(self,identifier):
 		if int(float(identifier)) == 2:
@@ -1824,6 +1842,20 @@ class Emission:
 			return ''
 
 
+class GSourceEmission:
+	"""
+	Store information relative to identified gamma source emissions.
+	"""
+	def __init__(self,energy,emitter,reference):
+		self.reference,self.emission = self._decrypt(energy, emitter, reference)
+
+	def _decrypt(self,energy, emitter, reference):
+		target = emitter
+		energy = energy
+		emission = f'{target} {energy} keV'
+		return reference,emission
+
+
 class ExcelOutput:
     def __init__(self, filename, NAA, M, budgets, btype='target'):
         wb = xlsxwriter.Workbook(filename, {'nan_inf_to_errors': True})
@@ -3051,9 +3083,10 @@ def _get_emission_data(filename='emissions.csv', columns=['emitter', 'energy', '
 	return pd.read_csv(os.path.join(os.path.join('data','literaturedata'), filename), header=0, names=columns)
 
 
-def _get_channel_data(filename='channels.csv', columns=['datetime', 'channel_name', 'f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux'],full_dataset=False):
+def _get_channel_data_deprecated(filename='channels.csv', columns=['m_datetime','datetime', 'channel_name', 'f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux'],full_dataset=False):
 	channel_df = pd.read_csv(os.path.join(os.path.join('data','facility'), filename), header=0, names=columns)
 	channel_df['datetime'] = pd.to_datetime(channel_df['datetime'], format="%d/%m/%Y %H:%M:%S")
+	channel_df['m_datetime'] = pd.to_datetime(channel_df['m_datetime'], format="%d/%m/%Y %H:%M:%S")
 	channel_df['channel_name'] = channel_df['channel_name'].astype(str)
 	channel_df.dropna(axis=0, how='any', subset=['f_value','unc_f_value', 'a_value','unc_a_value'], inplace=True)
 	#selection
@@ -3066,15 +3099,32 @@ def _get_channel_data(filename='channels.csv', columns=['datetime', 'channel_nam
 		channel_df.set_index(keys='channel_name', drop=True, inplace=True)
 		return list(set(channel_df.index)), channel_df
 
-def _get_beta_data(filename='beta.csv', columns=['channel_name', 'datetime','position', 'beta', 'unc_beta']):
+def _get_channel_data(filename='channels.csv', columns=['m_datetime','datetime', 'channel_name', 'f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux'],full_dataset=False):
 	channel_df = pd.read_csv(os.path.join(os.path.join('data','facility'), filename), header=0, names=columns)
+	channel_df['datetime'] = pd.to_datetime(channel_df['datetime'], format="%d/%m/%Y %H:%M:%S")
+	channel_df['m_datetime'] = pd.to_datetime(channel_df['m_datetime'], format="%d/%m/%Y %H:%M:%S")
+	channel_df['channel_name'] = channel_df['channel_name'].astype(str)
+	channel_df.dropna(axis=0, how='any', subset=['f_value','unc_f_value', 'a_value','unc_a_value'], inplace=True)
+	#selection
+	channel_df.sort_values(by='datetime', inplace=True, ascending=False)
+	if full_dataset == False:
+		channel_df.drop_duplicates(subset='channel_name', keep='first', inplace=True)
+		#channel_df.set_index(keys='channel_name', drop=True, inplace=True)
+	return list(channel_df.index), channel_df
+	#else:
+	#	#channel_df.set_index(keys='channel_name', drop=True, inplace=True)
+	#	return list(set(channel_df.index)), channel_df
+
+def _get_beta_data(filename='beta.csv', columns=['channel_name', 'm_datetime', 'datetime','position', 'beta', 'unc_beta']):
+	channel_df = pd.read_csv(os.path.join(os.path.join('data','facility'), filename), header=0, names=columns)
+	channel_df['m_datetime'] = pd.to_datetime(channel_df['m_datetime'], format="%d/%m/%Y %H:%M:%S")
 	channel_df['datetime'] = pd.to_datetime(channel_df['datetime'], format="%d/%m/%Y %H:%M:%S")
 	channel_df['channel_name'] = channel_df['channel_name'].astype(str)
 	channel_df['position'] = channel_df['position'].astype(str)
 	channel_df.dropna(axis=0, how='any', subset=['beta', 'unc_beta'], inplace=True)
 	#selection
 	channel_df.sort_values(by='datetime', inplace=True, ascending=False)
-	channel_df.set_index(keys='channel_name', drop=True, inplace=True)
+	#channel_df.set_index(keys='channel_name', drop=True, inplace=True)
 	return channel_df
 
 def manage_spectra_files_and_get_infos(filename,limit,look_for_peaklist_option):
