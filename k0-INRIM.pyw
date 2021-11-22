@@ -563,8 +563,13 @@ class MainWindow:
 
     def _spectrum_selection(self):
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
-            self.secondary_window = None
+            try:
+                if self.secondary_window.title() not in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    self.secondary_window.destroy()
+                    self.secondary_window = None
+            except Exception:
+                self.secondary_window.destroy()
+                self.secondary_window = None
 
     def _update_regular_selection(self, NAA, regular, standard_scale, sample_scale):
         if NAA.calibration is not None:
@@ -594,13 +599,29 @@ class MainWindow:
         for spectrum in NAA.sample_spectra:
             spectrum.calibration = NAA.calibration
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
-            self.secondary_window = None
+            try:
+                if self.secondary_window.title() not in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    self.secondary_window.destroy()
+                    self.secondary_window = None
+            except Exception:
+                self.secondary_window.destroy()
+                self.secondary_window = None
 
     def delete_spectrum_file(self, box, spectrum_list, M_selector, snumber, infos):
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
-            self.secondary_window = None
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                        self.secondary_window = None
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+                    self.secondary_window = None
+            except Exception:
+                self.secondary_window.destroy()
+                self.secondary_window = None
         if M_selector.get() == 0:
             if box.current() >= 0:
                 if messagebox.askyesno(title='Remove spectrum', message=f'\nAre you sure to remove spectrum: {box.get()} from selection?\n'):
@@ -625,8 +646,19 @@ class MainWindow:
     def delete_calibration(self, box, NAA, M_info, M_standard_pos, M_sample_pos, M_selector, folder=os.path.join('data','characterization')):
         #delete detector characterization entry
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
-            self.secondary_window = None
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                        self.secondary_window = None
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+                    self.secondary_window = None
+            except Exception:
+                self.secondary_window.destroy()
+                self.secondary_window = None
         if box.get() != '' and os.path.exists(os.path.join(folder,f'{box.get()}.pos')):
             if messagebox.askyesno(title='Delete detector characterization', message=f'\nAre you sure to delete characterization: {box.get()}?\n'):
                 try:
@@ -662,16 +694,32 @@ class MainWindow:
 
     def select_irradiation(self, box, NAA):
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
-            self.secondary_window = None
+            try:
+                if self.secondary_window.title() not in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    self.secondary_window.destroy()
+                    self.secondary_window = None
+            except Exception:
+                self.secondary_window.destroy()
+                self.secondary_window = None
         if box.get() != '':
             NAA.irradiation = naaobject.Irradiation(filename=box.get())
 
     def delete_irradiation(self, box, NAA, M_info, folder=os.path.join('data','irradiation')):
         #delete irradiation entry
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
-            self.secondary_window = None
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                        self.secondary_window = None
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+                    self.secondary_window = None
+            except Exception:
+                self.secondary_window.destroy()
+                self.secondary_window = None
         if box.get() != '' and os.path.exists(os.path.join(folder,f'{box.get()}.irr')):
             if messagebox.askyesno(title='Delete irradiation', message=f'\nAre you sure to delete irradiation: {box.get()}?\n'):
                 try:
@@ -697,21 +745,48 @@ class MainWindow:
     def go_to_settings(self, M, NAA):
         #open the settings window
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         SettingsWindow(self.secondary_window, NAA, M)
 
     def go_to_browse_databases(self, M, NAA):
         #open the window to browse and manage k0, sample and hopefully other databases
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         DatabasesWindow(self.secondary_window, NAA, M)
 
     def go_to_display_irradiation(self, M, NAA):
         #open the window to display the irradiation information
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         if NAA.irradiation is not None:
             self.secondary_window = tk.Toplevel(M)
             DisplayIrradiationWindow(self.secondary_window, NAA)
@@ -721,7 +796,16 @@ class MainWindow:
     def go_to_display_calibration(self, M, NAA):
         #open the window to display the calibration information
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         if NAA.calibration is not None:
             self.secondary_window = tk.Toplevel(M)
             DisplayCalibrationWindow(self.secondary_window, NAA, M)
@@ -731,7 +815,16 @@ class MainWindow:
     def go_to_sampledefinition(self, M, NAA, box, button='background'):
         #open the window to modify sample information
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         idx = box.current()
         if idx >= 0:
             self.secondary_window = tk.Toplevel(M)
@@ -746,7 +839,16 @@ class MainWindow:
 
     def go_to_openspectra(self, M, NAA, button):
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         filetypes = (('HyperLab peak list','*.csv'),('GammaVision report file','*.rpt'))#,('HyperLab ASC file','*.asc'),('CHN spectrum file','*.chn'))
         if button == 'background':
             limit_s = NAA.settings_dict['sample statistical uncertainty limit']
@@ -837,34 +939,79 @@ class MainWindow:
             local_peak_list = nest_list(spectrum.peak_list, NAA.settings_dict['page height'])
             local_suspected = nest_list(spectrum.suspected, NAA.settings_dict['page height'])
             if self.secondary_window is not None:
-                self.secondary_window.destroy()
+                try:
+                    if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                        if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                            self.secondary_window.destroy()
+                        else:
+                            return
+                    else:
+                        self.secondary_window.destroy()
+                except Exception:
+                    self.secondary_window.destroy()
             self.secondary_window = tk.Toplevel(M)
             PeaklistWindow(self.secondary_window, spectrum, local_peak_list, local_suspected, NAA.settings_dict['page height'], background, NAA.database)
 
     def go_to_irradiation(self, M, NAA):
         #open the window for irradiation record
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         IrradiationWindow(self.secondary_window, NAA, M)
 
     def go_to_fluxevaluation(self, M, NAA):
         #open the window for flux measurements
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         FluxEvaluationWindow(self.secondary_window, NAA, M)
 
     def go_to_fluxgradientevaluation(self, M, NAA):
         #open the window for flux gradient measurements
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         FluxGradientEvaluationWindow(self.secondary_window, NAA, M)
 
     def go_to_calibration(self, M, NAA):
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         DetectorCharacterizationWindow(self.secondary_window, NAA, M)
 
@@ -877,27 +1024,47 @@ class MainWindow:
     def go_to_detectionlimits(self, M, NAA):
         #open the window to select element for detection limit evaluation
         if self.secondary_window is not None:
-            # if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-            #     if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n'):
-            #         self.secondary_window.destroy()
-            #     else:
-            #         return
-            # else:
-            #     self.secondary_window.destroy()
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         DetectionLimitWindow(self.secondary_window, NAA, M)
 
     def go_to_elaboration(self, M, NAA):
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         ElaborationProcess(self.secondary_window, NAA, M)
 
     def go_to_credits(self, M):
         #maybe useful information
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         CreditsWindow(self.secondary_window)
 
@@ -910,7 +1077,16 @@ class MainWindow:
     def go_to_save(self, M, NAA, button):
         #save the current situation
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         position = button.winfo_width(), button.winfo_height(), button.winfo_rootx(), button.winfo_rooty()
         SaveWindow(self.secondary_window, NAA, M, position)
@@ -918,10 +1094,20 @@ class MainWindow:
     def go_to_load(self, M, NAA, button):
         #load the current situation
         if self.secondary_window is not None:
-            self.secondary_window.destroy()
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
         self.secondary_window = tk.Toplevel(M)
         position = button.winfo_width(), button.winfo_height(), button.winfo_rootx(), button.winfo_rooty()
         LoadWindow(self.secondary_window, NAA, M, position)
+
 
 def retrieve_files(folder,ext):
     return [filename for filename in os.listdir(folder) if filename[-len(ext):].lower() == ext]
@@ -1059,9 +1245,9 @@ class LoadWindow:
                     CB['values'] = [filename for filename in os.listdir(folder) if filename[-4:] == '.sav']
                     CB.set('')
 
-    def _overwrite_settings(self, saved_NAA):
+    def _overwrite_settings(self, saved_NAA, NAA):
         with open(os.path.join('data','k0-set.cfg'), 'w') as settingsfile:
-            settingsfile.write(f'database <#> {saved_NAA.settings_dict["database"]}\nenergy tolerance <#> {saved_NAA.settings_dict["energy tolerance"]}\npage height <#> {saved_NAA.settings_dict["page height"]}\nmax allowed calibration uncertainty <#> {saved_NAA.settings_dict["max allowed calibration uncertainty"]}\ncalibs statistical uncertainty limit <#> {saved_NAA.settings_dict["calibs statistical uncertainty limit"]}\nstandard statistical uncertainty limit <#> {saved_NAA.settings_dict["standard statistical uncertainty limit"]}\nsample statistical uncertainty limit <#> {saved_NAA.settings_dict["sample statistical uncertainty limit"]}\nnon certified standard uncertainties <#> {saved_NAA.settings_dict["non certified standard uncertainties"]}\ndefault tc&tl uncertainties <#> {saved_NAA.settings_dict["default tc&tl uncertainties"]}\ndefault td uncertainty <#> {saved_NAA.settings_dict["default td uncertainty"]}\nlook for spectrum file <#> {int(saved_NAA.settings_dict["look for spectrum file"])}')
+            settingsfile.write(f'database <#> {saved_NAA.settings_dict["database"]}\nenergy tolerance <#> {saved_NAA.settings_dict["energy tolerance"]}\npage height <#> {NAA.settings_dict["page height"]}\nmax allowed calibration uncertainty <#> {saved_NAA.settings_dict["max allowed calibration uncertainty"]}\ncalibs statistical uncertainty limit <#> {saved_NAA.settings_dict["calibs statistical uncertainty limit"]}\nstandard statistical uncertainty limit <#> {saved_NAA.settings_dict["standard statistical uncertainty limit"]}\nsample statistical uncertainty limit <#> {saved_NAA.settings_dict["sample statistical uncertainty limit"]}\nnon certified standard uncertainties <#> {saved_NAA.settings_dict["non certified standard uncertainties"]}\ndefault tc&tl uncertainties <#> {saved_NAA.settings_dict["default tc&tl uncertainties"]}\ndefault td uncertainty <#> {saved_NAA.settings_dict["default td uncertainty"]}\nlook for spectrum file <#> {int(saved_NAA.settings_dict["look for spectrum file"])}')
 
     def how_to_solve_the_loading_problem(self, NAA, CB, M, parent, folder=os.path.join('data','saves')):
         saved_NAA = None
@@ -1073,7 +1259,7 @@ class LoadWindow:
             #irradiation, calibration
             if messagebox.askyesno(title='Load data', message=f'\nAre you sure to load data from {CB.get()} savefile?\nthe k0-INRIM will be restarted!\n', parent=parent):
                 if saved_NAA.settings_dict != NAA.settings_dict:
-                    self._overwrite_settings(saved_NAA)
+                    self._overwrite_settings(saved_NAA, NAA)
                 M.destroy()
                 main_script(saved_NAA)
 
@@ -5022,7 +5208,7 @@ class DetectorCharacterizationWindow:
         CB_source.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self.select_source(CB_source,NAA.settings_dict['energy tolerance']))
         CB_positions.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self.select_position(CB_positions,distance_indicator,listbox,B_PT_indicator,logo_PT_indicator_red,logo_PT_indicator_green))
 
-    def on_closing(self, parent, title='Quit Detector characterization window', message='Unsaved data will be lost.\n\nDo you want to quit the window?'):
+    def on_closing(self, parent, title='Quit Detector characterization window', message='Save your elaboration before quitting.\n\nDo you want to quit the window?'):
         if messagebox.askokcancel(title, message, parent=parent):
             parent.destroy()
 
@@ -6615,6 +6801,7 @@ class FluxEvaluationWindow:
     def __init__(self, parent, NAA, M):
         parent.title('Flux evaluation - Bare triple monitor')
         parent.resizable(False,False)
+        parent.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(parent))
         self.sub_database = self.database_subset(NAA)
         self.fast_database = naaobject._get_fast_data()
         self.flux_spectra_list = []
@@ -6910,6 +7097,10 @@ class FluxEvaluationWindow:
         self.information_box.pack(anchor=tk.NW, padx=5)
 
         calibration_CB.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>' : self.calibration_selection(calibration_CB, triple_monitor_distance, fast_monitor_distance))
+
+    def on_closing(self, parent, title='Quit Flux evaluation window', message='Save your elaboration before quitting.\n\nDo you want to quit the window?'):
+        if messagebox.askokcancel(title, message, parent=parent):
+            parent.destroy()
 
     def _add_spectra(self, parent, tol, listbox):
         #add spectra for flux measurement
@@ -7714,6 +7905,7 @@ class FluxGradientEvaluationWindow:
     def __init__(self, parent, NAA, M):
         parent.title('Flux gradient evaluation')
         parent.resizable(False,False)
+        parent.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(parent))
         self.information_box = tk.Label(parent, text='', anchor=tk.W)
         self.display_window = None
         info_frame = tk.Frame(parent)
@@ -7901,6 +8093,10 @@ class FluxGradientEvaluationWindow:
 
         channel_CB.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self._select_channel(channel_CB, E_newname, f_label, a_label))
         calibration_CB.bind('<<ComboboxSelected>>', lambda e='<<ComboboxSelected>>': self._select_calibration(calibration_CB, deltal_monitor_distance))
+
+    def on_closing(self, parent, title='Quit Flux gradient evaluation window', message='Save your elaboration before quitting.\n\nDo you want to quit the window?'):
+        if messagebox.askokcancel(title, message, parent=parent):
+            parent.destroy()
 
     def beta_save(self, E_name, channel_CB, folder=os.path.join('data','facility')):
         if self.beta is not None and self.unc_beta is not None:
@@ -8318,6 +8514,8 @@ class FluxGradientEvaluationWindow:
 def main_script(NAA=None):
     if NAA is None:
         NAA = naaobject.CoreAnalysis(naaobject._get_settings_k0())
+    else:
+        NAA.settings_dict['page height'] = naaobject._get_settings_k0()['page height']
     M = tk.Tk()
     MainWindow(M, NAA)
     M.mainloop()
