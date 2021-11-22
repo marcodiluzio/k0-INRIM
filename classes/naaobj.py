@@ -3082,28 +3082,12 @@ def _get_division(uncertainty, value):
 def _get_emission_data(filename='emissions.csv', columns=['emitter', 'energy', 'yield','t_half', 'u_t_half', 'COIfree', 'reference']):
 	return pd.read_csv(os.path.join(os.path.join('data','literaturedata'), filename), header=0, names=columns)
 
-
-# def _get_channel_data_deprecated(filename='channels.csv', columns=['m_datetime','datetime', 'channel_name', 'f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux'],full_dataset=False):
-# 	channel_df = pd.read_csv(os.path.join(os.path.join('data','facility'), filename), header=0, names=columns)
-# 	channel_df['datetime'] = pd.to_datetime(channel_df['datetime'], format="%d/%m/%Y %H:%M:%S")
-# 	channel_df['m_datetime'] = pd.to_datetime(channel_df['m_datetime'], format="%d/%m/%Y %H:%M:%S")
-# 	channel_df['channel_name'] = channel_df['channel_name'].astype(str)
-# 	channel_df.dropna(axis=0, how='any', subset=['f_value','unc_f_value', 'a_value','unc_a_value'], inplace=True)
-# 	#selection
-# 	channel_df.sort_values(by='datetime', inplace=True, ascending=False)
-# 	if full_dataset == False:
-# 		channel_df.drop_duplicates(subset='channel_name', keep='first', inplace=True)
-# 		channel_df.set_index(keys='channel_name', drop=True, inplace=True)
-# 		return list(channel_df.index), channel_df
-# 	else:
-# 		channel_df.set_index(keys='channel_name', drop=True, inplace=True)
-# 		return list(set(channel_df.index)), channel_df
-
-def _get_channel_data(filename='channels.csv', columns=['m_datetime','datetime', 'channel_name', 'f_value','unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux'],full_dataset=False):
+def _get_channel_data(filename='channels.csv', columns=['m_datetime','datetime', 'channel_name', 'pos', 'f_value', 'unc_f_value', 'a_value','unc_a_value', 'thermal_flux', 'unc_thermal_flux', 'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux'],full_dataset=False):
 	channel_df = pd.read_csv(os.path.join(os.path.join('data','facility'), filename), header=0, names=columns)
 	channel_df['datetime'] = pd.to_datetime(channel_df['datetime'], format="%d/%m/%Y %H:%M:%S")
 	channel_df['m_datetime'] = pd.to_datetime(channel_df['m_datetime'], format="%d/%m/%Y %H:%M:%S")
 	channel_df['channel_name'] = channel_df['channel_name'].astype(str)
+	channel_df['pos'] = channel_df['pos'].astype(str)
 	channel_df.dropna(axis=0, how='any', subset=['f_value','unc_f_value', 'a_value','unc_a_value'], inplace=True)
 	#selection
 	channel_df.sort_values(by='datetime', inplace=True, ascending=False)
