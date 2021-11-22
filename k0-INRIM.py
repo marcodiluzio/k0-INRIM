@@ -2132,8 +2132,8 @@ class IrradiationWindow:
             else:
                 return text.ljust(limit," ")
 
-        def _as_text_display(data, spaces=[15,12,12,10,10,10,10]):
-            return [f'{text_cut(idx,spaces[0])}{mtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{format(ff,".2f").rjust(spaces[3]," ")}{format(aa,".5f").rjust(spaces[4]," ")}{format(thermal,".2e").rjust(spaces[5]," ")}{format(fast,".2e").rjust(spaces[6]," ")}' for idx, mtime, dtime, ff, aa, thermal, fast in zip(data['channel_name'], data['m_datetime'], data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])]
+        def _as_text_display(data, spaces=[15,8,12,12,10,10,10,10]):
+            return [f'{text_cut(idx,spaces[0])}{text_cut(pos,spaces[1])}{mtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[3]," ")}{format(ff,".2f").rjust(spaces[4]," ")}{format(aa,".5f").rjust(spaces[5]," ")}{format(thermal,".2e").rjust(spaces[6]," ")}{format(fast,".2e").rjust(spaces[7]," ")}' for idx, pos, mtime, dtime, ff, aa, thermal, fast in zip(data['channel_name'], data['pos'], data['m_datetime'], data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])]
 
         def filter_list(ch_data, listbox, CB_channel):
             if CB_channel.get() != '':
@@ -2151,13 +2151,13 @@ class IrradiationWindow:
         self.subselection_window.resizable(False, False)
         tframe = tk.Frame(self.subselection_window)
 
-        spaces = [15,12,12,10,10,10,10]
-        header=['channel','meas date','eval date','f / 1', 'a / 1','thermal', 'fast']
-        tk.Label(tframe, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}{header[6].rjust(spaces[6]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
+        spaces = [15,8,12,12,10,10,10,10]
+        header=['channel','position','meas date','eval date','f / 1', 'a / 1','thermal', 'fast']
+        tk.Label(tframe, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}{header[6].rjust(spaces[6]," ")}{header[7].rjust(spaces[7]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
 
         listframe = tk.Frame(tframe)
         scrollbar = tk.Scrollbar(listframe, orient="vertical")
-        listbox = tk.Listbox(listframe, width=82, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
+        listbox = tk.Listbox(listframe, width=90, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
         scrollbar.config(command=listbox.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -2470,9 +2470,9 @@ class DatabasesWindow:
 
             def rewrite_file(folder=os.path.join('data', 'facility')):
                 with open(os.path.join(folder,'channels.csv'), 'w') as channel_file:
-                    channel_file.write('mdatetime,datetime,channel_name,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux\n')
-                    for meas_time, save_time, CH_name, result_f, result_f_unc, result_a, result_a_unc, result_thermal, result_thermal_unc, result_epithermal, result_epithermal_unc, result_fast, result_fast_unc in zip(self.fdata['m_datetime'], self.fdata['datetime'], self.fdata['channel_name'], self.fdata['f_value'], self.fdata['unc_f_value'], self.fdata['a_value'], self.fdata['unc_a_value'], self.fdata['thermal_flux'], self.fdata['unc_thermal_flux'], self.fdata['epithermal_flux'], self.fdata['unc_epithermal_flux'], self.fdata['fast_flux'], self.fdata['unc_fast_flux']):
-                        channel_file.write(f'{meas_time.strftime("%d/%m/%Y %H:%M:%S")},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name},{result_f},{result_f_unc},{result_a},{result_a_unc},{result_thermal},{result_thermal_unc},{result_epithermal},{result_epithermal_unc},{result_fast},{result_fast_unc}\n')
+                    channel_file.write('mdatetime,datetime,channel_name,pos,f_value,unc_f_value,a_value,unc_a_value,thermal_flux,unc_thermal_flux,epithermal_flux,unc_epithermal_flux,fast_flux,unc_fast_flux\n')
+                    for meas_time, save_time, CH_name, pos, result_f, result_f_unc, result_a, result_a_unc, result_thermal, result_thermal_unc, result_epithermal, result_epithermal_unc, result_fast, result_fast_unc in zip(self.fdata['m_datetime'], self.fdata['datetime'], self.fdata['channel_name'], self.fdata['pos'], self.fdata['f_value'], self.fdata['unc_f_value'], self.fdata['a_value'], self.fdata['unc_a_value'], self.fdata['thermal_flux'], self.fdata['unc_thermal_flux'], self.fdata['epithermal_flux'], self.fdata['unc_epithermal_flux'], self.fdata['fast_flux'], self.fdata['unc_fast_flux']):
+                        channel_file.write(f'{meas_time.strftime("%d/%m/%Y %H:%M:%S")},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name},{pos},{result_f},{result_f_unc},{result_a},{result_a_unc},{result_thermal},{result_thermal_unc},{result_epithermal},{result_epithermal_unc},{result_fast},{result_fast_unc}\n')
                 #check on betas
                 channels = self.fdata['channel_name'].unique()
                 beta_data = naaobject._get_beta_data()
@@ -2491,7 +2491,7 @@ class DatabasesWindow:
             except IndexError:
                 idx = -1
             if idx > -1:
-                if messagebox.askyesno(title='Delete the selected measurement entry', message=f'\nAre you sure to remove the currently selected flux measurement entry?\nthis also deletes all β values for removed channels\n', parent=parent):
+                if messagebox.askyesno(title='Delete the selected measurement entry', message=f'Are you sure to remove the currently selected flux measurement entry?\nthis also deletes all β values for removed channels\n', parent=parent):
                     self.fdata = self.fdata.loc[self.fdata.index != prov_index[idx]]
                     rewrite_file()
                     CB['values'] = [''] + list(set(self.fdata['channel_name']))
@@ -2500,7 +2500,7 @@ class DatabasesWindow:
         def export_xcell(CB, parent):
             filetypes = (('Microsoft Excel file','*.xlsx'),)
             filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
-            header = ['meas datetime', 'datetime', 'channel','f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1']
+            header = ['meas datetime', 'datetime', 'channel', 'position', 'f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1']
             if filename != '' and filename is not None:
                 if filename[-len('.xlsx'):] != '.xlsx':
                     filename += '.xlsx'
@@ -2529,8 +2529,8 @@ class DatabasesWindow:
             else:
                 return text.ljust(limit," ")#here
 
-        def _as_text_display(data, channel=None, spaces=[15,12,12,10,10,10,10]):
-            return [f'{text_cut(idx,spaces[0])}{mtime.strftime("%d/%m/%Y").rjust(spaces[1]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{format(ff,".2f").rjust(spaces[3]," ")}{format(aa,".5f").rjust(spaces[4]," ")}{format(thermal,".2e").rjust(spaces[5]," ")}{format(fast,".2e").rjust(spaces[6]," ")}' for idx, mtime, dtime, ff, aa, thermal, fast in zip(data['channel_name'], data['m_datetime'], data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])]
+        def _as_text_display(data, channel=None, spaces=[15,8,12,12,10,10,10,10]):
+            return [f'{text_cut(idx,spaces[0])}{text_cut(posx,spaces[1])}{mtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[3]," ")}{format(ff,".2f").rjust(spaces[4]," ")}{format(aa,".5f").rjust(spaces[5]," ")}{format(thermal,".2e").rjust(spaces[6]," ")}{format(fast,".2e").rjust(spaces[7]," ")}' for idx, posx, mtime, dtime, ff, aa, thermal, fast in zip(data['channel_name'], data['pos'], data['m_datetime'], data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])]
         
         children = frame.winfo_children()
         for widget in children:
@@ -2538,13 +2538,13 @@ class DatabasesWindow:
         tk.Label(frame, text='flux evaluation history database', anchor=tk.W).pack(anchor=tk.W)
 
         _, self.fdata = naaobject._get_channel_data(full_dataset=True)
-        spaces = [15,12,12,10,10,10,10]
-        header=['channel','meas date','eval date','f / 1', 'a / 1','thermal', 'fast']
-        tk.Label(frame, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}{header[6].rjust(spaces[6]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
+        spaces = [15,8,12,12,10,10,10,10]
+        header=['channel','position','meas date','eval date','f / 1', 'a / 1','thermal', 'fast']
+        tk.Label(frame, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}{header[6].rjust(spaces[6]," ")}{header[7].rjust(spaces[7]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
 
         listframe = tk.Frame(frame)
         scrollbar = tk.Scrollbar(listframe, orient="vertical")
-        listbox = tk.Listbox(listframe, width=82, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
+        listbox = tk.Listbox(listframe, width=90, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
         scrollbar.config(command=listbox.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -6823,19 +6823,24 @@ class FluxEvaluationWindow:
             ti_Spinbox.insert(tk.END, f'{NAA.irradiation.irradiation_time:.0f}')
             self.date = NAA.irradiation.datetime
 
+        tk.Frame(info_frame).grid(row=0, column=2, padx=5)
+        tk.Label(info_frame, text='pos', width=6).grid(row=0, column=3, sticky=tk.W)
+        pos_Spinbox = tk.Spinbox(info_frame, width=4, from_=0, to=10, increment=1)
+        pos_Spinbox.grid(row=0, column=4, sticky=tk.W)
+
         irradiation_date_label = gui_things.Label(info_frame, text=self.date.strftime("%d/%m/%Y %H:%M:%S"), width=25)
-        irradiation_date_label.grid(row=0, column=2, sticky=tk.W)
+        irradiation_date_label.grid(row=0, column=5, sticky=tk.W)
         logo_calendar = tk.PhotoImage(data=gui_things.calendar)
         B_modify_date = gui_things.Button(info_frame, image=logo_calendar, command=lambda : self.change_end_irradiation_date(irradiation_date_label, self.information_box))
-        B_modify_date.grid(row=0, column=3, padx=5)
+        B_modify_date.grid(row=0, column=6, padx=5)
         B_modify_date.image = logo_calendar
-        tk.Frame(info_frame).grid(row=0, column=4, padx=5)
-        tk.Label(info_frame, text='ti / s', anchor=tk.W).grid(row=0, column=5)
-        ti_Spinbox.grid(row=0, column=6)
+        tk.Frame(info_frame).grid(row=0, column=7, padx=5)
+        tk.Label(info_frame, text='ti / s', anchor=tk.W).grid(row=0, column=8)
+        ti_Spinbox.grid(row=0, column=9)
 
         tk.Label(info_frame, text='calibration', width=12, anchor=tk.W).grid(row=1, column=0, sticky=tk.W)
         calibration_CB = ttk.Combobox(info_frame, width=25, state='readonly')
-        calibration_CB.grid(row=1, column=1, columnspan=2, sticky=tk.EW)
+        calibration_CB.grid(row=1, column=1, columnspan=4, sticky=tk.EW)
         calibration_CB['values'] = M.calibration_combobox['values']
         if NAA.calibration is not None:
             self.calibration = naaobject.DetectorCalibration(NAA.calibration.name)
@@ -7088,7 +7093,7 @@ class FluxEvaluationWindow:
         B_start_computation.pack(side=tk.LEFT)
         B_start_computation.image = logo_start_computation
         logo_save_values = tk.PhotoImage(data=gui_things.beye)
-        B_save_values = gui_things.Button(buttons_frame, image=logo_save_values, hint='Confirm obtained values!', hint_destination=self.information_box, command=lambda : self.save_fluxes(channel_CB))
+        B_save_values = gui_things.Button(buttons_frame, image=logo_save_values, hint='Confirm obtained values!', hint_destination=self.information_box, command=lambda : self.save_fluxes(channel_CB, pos_Spinbox))
         B_save_values.pack(side=tk.LEFT)
         B_save_values.image = logo_save_values
 
@@ -7827,12 +7832,12 @@ class FluxEvaluationWindow:
         else:
             return None, False
 
-    def save_fluxes(self,CH_name, folder=os.path.join('data', 'facility')):
+    def save_fluxes(self, CH_name, pos_name, folder=os.path.join('data', 'facility')):
         #prerequisites
         if self.allow_save == True and CH_name.get().replace(' ','') != '':
             save_time = datetime.datetime.today()
             with open(os.path.join(folder,'channels.csv'), 'a') as channel_file:
-                channel_file.write(f'{self.date.strftime("%d/%m/%Y %H:%M:%S")},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name.get()},{self.result_f},{self.result_f_unc},{self.result_a},{self.result_a_unc},{self.result_thermal},{self.result_thermal_unc},{self.result_epithermal},{self.result_epithermal_unc},{self.result_fast},{self.result_fast_unc}\n')
+                channel_file.write(f'{self.date.strftime("%d/%m/%Y %H:%M:%S")},{save_time.strftime("%d/%m/%Y %H:%M:%S")},{CH_name.get()},{pos_name.get()},{self.result_f},{self.result_f_unc},{self.result_a},{self.result_a_unc},{self.result_thermal},{self.result_thermal_unc},{self.result_epithermal},{self.result_epithermal_unc},{self.result_fast},{self.result_fast_unc}\n')
             self.information_box.configure(text='flux evaluation is correctly saved!')
         elif self.allow_save == False:
             self.information_box.configure(text='the elaboration needs to be updated')
