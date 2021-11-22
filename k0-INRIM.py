@@ -2500,7 +2500,7 @@ class DatabasesWindow:
         def export_xcell(CB, parent):
             filetypes = (('Microsoft Excel file','*.xlsx'),)
             filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
-            header = ['channel', 'meas datetime', 'datetime', 'f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1']
+            header = ['meas datetime', 'datetime', 'channel','f / 1', 'u(f) / 1', 'a / 1', 'u(a) / 1', 'thermal flux / cm-2 s-1', 'u(thermal flux) / cm-2 s-1', 'epithermal flux / cm-2 s-1', 'u(epithermal flux) / cm-2 s-1', 'fast flux / cm-2 s-1', 'u(fast flux) / cm-2 s-1']
             if filename != '' and filename is not None:
                 if filename[-len('.xlsx'):] != '.xlsx':
                     filename += '.xlsx'
@@ -5068,7 +5068,7 @@ class DetectorCharacterizationWindow:
 
         self.spectra_list[CB_positions.get()] = []
         self.position_list[CB_positions.get()] = 0.0
-        self.PT_list[CB_positions.get()] = (None, np.array([0.0, 0.0]), np.array([0.0, 0.0, 0.0]))
+        self.PT_list[CB_positions.get()] = (None, np.array([0.0, 0.0]), np.array([0.0, 0.0, 0.0]), '')
 
         ttk.Separator(spectra_frame, orient="vertical").grid(
             row=0, column=3, sticky=tk.NS, padx=3)
@@ -5615,7 +5615,7 @@ class DetectorCharacterizationWindow:
             position_name = f'position {n}'
         self.spectra_list[position_name] = []
         self.position_list[position_name] = 0.0
-        self.PT_list[position_name] = (None, np.array([0.0, 0.0]), np.array([0.0, 0.0, 0.0]))
+        self.PT_list[position_name] = (None, np.array([0.0, 0.0]), np.array([0.0, 0.0, 0.0]), '')
         box['values'] = list(self.spectra_list.keys())
         box.set(position_name)
         self.select_position(box, distance_indicator, listbox, PT, red, green)
@@ -5878,13 +5878,13 @@ class DetectorCharacterizationWindow:
                 text.append(f'#####\nPT overview.\n')
                 #PT overview
                 if dummy_calibration.PT_energy is not None:
-                    text_message = f'polynomial model (exponents: 2, 1, 0)\n    value\np0: {dummy_calibration.PT_polynomial[0]:.4f}\np1: {dummy_calibration.PT_polynomial[1]:.4f}\np2: {dummy_calibration.PT_polynomial[2]:.4f}\n\nfit junction at {dummy_calibration.PT_energy:.1f} keV\n\nlinear model (exponents: 1, 0)\n    value\nl0: {dummy_calibration.PT_linear[0]:.4f}\nl1: {dummy_calibration.PT_linear[1]:.4f}\n'
+                    text_message = dummy_calibration.PT_text
                 else:
                     text_message = 'PT evaluation not performed for this position\n'
                 text.append(f'- PT at reference\n{text_message}\n')
                 for PT_key, PT_value in dummy_calibration.PT_dict.items():
                     if PT_value[0] is not None:
-                        text_message = f'polynomial model (exponents: 2, 1, 0)\n    value\np0: {PT_value[2][0]:.4f}\np1: {PT_value[2][1]:.4f}\np2: {PT_value[2][2]:.4f}\n\nfit junction at {PT_value[0]:.1f} keV\n\nlinear model (exponents: 1, 0)\n    value\nl0: {PT_value[1][0]:.4f}\nl1: {PT_value[1][1]:.4f}\n'
+                        text_message = PT_value[3]
                     else:
                         text_message = 'PT evaluation not performed for this position\n'
                     text.append(f'- PT at {PT_key:.1f} mm\n{text_message}\n')
@@ -6322,7 +6322,7 @@ class PTEvaluateWindow:
 
         B_perform_PT.configure(command=lambda : self.PT_elaboration(CB_background, source, stext, tolerance_energy, ax_PT, ax_resd, f, canvas, sum_of_residuals))
         B_insert_manual_data_PT.configure(command=lambda : self.PT_data_manual_insert(parent, stext, ax_PT, ax_resd, f, canvas, sum_of_residuals))
-        B_confirm_PT.configure(command=lambda : self.confirm_elaboration(PT_list, key, PT_button, red, green))
+        B_confirm_PT.configure(command=lambda : self.confirm_elaboration(PT_list, key, PT_button, red, green, stext))
 
     def delete_PTspectrum_file(self, parent, listbox):
         if self.PT_peaklist is not None:
@@ -6431,9 +6431,9 @@ class PTEvaluateWindow:
             local_suspected = nest_list(self.actual_spectra_list[idx].suspected, nline)
             PeaklistWindow(self.PT_peaklist, self.actual_spectra_list[idx], local_peak_list, local_suspected, nline, background=background)
 
-    def confirm_elaboration(self, PT_list, key, PT_button, red, green):
+    def confirm_elaboration(self, PT_list, key, PT_button, red, green, stext):
         if self.linear is not None and self.polynomial is not None:
-            PT_list[key] = (self.E_joint.get(), self.linear, self.polynomial)
+            PT_list[key] = (self.E_joint.get(), self.linear, self.polynomial, stext.get())
             PT_button.configure(image=green)
             self.information_box.configure(text='PT evaluation saved')
         else:
@@ -6573,6 +6573,7 @@ class PTEvaluateWindow:
         except UnboundLocalError:
             self.data = None
         if self.data is not None:
+            ttext.append(f'background: {back.filename()}\nsource spectra: {", ".join([spc.filename() for spc in self.actual_spectra_list])}\n')
             ttext.append(f'{"emitter".ljust(20)}{"area / 1".ljust(12)}{"PT / 1".ljust(12)}\n'+'\n'.join([f'{dataline[3].ljust(20)}{format(dataline[1],".0f").ljust(11)}{format(dataline[2],".4f").ljust(11)}' for dataline in self.data])+'\n')
             x, y = np.array([line[0] for line in self.data]), np.array([line[2] for line in self.data])
         else:
@@ -6607,6 +6608,7 @@ class PTEvaluateWindow:
         if linp is not None and polyp is not None:
             #print results
             ttext.append(f'polynomial fit (exponents: 2, 1, 0)\np0: {polyp[0]:.3e}\np1: {polyp[1]:.3e}\np2: {polyp[2]:.3e}\n\njunction energy: {E:.1f} keV\n\nlinear fit (exponents: 1, 0)\nl0: {linp[0]:.3e}\nl1: {linp[1]:.3e}\n')
+            ttext.append(f'sum of residuals (< {E:.1f} keV): {resp:.3e}\n')
             sum_of_residuals.configure(text=f'sum of residuals (< {E:.1f} keV): {resp:.3e}', anchor=tk.W)
             self.linear = linp
             self.polynomial = polyp
@@ -6716,7 +6718,7 @@ class PTViewWindow:
             E_l0.insert(tk.END, l0)
             E_l1.insert(tk.END, l1)
 
-            fit_limits, DX = (50,2000), 150
+            fit_limits, DX = (50,3000), 150
             x_fit = np.linspace(np.min(fit_limits), PT_values[0], DX)
             y_fit = polynomial_function_PT(np.log10(x_fit), *PT_values[2])
             ax_PT.loglog(x_fit, 10**y_fit, linestyle='-', linewidth=1, color='k')
@@ -6724,7 +6726,7 @@ class PTViewWindow:
             y_fit = linear_function_PT(np.log10(x_fit), *PT_values[1])
             ax_PT.loglog(x_fit, 10**y_fit, linestyle='-', linewidth=1, color='k')
             ax_PT.loglog(PT_values[0], 10**y_fit[0], marker='x', linestyle='', color='y', markerfacecolor='y', markersize=6, zorder=7)
-            ax_PT.set_xlim(40, 2000)
+            ax_PT.set_xlim(40, 3000)
             ax_PT.set_ylim(None, 1)
             f.tight_layout()
             canvas.draw()
@@ -6747,7 +6749,7 @@ class PTViewWindow:
 
     def delete_values(self, key, PT_list, PT_button, red, green, E_p0, E_p1, E_p2, E_l0, E_l1, ax_PT, f, canvas, parent):
         if messagebox.askyesno(title='Remove PT evaluation', message='\nAre you sure to remove the current PT evaluation for this position?\n', parent=parent):
-            PT_values = (None, np.array([0.0, 0.0]), np.array([0.0, 0.0, 0.0]))
+            PT_values = (None, np.array([0.0, 0.0]), np.array([0.0, 0.0, 0.0]), '')
             PT_list[key] = PT_values
             PT_button.configure(image=red)
             PT_button.image = red
@@ -6769,12 +6771,12 @@ class PTViewWindow:
         except:
             pass
         else:
-            PT_values = (Ejoint, np.array([El0, El1]), np.array([Ep0, Ep1, Ep2]))
+            PT_values = (Ejoint, np.array([El0, El1]), np.array([Ep0, Ep1, Ep2]), f'PT fit manually defined by user:\npolynomial fit (exponents: 2, 1, 0)\np0: {Ep0:.3e}\np1: {Ep1:.3e}\np2: {Ep2:.3e}\n\njunction energy: {Ejoint:.1f} keV\n\nlinear fit (exponents: 1, 0)\nl0: {El0:.3e}\nl1: {El1:.3e}\n')
             PT_list[key] = PT_values
             nlines = len(ax_PT.lines)
             for _ in range(nlines):
                 ax_PT.lines.pop()
-            fit_limits, DX = (50,2000), 150
+            fit_limits, DX = (50,3000), 150
             x_fit = np.linspace(np.min(fit_limits), PT_values[0], DX)
             y_fit = polynomial_function_PT(np.log10(x_fit), *PT_values[2])
             ax_PT.loglog(x_fit, 10**y_fit, linestyle='-', linewidth=1, color='k')
@@ -6782,7 +6784,7 @@ class PTViewWindow:
             y_fit = linear_function_PT(np.log10(x_fit), *PT_values[1])
             ax_PT.loglog(x_fit, 10**y_fit, linestyle='-', linewidth=1, color='k')
             ax_PT.loglog(PT_values[0], 10**y_fit[0], marker='x', linestyle='', color='y', markerfacecolor='y', markersize=6, zorder=7)
-            ax_PT.set_xlim(40, 2000)
+            ax_PT.set_xlim(40, 3000)
             ax_PT.set_ylim(None, 1)
             f.tight_layout()
             canvas.draw()
@@ -7670,10 +7672,10 @@ class FluxEvaluationWindow:
         except:
             return default * value
 
-    def get_specific_fast(self, line):#herereeee
+    def get_specific_fast(self, line):
         """Calculate specific count rate at saturation, only I type"""
         _l, _ti, _tr, _tl, _td, _np, _unp, _coi, _ucoi, _m, _um = line[3], line[10], line[11], line[12], line[13], line[14], line[15], line[16], line[17], line[18], line[19]
-        Asp = (_np * _l * _tr) / (_tl * (1 - np.exp(-_l * _ti)) * np.exp(-_l * _td) * (1 - np.exp(-_l * _tr)) * _coi * _m)
+        Asp = (_np * _l * _tr * np.exp(self.calibration.mu*(1-_tl/_tr))) / (_tl * (1 - np.exp(-_l * _ti)) * np.exp(-_l * _td) * (1 - np.exp(-_l * _tr)) * _coi * _m)
         unc = Asp * np.sqrt(np.power(_unp / _np, 2) + np.power(_um / _m, 2) + np.power(_ucoi / _coi, 2))
         return Asp, unc
 
@@ -7681,10 +7683,10 @@ class FluxEvaluationWindow:
         """Calculate specific count rate at saturation"""
         if line[12] == 'IIA':
             _l2, _l3, _ti, _tr, _tl, _td, _np, _unp, _coi, _ucoi, _m, _um = line[9], line[10], line[13], line[14], line[15], line[16], line[17], line[18], line[19], line[20], line[21], line[22]
-            Asp = (_np * _tr * (_l3 - _l2)) / (_tl * _coi * _m * (_l3/_l2*(1 - np.exp(-_l2 * _ti)) * np.exp(-_l2 * _td) * (1 - np.exp(-_l2 * _tr)) - _l2/_l3*(1 - np.exp(-_l3 * _ti)) * np.exp(-_l3 * _td) * (1 - np.exp(-_l3 * _tr))))
+            Asp = (_np * _tr * (_l3 - _l2) * np.exp(self.calibration.mu*(1-_tl/_tr))) / (_tl * _coi * _m * (_l3/_l2*(1 - np.exp(-_l2 * _ti)) * np.exp(-_l2 * _td) * (1 - np.exp(-_l2 * _tr)) - _l2/_l3*(1 - np.exp(-_l3 * _ti)) * np.exp(-_l3 * _td) * (1 - np.exp(-_l3 * _tr))))
         else:
             _l, _ti, _tr, _tl, _td, _np, _unp, _coi, _ucoi, _m, _um = line[9], line[13], line[14], line[15], line[16], line[17], line[18], line[19], line[20], line[21], line[22]
-            Asp = (_np * _l * _tr) / (_tl * (1 - np.exp(-_l * _ti)) * np.exp(-_l * _td) * (1 - np.exp(-_l * _tr)) * _coi * _m)
+            Asp = (_np * _l * _tr * np.exp(self.calibration.mu*(1-_tl/_tr))) / (_tl * (1 - np.exp(-_l * _ti)) * np.exp(-_l * _td) * (1 - np.exp(-_l * _tr)) * _coi * _m)
         unc = Asp * np.sqrt(np.power(_unp / _np, 2) + np.power(_um / _m, 2) + np.power(_ucoi / _coi, 2))
         return Asp, unc
 
@@ -7912,7 +7914,10 @@ class FluxGradientEvaluationWindow:
         tk.Label(info_frame, text='channel', width=12, anchor=tk.W).grid(row=0, column=0, sticky=tk.W)
         channel_CB = ttk.Combobox(info_frame, width=15, state='readonly')
         channel_CB.grid(row=0, column=1, sticky=tk.W)
-        list_value, self.channel_data = naaobject._get_channel_data()
+
+        self.channel_data = naaobject._get_channel_data()[1]
+        list_value = tuple(self.channel_data['channel_name'].unique())
+
         channel_CB['values'] = list_value
         f_value, unc_f_value = 0.0, 0.0
         a_value, unc_a_value = 0.0, 0.0
@@ -8234,12 +8239,18 @@ class FluxGradientEvaluationWindow:
                 proceed = False
                 ttext.append('- acquisition date of lower spectrum is before the end of irradiation!')
             if proceed == True:
-                ttext.append(f'Irradiation performed on {self.date.strftime("%d/%m/%Y %H:%M:%S")}\nAdopted emission for monitor: {monitor_CB.get()} keV\nCalibration: {self.calibration.name}, counting distance {self.calibration.reference_calibration.distance} mm on {self.calibration.detector} detector ({format(der,".1f")} mm inside detector to reach the maximum efficiency)\n')
+                ttext.append(f'Irradiation performed on {self.date.strftime("%d/%m/%Y %H:%M:%S")}\nAdopted emission for monitor: {monitor_CB.get()} keV\nCalibration: {self.calibration.name}, counting distance {self.calibration.reference_calibration.distance} mm on {self.calibration.detector} detector (d0 = {format(der,".1f")} mm)\n')
                 ttext.append(f'- Monitor found on higher spectrum "{self.higher_spectrum.filename()}" ({format(np_hi,".0f")} net area counts with {format(unp_hi/np_hi*100,".2f")} % relative uncertainty)\n- Monitor found on lower spectrum "{self.lower_spectrum.filename()}" ({format(np_lo,".0f")} net area counts with {format(unp_lo/np_lo*100,".2f")} % relative uncertainty)\n- Distance between two monitor positions (ΔL) is {format(hi_deltal_in,".1f")} mm\n')
 
                 dref = deltal_monitor_distance.get()
 
-                ff, uuff, aa, uuaa = self.channel_data.loc[channel_CB.get(), ['f_value', 'unc_f_value', 'a_value', 'unc_a_value']]
+                #ff, uuff, aa, uuaa = self.channel_data.loc[channel_CB.get(), ['f_value', 'unc_f_value', 'a_value', 'unc_a_value']]
+
+                filter_data = self.channel_data[self.channel_data['channel_name'] == channel_CB.get()]
+                dataline = filter_data.iloc[0]
+                ff, uuff, aa, uuaa = dataline['f_value'], dataline['unc_f_value'], dataline['a_value'], dataline['unc_a_value']
+
+
                 Asp_lo = self.specific_count_rate(np_lo, self.lower_spectrum.real_time, self.lower_spectrum.live_time, lamb, td_lo, lo_mass_in, der, 0.0, lo_Gs_in, lo_Ge_in, ff, Q0, Er, aa, dref)
                 Asp_hi = self.specific_count_rate(np_hi, self.higher_spectrum.real_time, self.higher_spectrum.live_time, lamb, td_hi, hi_mass_in, der, 0.0, hi_Gs_in, hi_Ge_in, ff, Q0, Er, aa, dref)
                 # beta evaluation
@@ -8312,11 +8323,8 @@ class FluxGradientEvaluationWindow:
             ttext = ['Issues were identified while checking for consistency of the input data; error messages are reported\n'] + ttext
             stext._update('\n'.join(ttext))
 
-    #def specific_count_rate(self, _np, _tr, _tl, _lb, _td, _m, _der, _dd, _Gth, _Ge, _f, _Q0, _Er, _a):
-    #    return (_np * _tr) / (_tl * np.exp(-_lb*_td) * (1-np.exp(-_lb*_tr)) * _m * (1-_der*_dd) * (_Gth + _Ge / _f * ((_Q0 - 0.429)/(_Er**_a) + 0.429/((2*_a + 1) * 0.55**_a))))
-
     def specific_count_rate(self, _np, _tr, _tl, _lb, _td, _m, _der, _dd, _Gth, _Ge, _f, _Q0, _Er, _a,_dref):
-        return (_np * _tr) / (_tl * np.exp(-_lb*_td) * (1-np.exp(-_lb*_tr)) * _m * ((_dref-_der)/(_dref+_dd-_der))**2 * (_Gth + _Ge / _f * ((_Q0 - 0.429)/(_Er**_a) + 0.429/((2*_a + 1) * 0.55**_a))))
+        return (_np * _tr * np.exp(self.calibration.mu*(1-_tl/_tr))) / (_tl * np.exp(-_lb*_td) * (1-np.exp(-_lb*_tr)) * _m * ((_dref-_der)/(_dref+_dd-_der))**2 * (_Gth + _Ge / _f * ((_Q0 - 0.429)/(_Er**_a) + 0.429/((2*_a + 1) * 0.55**_a))))
 
     def g_discr(self,i):
         if i == 2.0:
@@ -8437,12 +8445,14 @@ class FluxGradientEvaluationWindow:
             self.beta, self.unc_beta = None, None
 
     def _select_channel(self, box, entry, Lf, La):
-        f_value, unc_f_value = self.channel_data.loc[box.get(),['f_value','unc_f_value']]
-        a_value, unc_a_value = self.channel_data.loc[box.get(),['a_value','unc_a_value']]
+
+        filter_data = self.channel_data[self.channel_data['channel_name'] == box.get()]
+        dataline = filter_data.iloc[0]
+
+        f_value, unc_f_value, a_value, unc_a_value = dataline['f_value'], dataline['unc_f_value'], dataline['a_value'], dataline['unc_a_value']
+
         Lf.configure(text=f'{f_value:.1f} ({naaobject._get_division(unc_f_value,f_value):.1f} %)')
         La.configure(text=f'{a_value:.4f} ({naaobject._get_division(unc_a_value,a_value):.1f} %)')
-        #entry.delete(0,tk.END)
-        #entry.insert(tk.END, box.get())
         self.beta, self.unc_beta = None, None
 
     def change_end_irradiation_date(self, irradiation_date_label, hints):
