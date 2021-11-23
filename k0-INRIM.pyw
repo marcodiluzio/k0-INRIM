@@ -611,7 +611,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                         self.secondary_window = None
                     else:
@@ -648,7 +648,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                         self.secondary_window = None
                     else:
@@ -709,7 +709,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                         self.secondary_window = None
                     else:
@@ -747,7 +747,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -763,7 +763,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -779,7 +779,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -798,7 +798,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -817,7 +817,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -841,7 +841,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -941,7 +941,7 @@ class MainWindow:
             if self.secondary_window is not None:
                 try:
                     if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                        if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                        if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                             self.secondary_window.destroy()
                         else:
                             return
@@ -957,7 +957,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -973,7 +973,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -989,7 +989,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -1004,7 +1004,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -1026,7 +1026,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -1041,7 +1041,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -1057,7 +1057,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -1079,7 +1079,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
@@ -1096,7 +1096,7 @@ class MainWindow:
         if self.secondary_window is not None:
             try:
                 if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
-                    if messagebox.askyesno(title='Open new window', message=f'\nThis action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses\nDo you want to continue?\n', parent=self.secondary_window):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
                         self.secondary_window.destroy()
                     else:
                         return
