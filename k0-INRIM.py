@@ -2395,6 +2395,28 @@ class DatabasesWindow:
             else:
                 self.information.configure(text='')
 
+        def delete_dat(CB, stext, parent):
+
+            def rewrite_file(folder=os.path.join('data', 'facility')):
+                self.bdata.to_csv(os.path.join(os.path.join('data','facility'),'beta.csv'), columns=['channel_name', 'm_datetime', 'datetime','position', 'beta', 'unc_beta'], header=['channel_name', 'mdatetime', 'datetime','position', 'beta', 'unc_beta'], index=False)
+
+            if CB.get() != '':
+                prov_data = self.bdata[self.bdata['channel_name'] == CB.get()]
+            else:
+                prov_data = self.bdata[self.bdata['channel_name'] != '']
+            prov_index = list(prov_data.index)
+            idx = stext.curselection()
+            try:
+                idx = idx[0]
+            except IndexError:
+                idx = -1
+            if idx > -1:
+                if messagebox.askyesno(title='Delete the selected measurement entry', message=f'Are you sure to remove the currently selected β measurement entry?\n', parent=parent):
+                    self.bdata = self.bdata.loc[self.bdata.index != prov_index[idx]]
+                    rewrite_file()
+                    CB['values'] = [''] + list(set(self.bdata['channel_name']))
+                    _update(CB, stext)
+
         def export_xcell(CB, parent):
             filetypes = (('Microsoft Excel file','*.xlsx'),)
             filename = asksaveasfilename(parent=parent, title='Save excel file',filetypes=filetypes)
@@ -2463,6 +2485,7 @@ class DatabasesWindow:
 
         CB_channel_selector.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>' : _update(CB_channel_selector, listbox))
         B_export_selection.configure(command=lambda : export_xcell(CB_channel_selector, frame))
+        B_delete_selection.configure(command=lambda : delete_dat(CB_channel_selector, listbox, frame))
 
     def channel_database_management(self, NAA, frame):
 
