@@ -8384,7 +8384,11 @@ class FluxGradientEvaluationWindow:
         npp, unpp = None, None
         for line in spectrum.peak_list:
             if monitor_energy - float(tolerance_energy) < float(line[2]) < monitor_energy + float(tolerance_energy):
-                npp, unpp = float(line[4]), float(line[5])
+                if npp is None and unpp is None:
+                    npp, unpp = float(line[4]), float(line[5])
+                elif float(line[5]) / float(line[4]) < unpp/npp:
+                    npp, unpp = float(line[4]), float(line[5])
+            elif float(line[2]) > monitor_energy + float(tolerance_energy):
                 break
         return npp, unpp
 
