@@ -38,7 +38,7 @@ class MainWindow:
         self.secondary_window = None
         M.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(M))
 
-        greeting = f'k0-INRIM version {1.5}'
+        greeting = f'k0-INRIM version {2.0}'
         M.infotask = tk.Label(M, text=greeting, anchor=tk.W)
 
         Logo_frame = tk.Frame(M)
@@ -1748,7 +1748,7 @@ class CreditsWindow:
         k0logo.pack(anchor=tk.NW, pady=5, padx=5)
         k0logo.image = logo_k0main
 
-        self.brief_text = "k0-INRIM software\nversion 1.5 (2021)\n\ncontacts:\nm.diluzio@inrim.it\n\nliterature:\nG D'Agostino et al 2020;\nMeas. Sci. Technol. 31 017002\ndoi: 10.1088/1361-6501/ab57c8\n\nM Di Luzio et al 2020;\nMeas. Sci. Technol. 31 074006\ndoi: 10.1088/1361-6501/ab7ca8"
+        self.brief_text = "k0-INRIM software\nversion 2.0 (2021)\n\ncontacts:\nm.diluzio@inrim.it\n\nliterature:\nG D'Agostino et al 2020;\nMeas. Sci. Technol. 31 017002\ndoi: 10.1088/1361-6501/ab57c8\n\nM Di Luzio et al 2020;\nMeas. Sci. Technol. 31 074006\ndoi: 10.1088/1361-6501/ab7ca8"
         self.contact_info_panel = tk.Label(left_side, width=23, text=self.brief_text, anchor=tk.W, justify=tk.LEFT)
         self.contact_info_panel.pack(anchor=tk.NW, fill=tk.X)
         left_side.grid(row=0, column=0, sticky=tk.NW)
