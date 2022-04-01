@@ -38,7 +38,7 @@ class MainWindow:
         self.secondary_window = None
         M.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(M))
 
-        greeting = f'k0-INRIM version {2.0}'
+        greeting = f'k0-INRIM version {2.1}'
         M.infotask = tk.Label(M, text=greeting, anchor=tk.W)
 
         Logo_frame = tk.Frame(M)
@@ -51,10 +51,10 @@ class MainWindow:
         Buttons_frame = tk.Frame(M)
         nln = 0
         #settings
-        tk.Label(Buttons_frame, text='Utility', anchor=tk.W).grid(row=nln, column=0, columnspan=7, sticky=tk.W)
+        tk.Label(Buttons_frame, text='Utility', anchor=tk.W).grid(row=nln, column=0, columnspan=9, sticky=tk.W)
         ttk.Separator(Buttons_frame, orient="vertical").grid(
-            row=nln, column=7, rowspan=2, sticky=tk.NS, padx=10)
-        tk.Label(Buttons_frame, text='Characterization', anchor=tk.W).grid(row=nln, column=8, columnspan=5, sticky=tk.W)
+            row=nln, column=9, rowspan=2, sticky=tk.NS, padx=10)
+        tk.Label(Buttons_frame, text='Characterization', anchor=tk.W).grid(row=nln, column=10, columnspan=5, sticky=tk.W)
         nln += 1
         logo_settings = tk.PhotoImage(data=gui_things.ggear)
         B_settings = gui_things.Button(Buttons_frame, image=logo_settings, hint='Settings!', hint_destination=M.infotask, command=lambda: self.go_to_settings(M, NAA))
@@ -86,43 +86,51 @@ class MainWindow:
                   command=lambda: self.go_to_load(M, NAA, B_load_elaboration))
         B_load_elaboration.grid(row=nln, column=6)
         B_load_elaboration.image = logo_load
+
+        ttk.Separator(Buttons_frame, orient="vertical").grid(
+            row=nln, column=7, sticky=tk.NS, padx=3)
+        logo_expect = tk.PhotoImage(data=gui_things.predict)
+        B_expect_elaboration = gui_things.Button(Buttons_frame, image=logo_expect, hint='Predict experimental setup!', hint_destination=M.infotask,
+                  command=lambda: self.go_to_expectations(M, NAA))
+        B_expect_elaboration.grid(row=nln, column=8)
+        B_expect_elaboration.image = logo_expect
         
         #calibration
         logo_calibcurve = tk.PhotoImage(data=gui_things.calibcurve)
         B_new_detector_characterization = gui_things.Button(Buttons_frame, image=logo_calibcurve, hint='New detector characterization!', hint_destination=M.infotask, command=lambda: self.go_to_calibration(M, NAA))
-        B_new_detector_characterization.grid(row=nln, column=8)
+        B_new_detector_characterization.grid(row=nln, column=10)
         B_new_detector_characterization.image = logo_calibcurve
         M.calibration_combobox = ttk.Combobox(Buttons_frame, width=25, state='readonly')
-        M.calibration_combobox.grid(row=nln, column=9, padx=3)
+        M.calibration_combobox.grid(row=nln, column=11, padx=3)
         self.get_calibration_files(M.calibration_combobox,NAA)
         #check load
         if NAA.calibration is not None:
             M.calibration_combobox.set('#loaded: '+NAA.calibration.name)
         logo_deletecalib = tk.PhotoImage(data=gui_things.delcal)
         B_delete_calibration = gui_things.Button(Buttons_frame, image=logo_deletecalib, hint='Delete detector characterization!', hint_destination=M.infotask)
-        B_delete_calibration.grid(row=nln, column=10)
+        B_delete_calibration.grid(row=nln, column=12)
         B_delete_calibration.image = logo_deletecalib
         logo_renamecalib = tk.PhotoImage(data=gui_things.renewcal)
         B_rename_calibration = gui_things.Button(Buttons_frame, image=logo_renamecalib, hint='Rename detector characterization!', hint_destination=M.infotask, command=lambda: self.rename_calibration_name(M.calibration_combobox, M, NAA))
-        B_rename_calibration.grid(row=nln, column=11)
+        B_rename_calibration.grid(row=nln, column=13)
         B_rename_calibration.image = logo_renamecalib
         logo_displaycalib = tk.PhotoImage(data=gui_things.magnif)
         B_display_calibration = gui_things.Button(Buttons_frame, image=logo_displaycalib, hint='Display detector characterization!', hint_destination=M.infotask, command=lambda: self.go_to_display_calibration(M, NAA))
-        B_display_calibration.grid(row=nln, column=12)
+        B_display_calibration.grid(row=nln, column=14)
         B_display_calibration.image = logo_displaycalib
         ttk.Separator(Buttons_frame, orient="vertical").grid(
-            row=nln, column=13, sticky=tk.NS, padx=3)
+            row=nln, column=15, sticky=tk.NS, padx=3)
         
         #f & a evaluation
         logo_phi = tk.PhotoImage(data=gui_things.phi)
         B_fluxevaluation = gui_things.Button(Buttons_frame, image=logo_phi, hint='Flux evaluation!', hint_destination=M.infotask, command=lambda: self.go_to_fluxevaluation(M, NAA))
-        B_fluxevaluation.grid(row=nln, column=14)
+        B_fluxevaluation.grid(row=nln, column=16)
         B_fluxevaluation.image = logo_phi
 
         #gradient evaluation
         logo_beta = tk.PhotoImage(data=gui_things.beta)
         B_gradientevaluation = gui_things.Button(Buttons_frame, image=logo_beta, hint='Gradient evaluation!', hint_destination=M.infotask, command=lambda: self.go_to_fluxgradientevaluation(M, NAA))
-        B_gradientevaluation.grid(row=nln, column=15)
+        B_gradientevaluation.grid(row=nln, column=17)
         B_gradientevaluation.image = logo_beta
 
         Buttons_frame.pack(anchor=tk.W, padx=5)
@@ -758,6 +766,22 @@ class MainWindow:
         self.secondary_window = tk.Toplevel(M)
         SettingsWindow(self.secondary_window, NAA, M)
 
+    def go_to_expectations(self, M, NAA):
+        #open the window to browse and manage k0, sample and hopefully other databases
+        if self.secondary_window is not None:
+            try:
+                if self.secondary_window.title() in ('Detector characterization', 'Flux evaluation - Bare triple monitor', 'Flux gradient evaluation'):
+                    if messagebox.askyesno(title='Open new window', message=f'This action will close the {self.secondary_window.title()} window.\nMake sure you saved your progresses.\nDo you want to continue?\n', parent=self.secondary_window):
+                        self.secondary_window.destroy()
+                    else:
+                        return
+                else:
+                    self.secondary_window.destroy()
+            except Exception:
+                self.secondary_window.destroy()
+        self.secondary_window = tk.Toplevel(M)
+        ExpectationsWindow(self.secondary_window, NAA, M)
+
     def go_to_browse_databases(self, M, NAA):
         #open the window to browse and manage k0, sample and hopefully other databases
         if self.secondary_window is not None:
@@ -1139,6 +1163,280 @@ class InformationWindow:
         tk.Label(parent, text='').pack()
 
 
+class ExpectationsWindow:
+    def __init__(self, parent, NAA, M):
+        parent.title('Predict experimental setup')
+        parent.resizable(False, False)
+        self.reduced_database = self._filter_database(NAA.database)
+        self.molar_mass = {}
+        self.material_name = ''
+        self.composition = {}
+        self.f_parameter = tk.DoubleVar(parent)
+        self.a_parameter = tk.DoubleVar(parent)
+        self.thermal_parameter = tk.DoubleVar(parent)
+        self.mass_variable = tk.DoubleVar(parent)
+        self.irr_time_variable = tk.DoubleVar(parent)
+        self.result_sheet = []
+        self.activity = tk.StringVar(parent)
+        self.characterization = None
+        self.subselection_window = None
+        self.info = tk.Label(parent, text='', anchor=tk.W)
+        mframe = tk.Frame(parent)
+        nrow = 0
+        tk.Label(mframe, text='material').grid(row=nrow, column=0, sticky=tk.W)
+        CB_material = ttk.Combobox(mframe, width=25, state='readonly')
+        CB_material.grid(row=nrow, column=1, columnspan=2, padx=3)
+        CB_material['values'] = [filename[:-len('.csv')] for filename in os.listdir(os.path.join('data','samples')) if filename[-len('.csv'):].lower()=='.csv']
+
+        tk.Frame(mframe).grid(row=nrow, column=3, padx=10)
+        tk.Label(mframe, text='mass / g').grid(row=nrow, column=4, sticky=tk.W)
+        E_mass = ttk.Entry(mframe, width=10, textvariable=self.mass_variable)
+        E_mass.grid(row=nrow, column=5, sticky=tk.W, padx=3)
+        self.mass_variable.set('0.0')
+
+        nrow += 1
+        tk.Label(mframe, text='channel').grid(row=nrow, column=0, sticky=tk.W)
+        
+        CB_channel_name = ttk.Entry(mframe, width=20)
+        CB_channel_name.grid(row=nrow, column=1, sticky=tk.E)
+        logo_flux = tk.PhotoImage(data=gui_things.phi)
+        B_select_flux_params = gui_things.Button(mframe, image=logo_flux, hint='select flux parameters from database', hint_destination=self.info)
+        B_select_flux_params.grid(row=nrow, column=2, padx=5)
+        B_select_flux_params.image = logo_flux
+        nrow += 1
+        f_a_frame = tk.Frame(mframe)
+        tk.Label(f_a_frame, text='f / 1').grid(row=0, column=0)
+        tk.Label(f_a_frame, text='a / 1').grid(row=0, column=1)
+        Ef = ttk.Entry(f_a_frame, width=7, textvariable=self.f_parameter)
+        Ef.grid(row=1, column=0, sticky=tk.W, padx=3)
+        Ealpha = ttk.Entry(f_a_frame, width=7, textvariable=self.a_parameter)
+        Ealpha.grid(row=1, column=1, sticky=tk.E, padx=3)
+        self.f_parameter.set(0.0)
+        self.a_parameter.set(0.0)
+
+        tk.Label(f_a_frame, text='th / cm-2 s-1', width=10).grid(row=0, column=2)
+        Ef = ttk.Entry(f_a_frame, width=10, textvariable=self.thermal_parameter)
+        Ef.grid(row=1, column=2, sticky=tk.W, padx=3)
+        self.thermal_parameter.set(0.0)
+
+        f_a_frame.grid(row=nrow, column=1, rowspan=2, columnspan=2)
+        nrow += 1
+        tk.Label(mframe, text='parameters').grid(row=nrow, column=0, sticky=tk.W)
+
+        tk.Frame(mframe).grid(row=nrow, column=3, padx=10)
+        tk.Label(mframe, text='irradiation time / s').grid(row=nrow, column=4, sticky=tk.W)
+        E_itime = ttk.Entry(mframe, width=10, textvariable=self.irr_time_variable)
+        E_itime.grid(row=nrow, column=5, sticky=tk.W, padx=3)
+        self.irr_time_variable.set('0.0')
+        
+        nrow += 1
+        tk.Frame(mframe).grid(row=nrow, column=0, pady=5)
+
+        nrow += 1
+        tk.Label(mframe, text='decay time / d').grid(row=nrow, column=0, sticky=tk.W)
+        nrow += 1
+        self.td_sl = gui_things.FSlider(mframe, decimals=1, label_width=6, length=200, default=0.00, hint='time after irradiation when evaluate activity', hint_destination=self.info, from_=0.00, to=20.00, resolution=0.1)
+        self.td_sl.grid(row=nrow, column=0, columnspan=6, sticky=tk.EW)
+
+        nrow += 1
+        tk.Label(mframe, text='Activity / Bq').grid(row=nrow, column=0, sticky=tk.W)
+        tk.Label(mframe, text='', textvariable=self.activity).grid(row=nrow, column=1, sticky=tk.W)
+        self.activity.set(f'{np.nan:.1E}')
+
+        nrow += 1
+        tk.Frame(mframe).grid(row=nrow, column=0, pady=5)
+        nrow += 1
+        tk.Label(mframe, text='Characterization').grid(row=nrow, column=0, sticky=tk.W)
+        CB_charactr = ttk.Combobox(mframe, width=25, state='readonly')
+        CB_charactr.grid(row=nrow, column=1, columnspan=2, padx=3)
+        CB_charactr['values'] = [filename[:-len('.pos')] for filename in os.listdir(os.path.join('data', 'characterization')) if filename[-len('.pos'):] == '.pos']
+
+        nrow += 1
+        self.charactr_sl = gui_things.FDiscreteSlider(mframe, label_width=10, length=200, default=0.00, hint='counting position', hint_destination=self.info)
+        self.charactr_sl.grid(row=nrow, column=0, columnspan=6, sticky=tk.EW)
+
+        CB_charactr.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>' : self._select_char(CB_charactr))
+
+        nrow += 1
+        tk.Frame(mframe).grid(row=nrow, column=0, pady=5)
+        nrow += 1
+        tk.Label(mframe, text=f"{str.ljust('emitter',12)}{str.ljust('E / keV',10)}{str.ljust('w / g g-1',12)}{str.ljust('C / s-1',12)}", font=('Courier', 11), anchor=tk.W).grid(row=nrow, column=0, columnspan=6, sticky=tk.EW)
+        nrow += 1
+
+        self.display_res = gui_things.ScrollableText(mframe, height=15, font=('Courier', 11))
+        self.display_res.grid(row=nrow, column=0, columnspan=6, sticky=tk.EW)
+
+        mframe.pack(anchor=tk.NW, padx=5, pady=5)
+        self.info.pack(anchor=tk.W)
+        CB_material.bind('<<ComboboxSelected>>', lambda e='event' : self._select_CB(CB_material))
+        self.td_sl.variable.trace('w', lambda a,b,c : self._calculate())
+        self.f_parameter.trace('w', lambda a,b,c : self._calculate())
+        self.a_parameter.trace('w', lambda a,b,c : self._calculate())
+        self.thermal_parameter.trace('w', lambda a,b,c : self._calculate())
+        self.mass_variable.trace('w', lambda a,b,c : self._calculate())
+        self.irr_time_variable.trace('w', lambda a,b,c : self._calculate())
+        self.charactr_sl.variable.trace('w', lambda a,b,c : self._calculate())
+        B_select_flux_params.configure(command=lambda : self.select_channel(parent, CB_channel_name))
+
+    def _filter_database(self, database):
+        direct = ('I', 'IIB', 'IVB', 'VI')
+        return [line for line in database if line[22] in direct]
+
+    def select_channel(self, parent, E_channel_name):
+
+        def text_cut(text,limit):
+            if len(text) > limit - 1:
+                return (text[:limit-3]+'..').ljust(limit," ")
+            else:
+                return text.ljust(limit," ")
+
+        def _as_text_display(data, spaces=[15,8,12,12,10,10,10,10]):
+            return [f'{text_cut(idx,spaces[0])}{text_cut(pos,spaces[1])}{mtime.strftime("%d/%m/%Y").rjust(spaces[2]," ")}{dtime.strftime("%d/%m/%Y").rjust(spaces[3]," ")}{format(ff,".2f").rjust(spaces[4]," ")}{format(aa,".5f").rjust(spaces[5]," ")}{format(thermal,".2e").rjust(spaces[6]," ")}{format(fast,".2e").rjust(spaces[7]," ")}' for idx, pos, mtime, dtime, ff, aa, thermal, fast in zip(data['channel_name'], data['pos'], data['m_datetime'], data['datetime'], data['f_value'], data['a_value'], data['thermal_flux'], data['fast_flux'])]
+
+        def filter_list(ch_data, listbox, CB_channel):
+            if CB_channel.get() != '':
+                fl_data = _as_text_display(ch_data[ch_data['channel_name'] == CB_channel.get()])
+            else:
+                fl_data = _as_text_display(ch_data)
+            listbox.delete(0, tk.END)
+            for item in fl_data:
+                listbox.insert(tk.END, item)
+
+        ch_list, ch_data = naaobject._get_channel_data(full_dataset=True)
+
+        if self.subselection_window is not None:
+            self.subselection_window.destroy()
+        self.subselection_window = tk.Toplevel(parent)
+        self.subselection_window.title('Selection of flux parameters')
+        self.subselection_window.resizable(False, False)
+        tframe = tk.Frame(self.subselection_window)
+
+        spaces = [15,8,12,12,10,10,10,10]
+        header=['channel','position','meas date','eval date','f / 1', 'a / 1','thermal', 'fast']
+        tk.Label(tframe, text=f'{header[0].ljust(spaces[0]," ")}{header[1].rjust(spaces[1]," ")}{header[2].rjust(spaces[2]," ")}{header[3].rjust(spaces[3]," ")}{header[4].rjust(spaces[4]," ")}{header[5].rjust(spaces[5]," ")}{header[6].rjust(spaces[6]," ")}{header[7].rjust(spaces[7]," ")}', anchor=tk.W, font=('Courier', 11)).pack(anchor=tk.W)
+
+        listframe = tk.Frame(tframe)
+        scrollbar = tk.Scrollbar(listframe, orient="vertical")
+        listbox = tk.Listbox(listframe, width=90, font=('Courier', 11), heigh=25, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=listbox.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        listframe.pack(anchor=tk.NW)
+        fl_data = _as_text_display(ch_data)
+        listbox.delete(0, tk.END)
+        for item in fl_data:
+            listbox.insert(tk.END, item)
+
+        hint_label = tk.Label(tframe, text='')
+        
+        control_frame = tk.Frame(tframe)
+        CB_channel_name = ttk.Combobox(control_frame, width=20, state='readonly')
+        CB_channel_name['values'] = [''] + sorted(set(ch_data['channel_name']))
+        CB_channel_name.pack(side=tk.LEFT)
+
+        logo_confirm = tk.PhotoImage(data=gui_things.beye)
+        B_confirm_selection = gui_things.Button(control_frame, image=logo_confirm, hint='select the current flux parameters!', hint_destination=hint_label, command=lambda: self.confirm_selected_facility(ch_data, listbox, CB_channel_name, E_channel_name))
+        B_confirm_selection.pack(side=tk.LEFT, padx=5)
+        B_confirm_selection.image = logo_confirm
+        control_frame.pack(anchor=tk.NW, pady=3)
+
+        hint_label.pack(anchor=tk.W)
+
+        tframe.pack(anchor=tk.NW, padx=5, pady=5)
+
+        CB_channel_name.bind('<<ComboboxSelected>>', lambda event='<<ComboboxSelected>>': filter_list(ch_data, listbox, CB_channel_name))
+
+    def confirm_selected_facility(self, ch_data, listbox, CB_channel_name, E_channel_name):
+        idx = listbox.curselection()
+        try:
+            idx = idx[0]
+        except:
+            idx = -1
+        if idx >= 0:
+            if CB_channel_name.get() != '':
+                filter_data = ch_data[ch_data['channel_name'] == CB_channel_name.get()]
+            else:
+                filter_data = ch_data[ch_data['channel_name'] != '']
+            prov_index = list(filter_data.index)
+            dataline = ch_data.loc[ch_data.index == prov_index[idx], ['channel_name', 'f_value', 'unc_f_value',
+       'a_value', 'unc_a_value', 'thermal_flux', 'unc_thermal_flux',
+       'epithermal_flux', 'unc_epithermal_flux', 'fast_flux', 'unc_fast_flux']]
+            data_name, data_f, data_unc_f, data_a, data_unc_a, data_thermal, data_unc_thermal, data_epithermal, data_unc_epithermal, data_fast, data_unc_fast = [items for items in zip(dataline['channel_name'], dataline['f_value'], dataline['unc_f_value'], dataline['a_value'], dataline['unc_a_value'], dataline['thermal_flux'], dataline['unc_thermal_flux'], dataline['epithermal_flux'], dataline['unc_epithermal_flux'], dataline['fast_flux'], dataline['unc_fast_flux'])][0]
+
+            E_channel_name.delete(0, tk.END)
+            E_channel_name.insert(0, f'{data_name}')
+            self.f_parameter.set(data_f)
+            self.a_parameter.set(data_a)
+            self.thermal_parameter.set(data_thermal)
+
+    def _select_CB(self, CB):
+        material = naaobject.Sample(f'{CB.get()}.csv', non_certified_uncertainty=None)
+        self.material_name = material.name
+        self.composition = material.certificate
+        self._calculate()
+
+    def _select_char(self, box):
+        filename = box.get()
+        if filename != '':
+            self.characterization = naaobject.DetectorCalibration(filename)
+            def_value = self.characterization.reference_calibration.distance
+            distances_list = list(self.characterization.kedd_dict.keys()) + [def_value]
+            self.charactr_sl.set_values(distances_list, def_value)
+
+    def _calculate(self):
+        if self.characterization is not None:
+            efficiency_machine = self.characterization.evaluate_efficiency
+        else:
+            efficiency_machine = self.fake_efficiency_machine
+        activity_limit = 10.0
+        if self.mass_variable.get() > 0.0 and self.irr_time_variable.get() > 0.0 and self.f_parameter.get() > 0.0:
+            datas = []
+            for item in self.composition.items():
+                datas += self.get_info(item)
+            self.result_sheet = [(item[1], item[0], item[2], self.get_activity(self.mass_variable.get(), item[2], item[3], self.thermal_parameter.get(), item[4], item[5], self.f_parameter.get(), self.a_parameter.get(), item[6]), efficiency_machine(np.array([item[0]]),self.charactr_sl.get())) for item in datas]
+            uniques = []
+            sm = 0.0
+            for item in self.result_sheet:
+                if item[0] not in uniques:
+                    sm += item[3]
+                    uniques.append(item[0])
+            self.activity.set(f'{sm:.1E}')
+            pdt = sorted(self.result_sheet, key=lambda x:x[3], reverse=True)
+            self.display_res._update('\n'.join([f"{str.ljust(line[0],12)}{str.ljust(format(line[1],'.1f'),10)}{str.ljust(format(line[2],'.2E'),12)}{str.ljust(format(float(line[3]*line[4]),'.1f'),12)}" for line in pdt if line[3] > activity_limit]))
+            self.info.configure(text='')
+        else:
+            self.display_res._update('')
+            self.info.configure(text='something went terribly wrong')
+
+    def fake_efficiency_machine(self, *p):
+        return 1.0
+
+    def get_info(self, target_info):
+
+        def gstate(n):
+            if n == 1.0:
+                return ''
+            else:
+                return 'm'
+
+        def get_lambda(value,unit):
+            units = {'d': 86400, 's': 1, 'm': 60, 'h': 3600, 'y': 86400*365.24}
+            return np.log(2)/(value*units[unit.lower()])
+
+        results = []
+        for line in self.reduced_database:
+            if line[1] == target_info[0]:
+                results.append((line[5], f'{line[2]}-{int(float(line[3]))}{gstate(line[4])}', target_info[1][0], line[7], line[75], line[77], get_lambda(line[31], line[32])))
+        return results
+
+    def get_activity(self, mass, mass_fraction, k0, thermal, Q0, Er, f, a, ldb):
+        NA = 6.022E23
+        k_Au = 0.9562 * 9.87E-23 / 196.966569
+        NAk_Au = 6.022 * 0.9562 * 9.87 / 196.966569
+        #return mass * mass_fraction * NA * k0 * k_Au * thermal * (1 + ((Q0-0.419)/Er**a + 0.429/((2*a+1)*0.55**a))/f)
+        return mass * mass_fraction * k0 * NAk_Au * thermal * (1 + ((Q0-0.419)/Er**a + 0.429/((2*a+1)*0.55**a))/f) * (1-np.exp(-ldb * self.irr_time_variable.get())) * np.exp(-ldb * self.td_sl.get() * 86400)
+
+
 class SaveWindow:
     def __init__(self, parent, NAA, M, position):
         parent.title('Save current situation')
@@ -1459,7 +1757,7 @@ class ValidationWindow:
         if len(dataset['z'].index) == 0:
             title = f"{len(dataset['z'])} data"
         else:
-            title = f"{len(dataset['z'])} data, {np.sum(outliers)} outliers, {questionable} questionable values (" + r'$2\leq \left|x\right| \leq 3$' + f')'#, average = {np.average(dataset[~outliers]["z"]):.2f}'
+            title = f"{len(dataset['z'])} data, {np.sum(outliers)} outliers, {questionable} questionable values (" + r'$2\leq \left|x\right| \leq 3$' + ')'#, average = {np.average(dataset[~outliers]["z"]):.2f}'
 
         x_concat = np.arange(0, n_index)
         xmax = len(x_concat)
@@ -1748,7 +2046,7 @@ class CreditsWindow:
         k0logo.pack(anchor=tk.NW, pady=5, padx=5)
         k0logo.image = logo_k0main
 
-        self.brief_text = "k0-INRIM software\nversion 2.0 (2021)\n\ncontacts:\nm.diluzio@inrim.it\n\nliterature:\nG D'Agostino et al 2020;\nMeas. Sci. Technol. 31 017002\ndoi: 10.1088/1361-6501/ab57c8\n\nM Di Luzio et al 2020;\nMeas. Sci. Technol. 31 074006\ndoi: 10.1088/1361-6501/ab7ca8"
+        self.brief_text = "k0-INRIM software\nversion 2.1 (2022)\n\ncontacts:\nm.diluzio@inrim.it\n\nliterature:\nG D'Agostino et al 2020;\nMeas. Sci. Technol. 31 017002\ndoi: 10.1088/1361-6501/ab57c8\n\nM Di Luzio et al 2020;\nMeas. Sci. Technol. 31 074006\ndoi: 10.1088/1361-6501/ab7ca8"
         self.contact_info_panel = tk.Label(left_side, width=23, text=self.brief_text, anchor=tk.W, justify=tk.LEFT)
         self.contact_info_panel.pack(anchor=tk.NW, fill=tk.X)
         left_side.grid(row=0, column=0, sticky=tk.NW)
@@ -2360,7 +2658,6 @@ class DatabasesWindow:
         Action_Frame = tk.Frame(parent)
         self.k0_database_management(NAA, Action_Frame)
         Action_Frame.pack(anchor=tk.W, padx=5, pady=5)
-        #self.information = tk.Label(parent, text='', anchor=tk.W)
         self.information.pack(anchor=tk.W, padx=5)
 
         B_k0_database.configure(command=lambda : self.k0_database_management(NAA, Action_Frame))
@@ -2398,7 +2695,7 @@ class DatabasesWindow:
         def delete_dat(CB, stext, parent):
 
             def rewrite_file(folder=os.path.join('data', 'facility')):
-                self.bdata.to_csv(os.path.join(os.path.join('data','facility'),'beta.csv'), columns=['channel_name', 'm_datetime', 'datetime','position', 'beta', 'unc_beta'], header=['channel_name', 'mdatetime', 'datetime','position', 'beta', 'unc_beta'], index=False)
+                self.bdata.to_csv(os.path.join(os.path.join('data','facility'),'beta.csv'), columns=['channel_name', 'm_datetime', 'datetime','position', 'beta', 'unc_beta'], header=['channel_name', 'mdatetime', 'datetime','position', 'beta', 'unc_beta'], index=False, date_format="%d/%m/%Y %H:%M:%S")
 
             if CB.get() != '':
                 prov_data = self.bdata[self.bdata['channel_name'] == CB.get()]
