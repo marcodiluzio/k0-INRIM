@@ -1434,7 +1434,7 @@ class ExpectationsWindow:
         k_Au = 0.9562 * 9.87E-23 / 196.966569
         NAk_Au = 6.022 * 0.9562 * 9.87 / 196.966569
         #return mass * mass_fraction * NA * k0 * k_Au * thermal * (1 + ((Q0-0.419)/Er**a + 0.429/((2*a+1)*0.55**a))/f)
-        return mass * mass_fraction * k0 * NAk_Au * thermal * (1 + ((Q0-0.419)/Er**a + 0.429/((2*a+1)*0.55**a))/f) * (1-np.exp(-ldb * self.irr_time_variable.get())) * np.exp(-ldb * self.td_sl.get() * 86400)
+        return mass * mass_fraction * k0 * NAk_Au * thermal * (1 + ((Q0-0.429)/Er**a + 0.429/((2*a+1)*0.55**a))/f) * (1-np.exp(-ldb * self.irr_time_variable.get())) * np.exp(-ldb * self.td_sl.get() * 86400)
 
 
 class SaveWindow:
